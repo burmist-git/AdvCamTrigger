@@ -1,0 +1,10 @@
+*~
+.*~
+src/*~
+*.pdf
+obj
+*.eps
+*.root
+tmp/
+convert2root
+runana

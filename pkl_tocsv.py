@@ -64,15 +64,19 @@ if __name__ == "__main__":
     tic = time.time()
     #conv_header(pklfilein = '../compressed_data/no_nsb_cut/gamma/corsika_run307.header.pkl',
     #            csvfileout = '../compressed_data/no_nsb_cut/gamma/corsika_run307.header.csv')
+    conv_header(pklfilein = '../compressed_data/gamma/corsika_run307.header.pkl',
+                csvfileout = '../compressed_data/gamma/corsika_run307.header.csv')
     #
     #conv_pe(pklfilein = '../compressed_data/no_nsb_cut/gamma/corsika_run307.pe_info.pkl',
     #        csvfileout = '../compressed_data/no_nsb_cut/gamma/corsika_run307.pe_info.csv')
+    conv_pe(pklfilein = '../compressed_data/gamma/corsika_run307.pe_info.pkl',
+            csvfileout = '../compressed_data/gamma/corsika_run307.pe_info.csv')
     #
     #wf_pkl_list=['../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info_00000.pkl',
     #             '../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info_00001.pkl',
     #             '../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info_00002.pkl']
-    wf_pkl_list=(subprocess.getoutput("ls ../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info_*.pkl")).split('\n')
-    [conv_wf(thefile) for thefile in wf_pkl_list]
+    #wf_pkl_list=(subprocess.getoutput("ls ../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info_*.pkl")).split('\n')
+    #[conv_wf(thefile) for thefile in wf_pkl_list]
     #
     toc = time.time()
     print('{:.2f} s'.format(toc - tic))
