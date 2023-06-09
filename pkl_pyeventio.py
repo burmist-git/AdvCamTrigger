@@ -197,6 +197,29 @@ def loop_header(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz
     pkl.dump(np.array(tot_list), open(headrefilename, "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
     
     sf.close()
+
+
+def get_pixel_mapping(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz", outmap_csv = 'pixel_mapping.csv'):
+    sf = SimTelFile(datafilein)
+    #
+    n_pixels=float(sf.telescope_descriptions[1]['camera_organization']['n_pixels'])
+    n_drawers=float(sf.telescope_descriptions[1]['camera_organization']['n_drawers'])
+    pixel_size=float(sf.telescope_descriptions[1]['camera_settings']['pixel_size'][0])
+    #
+    the_map=np.concatenate((sf.telescope_descriptions[1]['camera_settings']['pixel_x'].reshape(int(n_pixels),1),
+                            sf.telescope_descriptions[1]['camera_settings']['pixel_y'].reshape(int(n_pixels),1),
+                            sf.telescope_descriptions[1]['camera_organization']['drawer'].reshape(int(n_pixels),1)), axis=1)
+    np.savetxt(outmap_csv, the_map, delimiter=' ',fmt='%f')
+    #
+    print('n_pixels   = ', int(n_pixels))
+    print('n_drawers  = ', int(n_drawers))
+    print('pixel_size = ', pixel_size)
+    #
+    # 0.024300
+    # 0.023300
+    #
+    #
+    sf.close()
     
 if __name__ == "__main__":
     #
@@ -217,9 +240,10 @@ if __name__ == "__main__":
     #loop_header( datafilein, 5000, headerout)
     #loop_pe( datafilein, 5000, pe_info_out)
     #loop_wf_stack( datafilein, 100000, wf_info_out)
-    loop_wf( datafilein, 5000, wf_info_out, True)
+    #loop_wf( datafilein, 5000, wf_info_out, True)
     #
     #loop_wf_test( datafilein, 100000, wf_info_out)
     #
+    get_pixel_mapping(datafilein, outmap_csv = 'pixel_mapping.csv')
     toc = time.time()
     print('{:.2f} s'.format(toc - tic))

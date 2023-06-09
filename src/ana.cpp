@@ -1,5 +1,6 @@
 //my
 #include "ana.hh"
+#include "sipmCameraHist.hh"
 
 //root
 #include <TH2.h>
@@ -100,6 +101,12 @@ void ana::load_Template(TString file_name, TGraph *gr, Double_t t_max_shift, Dou
 }
   
 void ana::Loop(TString histOut){
+  //
+  //sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",-10);
+  //sipm_cam->dump_mapping_info();
+  //sipm_cam->test();
+  //
+  //assert(0);
   //
   TGraph *gr_template = new TGraph();
   gr_template->SetNameTitle("gr_template","gr_template");

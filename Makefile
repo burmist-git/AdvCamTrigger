@@ -29,12 +29,12 @@ makedir:
 
 .PHONY: printmakehelp_and_reminder
 printmakehelp_and_reminder: convert2root.cpp Makefile
-	$(info  /******************************************************************************/)
-	$(info  * task --> printmakehelp_and_reminder: convert2root.cpp Makefile        *)
-	$(info  * $$@ ----> $@                                         *)
-	$(info  * $$< --------------------------------> $<                 *)
-	$(info  * $$^ --------------------------------> $^        *)
-	$(info  /******************************************************************************/)
+	$(info  /*****************************************************************/)
+	$(info  * task --> printmakehelp_and_reminder: convert2root.cpp Makefile *)
+	$(info  * $$@ ----> $@                            *)
+	$(info  * $$< --------------------------------> $<          *)
+	$(info  * $$^ --------------------------------> $^ *)
+	$(info  /*****************************************************************/)
 
 convert2root: convert2root.cpp
 	$(CXX) -o $@ $^ $(CXXFLAGS)

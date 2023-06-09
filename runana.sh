@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #'nightsky_background=all:0.001'
-#inRootFile="../compressed_data/no_nsb_cut/gamma/corsika_run307.compressed.root"
-#outHistF="./hist_corsika_run307_no_nsb_cut.root"
+inRootFile="../compressed_data/no_nsb_cut/gamma/corsika_run307.compressed.root"
+outHistF="./hist_corsika_run307_no_nsb_cut.root"
 
 #'nightsky_background=all:0.386'
-inRootFile="../compressed_data/gamma/corsika_run307.compressed.root"
-outHistF="./hist_corsika_run307.root"
+#inRootFile="../compressed_data/gamma/corsika_run307.compressed.root"
+#outHistF="./hist_corsika_run307.root"
 
 make -f Makefileana clean; make -f Makefileana runana;
 
