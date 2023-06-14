@@ -2,7 +2,7 @@
 #define ana_hh
 
 //My
-#include "anabase.hh"
+#include "anabaseshort.hh"
 
 //root
 #include <TROOT.h>
@@ -13,15 +13,14 @@ class TTree;
 class TString;
 class TBranch;
 
-
 class ana: public anabase {
 public:
 
-  ana(TString fileList) : anabase(fileList)
+  anashort(TString fileList) : anabaseshort(fileList)
   {
   }
 
-  ana(TString file, Int_t key) : anabase(file, key)
+  anashort(TString file, Int_t key) : anabaseshort(file, key)
   {
   }
 

@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <time.h>
 #include <bits/stdc++.h>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -99,12 +100,56 @@ void ana::load_Template(TString file_name, TGraph *gr, Double_t t_max_shift, Dou
     gr->SetPoint( i, tnew, anew);
   }
 }
-  
+
+void ana::generate_gif_for_event(TString pathPref){
+  TString ev_dir_name = pathPref;
+  ev_dir_name += event_id; 
+  mkdir(ev_dir_name.Data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  //std::vector<sipmCameraHist*> sipm_cam_v; 
+  ofstream merge_gif;
+  TString merge_gif_name=ev_dir_name;
+  merge_gif_name += "/mrg.sh";
+  //cout<<"merge_gif_name "<<merge_gif_name<<endl;
+  merge_gif.open(merge_gif_name.Data());
+  //
+  merge_gif<<"convert -delay 15 -loop 1000 ";
+  for(Int_t i = 20;i<(nn_fadc_point-20);i++){
+    TString sipm_cam_name = "sipm_cam_";
+    TString gif_name = ev_dir_name;
+    gif_name += "/sipm_cam_";
+    gif_name += i;
+    gif_name += ".gif";
+    TString gif_name_short = "sipm_cam_";
+    gif_name_short += i;
+    gif_name_short += ".gif";
+    sipm_cam_name += i;
+    sipmCameraHist *sipm_cam = new sipmCameraHist(sipm_cam_name.Data(),sipm_cam_name.Data(),"pixel_mapping.csv",-10);
+    sipm_cam->SetMinimum(0.0);
+    sipm_cam->SetMaximum(TMath::Power(2,14));
+    for(Int_t j = 0;j<nChannels;j++){
+      sipm_cam->SetBinContent(j+1,wf[j][i]);
+    }
+    merge_gif<<gif_name_short<<" ";
+    sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),"gamma",i,event_id,energy,xcore,ycore,ev_time,nphotons,n_pe,n_pixels);
+    //
+    delete sipm_cam;
+  }
+  TString outtotGifName = "sipm_cam_ev";
+  outtotGifName += event_id;
+  outtotGifName += ".gif";
+  merge_gif<<  outtotGifName.Data();
+  merge_gif.close();
+}
+
 void ana::Loop(TString histOut){
   //
   //sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",-10);
+  //sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
   //sipm_cam->dump_mapping_info();
   //sipm_cam->test();
+  //sipm_cam->test_drawer_id();
+  //sipm_cam->test02();
+  //sipm_cam->test03();
   //
   //assert(0);
   //
@@ -188,6 +233,12 @@ void ana::Loop(TString histOut){
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     //
     h1_n_pe->Fill(n_pe);
+    //////////////////
+    if(n_pe>10000){
+      //if(energy<0.05){
+      generate_gif_for_event("./ev_");
+    }
+    //////////////////
     for(Int_t j = 0;j<nChannels;j++)
       chID_arr[j] = 0;
     for(Int_t j = 0;j<n_pe;j++){

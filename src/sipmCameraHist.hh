@@ -89,10 +89,25 @@ class sipmCameraHist: public TH2Poly {
   ~sipmCameraHist();
   void dump_mapping_info();
   void test();
+  void test02();
+  void test03();
+  void test_drawer_id();
   void Clean();
   void count_signal(Double_t th_val, Int_t &nch, Int_t &npe);
   void Draw_cam( TString settings, TString pdf_out_file);
-  
+  void Draw_cam( TString settings,
+		 TString pdf_out_file,
+		 TString particle_type,
+		 Int_t wf_time_id,
+		 Int_t   event_id,
+		 Float_t energy,
+		 Float_t xcore,
+		 Float_t ycore,
+		 Float_t ev_time,
+		 Int_t nphotons,
+		 Int_t n_pe,
+		 Int_t n_pixels);
+  //  
   TString _name;
   TString _title;
   

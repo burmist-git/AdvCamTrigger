@@ -18,13 +18,25 @@ all: runana
 runana: runana.cpp obj/ana.o obj/anabase.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
+runanashort: runanashort.cpp obj/anashort.o
+	$(CXX) -o $@ $< $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
 obj/ana.o: src/ana.cpp src/ana.hh obj/anabase.o obj/sipmCameraHist.o
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)ana.o $<
+
+obj/anashort.o: src/anashort.cpp src/anashort.hh obj/anabaseshort.o obj/sipmCameraHist.o obj/wfCamSim.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)ana.o $<
 
 obj/anabase.o: src/anabase.cpp src/anabase.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anabase.o $<
 
+obj/anabaseshort.o: src/anabaseshort.cpp src/anabaseshort.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anabaseshort.o $<
+
 obj/sipmCameraHist.o: src/sipmCameraHist.cpp src/sipmCameraHist.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
+
+obj/wfCamSim.o: src/wfCamSim.cpp src/wfCamSim.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
 
 clean:

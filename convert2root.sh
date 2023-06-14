@@ -3,8 +3,6 @@
 # Thu 11 May 16:09:40 CEST 2023
 # Autor: Leonid Burmistrov
 
-
-
 function printHelp {
     echo " --> ERROR in input arguments "
     echo " [0] --convert_gm       : convert gammas"
@@ -26,14 +24,16 @@ else
 	header_file="../compressed_data/no_nsb_cut/$particle/corsika_run307.header.csv"
 	pe_info_file="../compressed_data/no_nsb_cut/$particle/corsika_run307.pe_info.csv"
 	wf_file_list="./wf_file_list_no_nsb_cut.list"
-	outputRootFile="../compressed_data/no_nsb_cut/$particle/corsika_run307.compressed.root"
+	#outputRootFile="../compressed_data/no_nsb_cut/$particle/corsika_run307.compressed.root"
+	outputRootFile="../compressed_data/no_nsb_cut/$particle/corsika_run307.compressed.short.root"
 	#
 	#header_file="../compressed_data/$particle/corsika_run307.header.csv"
 	#pe_info_file="../compressed_data/$particle/corsika_run307.pe_info.csv"
 	#wf_file_list="./wf_file_list.list"
 	#outputRootFile="../compressed_data/$particle/corsika_run307.compressed.root"
 	#
-	./convert2root 0 $header_file $pe_info_file $wf_file_list $outputRootFile
+	#./convert2root 0 $header_file $pe_info_file $wf_file_list $outputRootFile
+	./convert2root 1 $header_file $pe_info_file $outputRootFile
     elif [ "$1" = "--convert_gd" ]; then
 	make clean; make;
 	particle="gamma_diffuse"
