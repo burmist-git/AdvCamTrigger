@@ -267,12 +267,13 @@ void sipmCameraHist::test03(){
 }
 
 void sipmCameraHist::test_drawer_id(){
-  for(unsigned int i = 0;i<GetNcells();i++){
-    if(i<_pixel_vec.size())
+  for(unsigned int i = 0;i<(unsigned int)GetNcells();i++){
+    if(i<_pixel_vec.size()){
       if(_pixel_vec.at(i).drawer_id < 1000)
 	SetBinContent(i+1,(_pixel_vec.at(i).drawer_id+1)%10+1);
       else
 	SetBinContent(i+1,0);
+    }
   }
   Draw_cam("ZCOLOR","sipmCameraHist_test_drawer_id.pdf");
 }

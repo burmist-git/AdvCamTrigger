@@ -13,7 +13,7 @@ class TTree;
 class TString;
 class TBranch;
 
-class ana: public anabase {
+class anashort: public anabaseshort {
 public:
 
   anashort(TString fileList) : anabaseshort(fileList)
@@ -25,10 +25,6 @@ public:
   }
 
   void Loop(TString histOut);
-  void print_ev_info(Long64_t jentry, Int_t max_pix_info, Int_t chid);
-  void load_Template(TString file_name, TGraph *gr, Double_t t_max_shift, Double_t ampl, Double_t pedestal);
-  void load_spe(TString file_name, TGraph *gr, TH1D *h1, Double_t &Prompt_max, Double_t &Ampl_Prompt_max);
-  void generate_gif_for_event(TString pathPref);
   
 };
 

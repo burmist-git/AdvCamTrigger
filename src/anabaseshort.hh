@@ -1,5 +1,5 @@
-#ifndef anabase_hh
-#define anabase_hh
+#ifndef anabaseshort_hh
+#define anabaseshort_hh
 
 #include <TROOT.h>
 
@@ -13,12 +13,12 @@ class TH1D;
 class TH2D;
 class TProfile;
 
-class anabase {
+class anabaseshort {
 
 public :
-  anabase(TString fileList);
-  anabase(TString inFileName, Int_t keyID);
-  ~anabase();
+  anabaseshort(TString fileList);
+  anabaseshort(TString inFileName, Int_t keyID);
+  ~anabaseshort();
   Int_t GetEntry(Long64_t entry);
   Long64_t LoadTree(Long64_t entry);
   void Init(TTree *tree);

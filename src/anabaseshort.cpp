@@ -1,5 +1,5 @@
 //my
-#include "anabase.hh"
+#include "anabaseshort.hh"
 
 //root
 #include <TH2.h>
@@ -26,7 +26,7 @@
 
 using namespace std;
 
-anabase::anabase(TString fileList) : fChain(0) 
+anabaseshort::anabaseshort(TString fileList) : fChain(0) 
 {
   ifstream indata;
   TString rootFileName;
@@ -46,7 +46,7 @@ anabase::anabase(TString fileList) : fChain(0)
   Init(theChain);
 }
 
-anabase::anabase(TString inFileName, Int_t keyID) : fChain(0) 
+anabaseshort::anabaseshort(TString inFileName, Int_t keyID) : fChain(0) 
 {
   if(keyID == 1){
     ifstream indata;
@@ -60,7 +60,7 @@ anabase::anabase(TString inFileName, Int_t keyID) : fChain(0)
     assert(0);
 }
 
-void anabase::tGraphInit(TGraph *gr[nChannels], TString grName, TString grTitle){
+void anabaseshort::tGraphInit(TGraph *gr[nChannels], TString grName, TString grTitle){
   Int_t i;
   TString grNameh;
   TString grTitleh;
@@ -73,7 +73,7 @@ void anabase::tGraphInit(TGraph *gr[nChannels], TString grName, TString grTitle)
   }
 }
 
-void anabase::h1D1Init(TH1D *h1D1[nChannels],TString h1name, TString h1Title,
+void anabaseshort::h1D1Init(TH1D *h1D1[nChannels],TString h1name, TString h1Title,
 		      Int_t Nbin, Float_t Vmin, Float_t Vmax){
   Int_t i;
   TString h1nameh;
@@ -86,7 +86,7 @@ void anabase::h1D1Init(TH1D *h1D1[nChannels],TString h1name, TString h1Title,
   }
 }
 
-void anabase::h2D2Init(TH2D *h2D1[nChannels],TString h2name, TString h2Title,
+void anabaseshort::h2D2Init(TH2D *h2D1[nChannels],TString h2name, TString h2Title,
 		      Int_t Nbin1, Float_t Vmin1, Float_t Vmax1,
 		      Int_t Nbin2, Float_t Vmin2, Float_t Vmax2){
   Int_t i;
@@ -101,7 +101,7 @@ void anabase::h2D2Init(TH2D *h2D1[nChannels],TString h2name, TString h2Title,
   }  
 }
 
-void anabase::tProfInit(TProfile *tprof[nChannels],TString prname, TString prTitle,
+void anabaseshort::tProfInit(TProfile *tprof[nChannels],TString prname, TString prTitle,
 		       Int_t Nbin, Float_t Vmin, Float_t Vmax){
   Int_t i;
   TString prnameh;
@@ -113,7 +113,7 @@ void anabase::tProfInit(TProfile *tprof[nChannels],TString prname, TString prTit
   }
 }
 
-double anabase::getUnixTimeFromTime(double d_year, double d_month, double d_day, double d_hour, double d_min, double d_sec){
+double anabaseshort::getUnixTimeFromTime(double d_year, double d_month, double d_day, double d_hour, double d_min, double d_sec){
   //time_t timer;
   struct tm y2k = {0};
   y2k.tm_year = d_year - 1900; y2k.tm_mon = d_month-1; y2k.tm_mday = d_day;
@@ -121,21 +121,21 @@ double anabase::getUnixTimeFromTime(double d_year, double d_month, double d_day,
   return difftime(mktime(&y2k),0);
 }
 
-anabase::~anabase(){
+anabaseshort::~anabaseshort(){
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-void anabase::Loop(TString histOut){
+void anabaseshort::Loop(TString histOut){
 }
 
-Int_t anabase::GetEntry(Long64_t entry){
+Int_t anabaseshort::GetEntry(Long64_t entry){
   // Read contents of entry.
   if (!fChain) return 0;
   return fChain->GetEntry(entry);
 }
 
-Long64_t anabase::LoadTree(Long64_t entry){
+Long64_t anabaseshort::LoadTree(Long64_t entry){
   // Set the environment to read one entry
   if (!fChain) return -5;
   Long64_t centry = fChain->LoadTree(entry);
@@ -147,7 +147,7 @@ Long64_t anabase::LoadTree(Long64_t entry){
   return centry;
 }
 
-void anabase::Init(TTree *tree){
+void anabaseshort::Init(TTree *tree){
   // The Init() function is called when the selector needs to initialize
   // a new tree or chain. Typically here the branch addresses and branch
   // pointers of the tree will be set.
@@ -182,7 +182,7 @@ void anabase::Init(TTree *tree){
   Notify();
 }
 
-Bool_t anabase::Notify(){
+Bool_t anabaseshort::Notify(){
   // The Notify() function is called when a new file is opened. This
   // can be either for a new TTree in a TChain or when when a new TTree
   // is started when using PROOF. It is normally not necessary to make changes
@@ -191,14 +191,14 @@ Bool_t anabase::Notify(){
   return kTRUE;
 }
 
-void anabase::Show(Long64_t entry){
+void anabaseshort::Show(Long64_t entry){
   // Print contents of entry.
   // If entry is not specified, print current entry
   if (!fChain) return;
   fChain->Show(entry);
 }
 
-Int_t anabase::Cut(Long64_t entry){
+Int_t anabaseshort::Cut(Long64_t entry){
   // This function may be called from Loop.
   // returns  1 if entry is accepted.
   // returns -1 otherwise.
