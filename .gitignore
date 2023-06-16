@@ -20,3 +20,7 @@ wf.pdf
 wf_template.pdf
 hist_corsika_run307.root
 hist_corsika_run307_no_nsb_cut.root
+runanashort
+hist_short_corsika_run307_no_nsb_cut.root
+spe_FADC_fast_sim.pdf
+spe_FADC_normal_sim.pdf
