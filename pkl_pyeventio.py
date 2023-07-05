@@ -223,27 +223,32 @@ def get_pixel_mapping(datafilein = "../simtel_data/gamma/data/corsika_run307.sim
     
 if __name__ == "__main__":
     #
-    datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"
-    headerout = "../compressed_data/gamma/corsika_run307.header.pkl"
-    pe_info_out = "../compressed_data/gamma/corsika_run307.pe_info.pkl"
-    wf_info_out = "../compressed_data/gamma/corsika_run307.wf_info"
+    #datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"
+    #headerout = "../compressed_data/gamma/corsika_run307.header.pkl"
+    #pe_info_out = "../compressed_data/gamma/corsika_run307.pe_info.pkl"
+    #wf_info_out = "../compressed_data/gamma/corsika_run307.wf_info"
     #
     #datafilein = "../simtel_data/no_nsb_cut/gamma/data/corsika_run307.simtel.gz"
     #headerout = "../compressed_data/no_nsb_cut/gamma/corsika_run307.header.pkl"
     #pe_info_out = "../compressed_data/no_nsb_cut/gamma/corsika_run307.pe_info.pkl"
     #wf_info_out = "../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info"
     #
+    datafilein = "../simtel_data/no_nsb_cut/proton/data/corsika_run307.simtel.gz"
+    headerout = "../compressed_data/no_nsb_cut/proton/corsika_run307.header.pkl"
+    pe_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.pkl"
+    wf_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.wf_info"
+    #
     #datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"
     #datafilein = "../simtel_data/electron/data/corsika_run307.simtel.gz"
     #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
     tic = time.time()
-    #loop_header( datafilein, 5000, headerout)
-    #loop_pe( datafilein, 5000, pe_info_out)
+    loop_header( datafilein, 500000, headerout)
+    loop_pe( datafilein, 500000, pe_info_out)
     #loop_wf_stack( datafilein, 100000, wf_info_out)
-    #loop_wf( datafilein, 5000, wf_info_out, True)
+    loop_wf( datafilein, 500000, wf_info_out, True)
     #
     #loop_wf_test( datafilein, 100000, wf_info_out)
     #
-    get_pixel_mapping(datafilein, outmap_csv = 'pixel_mapping.csv')
+    #get_pixel_mapping(datafilein, outmap_csv = 'pixel_mapping.csv')
     toc = time.time()
     print('{:.2f} s'.format(toc - tic))

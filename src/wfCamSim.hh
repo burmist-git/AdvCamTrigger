@@ -17,10 +17,12 @@ class TH1D;
 class wfCamSim {
 
 public :
-  wfCamSim( TRandom3 *rnd, TString wf_tamplete, TString spe_dat);
+  wfCamSim( TRandom3 *rnd, TString wf_tamplete, TString spe_dat,
+	    const unsigned int nn_fadc_point,
+	    const unsigned int nn_PMT_channels,
+	    const Float_t fadc_offset, const Float_t fadc_sample_in_ns, const Float_t NGB_rate_in_MHz);
   ~wfCamSim();
 
-public :
   //
   void getWF_ampl(TString name, Double_t &Ampl_Prompt_max, Double_t &Prompt_max);
   void getWF_tmpl(TString name);
@@ -37,7 +39,6 @@ public :
   void simulate_cam_event(const Int_t nn_fadc_point,
 			  const Int_t nn_PMT_channels,
 			  std::vector<std::vector<Int_t>> &wf,
-			  const Float_t NGB_rate_in_MHz,
 			  const Float_t ev_time,
 			  const Float_t time_offset,
 			  const Int_t n_pe,
@@ -45,9 +46,15 @@ public :
 			  const Float_t *pe_time);
   void simulate_cam_event(const Int_t nn_fadc_point,
 			  const Int_t nn_PMT_channels,
-			  std::vector<std::vector<Int_t>> &wf,
-			  const Float_t NGB_rate_in_MHz);
+			  std::vector<std::vector<Int_t>> &wf);
   //
+  void print_wfCamSim_configure();
+  void ger_gr_WF_tmpl_array(TGraph *gr);
+  //
+  static void calculate_camera_ADC_mean_and_std(const std::vector<std::vector<Int_t>> &wf, Float_t &meanv, Float_t &stdv);
+  static void calculate_camera_ADC_mean_and_std(const std::vector<std::vector<Int_t>> &wf, Float_t &meanv, Float_t &stdv, TH1D *h1_adc, TH1D *h1_dadc);
+  void test_calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc);
+  void generate_gif_for_event(TString pathPref, Int_t event_id, const std::vector<std::vector<Int_t>> &wf);
   
 private:
   //
@@ -61,15 +68,53 @@ private:
   TH1D *_h1_wf_ampl;
   TH1D *_h1_wf_ampl_ADC;
   static const unsigned int _n_ADC_arr = 2000000000;
+  Double_t _n_ADC_max_for_generator;
   unsigned char *_ampl_ADC_arr;
   TGraph *_gr_wf_tmpl;
-  Double_t _n_ADC_max_for_generator;
+  Float_t *_arr_wf_tmpl;
+  unsigned int _n_arr_wf_tmpl;
   Int_t generate_single_pe_amplitude();
   Int_t generate_single_pe_amplitude_from_hist();
+  //
+  void generateNGB(std::vector<int> &wf);
+  void generate_zero_wf(std::vector<int> &wf);
+  void generate_zero_wf(std::vector<int> &wf, Int_t pedestal);
+  void generate_wf(std::vector<int> &wf, Float_t pe_time);
+  void generate_electronic_noise(std::vector<int> &wf);
+  //
+  void calculate_pedestal();
+  //
+  void generateWF_tmpl_array();
+  //
+  bool check_pe_chID(Int_t id_ch);
   //  
   Double_t _Ampl_Prompt_max;
   Double_t _Prompt_max;
   Double_t _t_max_ampl_wf_tmpl;
+  //
+  Float_t _fadc_offset;
+  Float_t _fadc_sample_in_ns;
+  Float_t _NGB_rate_in_MHz;
+  //
+  Float_t _NGB_pedestal_mean;
+  Float_t _NGB_pedestal_std;
+  //  
+  Float_t _t_left_in_ns;
+  Float_t _t_righ_in_ns;
+  Float_t _n_NGB_pe_average_in_window;
+  //
+  Float_t _wf_tmpl_t_left;
+  Float_t _wf_tmpl_t_right;
+  Float_t _wf_tmpl_t_start;
+  Float_t _wf_tmpl_t_stop;
+  //
+  Float_t _fadc_electronic_noise_RMS;
+  Int_t _fadc_pedestal;
+  //
+  unsigned int _nn_fadc_point;
+  unsigned int _nn_PMT_channels;
+  //
+  Float_t _dt_arr_wf_tmpl;
 };
 
 #endif

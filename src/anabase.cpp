@@ -26,7 +26,7 @@
 
 using namespace std;
 
-anabase::anabase(TString fileList) : fChain(0) 
+anabase::anabase(TString fileList, Bool_t short_format_flag) : _short_format_flag(short_format_flag), fChain(0) 
 {
   ifstream indata;
   TString rootFileName;
@@ -46,7 +46,7 @@ anabase::anabase(TString fileList) : fChain(0)
   Init(theChain);
 }
 
-anabase::anabase(TString inFileName, Int_t keyID) : fChain(0) 
+anabase::anabase(TString inFileName, Int_t keyID, Bool_t short_format_flag) : _short_format_flag(short_format_flag), fChain(0) 
 {
   if(keyID == 1){
     ifstream indata;
@@ -59,6 +59,9 @@ anabase::anabase(TString inFileName, Int_t keyID) : fChain(0)
   else
     assert(0);
 }
+
+anabase::anabase(TString fileList) : anabase(fileList, false) {}
+anabase::anabase(TString inFileName, Int_t keyID) : anabase( inFileName, keyID, false) {}
 
 void anabase::tGraphInit(TGraph *gr[nChannels], TString grName, TString grTitle){
   Int_t i;
@@ -178,7 +181,8 @@ void anabase::Init(TTree *tree){
   fChain->SetBranchAddress("n_pixels", &n_pixels, &b_n_pixels);
   fChain->SetBranchAddress("pe_chID", pe_chID, &b_pe_chID);
   fChain->SetBranchAddress("pe_time", pe_time, &b_pe_time);
-  fChain->SetBranchAddress("wf", wf, &b_wf);
+  if(!_short_format_flag)
+    fChain->SetBranchAddress("wf", wf, &b_wf);
   //---------------------------------------------------
   Notify();
 }

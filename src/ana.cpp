@@ -113,7 +113,8 @@ void ana::generate_gif_for_event(TString pathPref){
   merge_gif.open(merge_gif_name.Data());
   //
   merge_gif<<"convert -delay 15 -loop 1000 ";
-  for(Int_t i = 20;i<(nn_fadc_point-20);i++){
+  //for(Int_t i = 20;i<(nn_fadc_point-20);i++){
+  for(Int_t i = 0;i<nn_fadc_point;i++){
     TString sipm_cam_name = "sipm_cam_";
     TString gif_name = ev_dir_name;
     gif_name += "/sipm_cam_";
@@ -130,7 +131,8 @@ void ana::generate_gif_for_event(TString pathPref){
       sipm_cam->SetBinContent(j+1,wf[j][i]);
     }
     merge_gif<<gif_name_short<<" ";
-    sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),"gamma",i,event_id,energy,xcore,ycore,ev_time,nphotons,n_pe,n_pixels);
+    //sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),"gamma",i,event_id,energy,xcore,ycore,ev_time,nphotons,n_pe,n_pixels);
+    sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),"proton",i,event_id,energy,xcore,ycore,ev_time,nphotons,n_pe,n_pixels);
     //
     delete sipm_cam;
   }
@@ -234,7 +236,7 @@ void ana::Loop(TString histOut){
     //
     h1_n_pe->Fill(n_pe);
     //////////////////
-    if(n_pe>10000){
+    if(n_pe>35000){
       //if(energy<0.05){
       generate_gif_for_event("./ev_");
     }

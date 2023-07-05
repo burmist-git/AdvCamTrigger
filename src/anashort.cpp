@@ -38,6 +38,7 @@ void anashort::Loop(TString histOut){
   Int_t fadc_sum_offset = 15;
   //Float_t fadc_amplitude = 8.25;
   Int_t fadc_MHz = 1024;
+  Int_t fadc_offset = 300;
   Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
   Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
   Float_t NGB_rate_in_MHz = 386.0;
@@ -46,7 +47,12 @@ void anashort::Loop(TString histOut){
   vector<vector<Int_t>> wfcam(nn_PMT_channels, vector<Int_t>(nn_fadc_point));
   //
   TRandom3 *rnd = new TRandom3(123123);
-  wfCamSim *wf = new wfCamSim( rnd, "Template_CTA_SiPM.txt", "spe.dat");
+  wfCamSim *wf = new wfCamSim( rnd, "Template_CTA_SiPM.txt", "spe.dat",
+			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz);
+  wf->print_wfCamSim_configure();
+  TGraph *gr_WF_tmpl_array = new TGraph();
+  gr_WF_tmpl_array->SetNameTitle("gr_WF_tmpl_array","gr_WF_tmpl_array");
+  wf->ger_gr_WF_tmpl_array(gr_WF_tmpl_array);
   //
   TH1D *h1_wf_ampl_ADC_test = new TH1D(); 
   h1_wf_ampl_ADC_test->SetNameTitle("h1_wf_ampl_ADC_test","h1_wf_ampl_ADC_test");
@@ -56,6 +62,8 @@ void anashort::Loop(TString histOut){
   TH1D *h1_nphotons = new TH1D("h1_nphotons","h1_nphotons",1000,0.0,10000);
   TH1D *h1_n_pe = new TH1D("h1_n_pe","h1_n_pe",1000,0.0,1000);
   TH1D *h1_n_pixels = new TH1D("h1_n_pixels","h1_n_pixels",1000,0.0,10000);
+  //
+  vector <TGraph*> gr_v;  
   //
   Long64_t nentries = fChain->GetEntriesFast();
   cout<<"nentries = "<<nentries<<endl;
@@ -89,21 +97,34 @@ void anashort::Loop(TString histOut){
     //
     if(n_pe<101){
       cout<<"n_pe "<<n_pe<<endl;
-      for(Int_t i = 0;i<n_pe;i++){
-	cout<<pe_chID[i]<<endl
-	    <<pe_time[i]<<endl;
-      }
+      //for(Int_t i = 0;i<n_pe;i++){
+      //cout<<pe_chID[i]<<endl
+      //    <<pe_time[i]<<endl;
+      //}
       //
       wf->simulate_cam_event(nn_fadc_point,
 			     nn_PMT_channels,
 			     wfcam,
-			     NGB_rate_in_MHz,
 			     ev_time,
 			     time_offset,
 			     n_pe,
 			     pe_chID,
 			     pe_time);
-      assert(0);
+      wf->generate_gif_for_event("ev_synthetic_", event_id, wfcam);
+      cout<<"wfcam.size() "<<wfcam.size()<<endl;
+      for(unsigned int i = 0; i<wfcam.size();i++){
+	TGraph *gr_wf = new TGraph();
+	TString gr_name = "gr_wf_";
+	gr_name += i;
+	gr_wf->SetNameTitle(gr_name.Data(),gr_name.Data());
+	for(unsigned int j = 0; j<wfcam.at(i).size();j++){
+	  gr_wf->SetPoint(j,j,wfcam.at(i).at(j));
+	}
+	gr_v.push_back(gr_wf);
+	//delete gr_wf;
+      }
+      //assert(0);
+      break;
     }
     //
   }
@@ -118,6 +139,10 @@ void anashort::Loop(TString histOut){
   else
     cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
   //
+  cout<<"gr_v.size() "<<gr_v.size()<<endl;
+  for(unsigned int i = 0; i<gr_v.size();i++)
+    gr_v.at(i)->Write();
+  //
   h1_nphotons->Write();
   h1_n_pe->Write();
   h1_n_pixels->Write();
@@ -128,6 +153,7 @@ void anashort::Loop(TString histOut){
   wf->get_h1_wf_ampl_ADC()->Write();
   //
   h1_wf_ampl_ADC_test->Write();
+  gr_WF_tmpl_array->Write();
   //
   rootFile->Close();
 }

@@ -30,9 +30,6 @@ obj/anashort.o: src/anashort.cpp src/anashort.hh obj/anabaseshort.o obj/sipmCame
 obj/anabase.o: src/anabase.cpp src/anabase.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anabase.o $<
 
-obj/anabaseshort.o: src/anabaseshort.cpp src/anabaseshort.hh
-	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anabaseshort.o $<
-
 obj/sipmCameraHist.o: src/sipmCameraHist.cpp src/sipmCameraHist.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
 

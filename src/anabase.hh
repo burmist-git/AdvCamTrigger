@@ -16,17 +16,24 @@ class TProfile;
 class anabase {
 
 public :
-  anabase(TString fileList);
+  anabase(TString fileList, Bool_t short_format_flag);
+  anabase(TString inFileName, Int_t keyID, Bool_t short_format_flag);
+  anabase(TString fileListm);
   anabase(TString inFileName, Int_t keyID);
   ~anabase();
-  Int_t GetEntry(Long64_t entry);
-  Long64_t LoadTree(Long64_t entry);
-  void Init(TTree *tree);
+  
+protected :
   void Loop(TString histOut);
+  Long64_t LoadTree(Long64_t entry);
+  
+private :
+  Bool_t _short_format_flag;
+  Int_t GetEntry(Long64_t entry);
+  void Init(TTree *tree);
   Bool_t Notify();
   void Show(Long64_t entry = -1);
   Int_t Cut(Long64_t entry);
-
+  
 protected :
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
   Int_t           fCurrent; //!current Tree number in a TChain
@@ -57,7 +64,7 @@ protected :
   ////////////////////////////////////  
   static const Int_t nChannels = 7987;
   static const Int_t nn_fadc_point = 75;
-  //  
+  //
   //---------------------------------------------------
   
   // List of branches

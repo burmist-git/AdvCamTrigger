@@ -24,3 +24,16 @@ runanashort
 hist_short_corsika_run307_no_nsb_cut.root
 spe_FADC_fast_sim.pdf
 spe_FADC_normal_sim.pdf
+ev_2818703/
+ev_3590000/
+ev_4171609/
+ev_4208001/
+ev_4558000/
+ev_5755006/
+ev_6443906/
+ev_7963405/
+ev_8175507/
+ev_9265006/
+ev_synthetic_27102/
+hist_corsika_run307_proton_no_nsb_cut.root
+wf_file_list_proton.list

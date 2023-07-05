@@ -146,12 +146,14 @@ void sipmCameraHist::Draw_cam( TString settings,
   c1->cd(1);
   gPad->SetRightMargin(0.12);
   gPad->SetLeftMargin(0.12);
-  gPad->SetTopMargin(0.1);
-  gPad->SetBottomMargin(0.15);
+  gPad->SetTopMargin(0.1); gPad->SetBottomMargin(0.15);
   //
   gPad->SetGridx();
   gPad->SetGridy();
-  gPad->SetLogz();
+  //gPad->SetLogz();
+  //
+  SetMaximum(500.0);
+  SetMinimum(300.0);
   //
   TH2F *frame = new TH2F( "h2", "h2", 40, -lx_camera/2.0-d_frame,lx_camera/2.0+d_frame,40, -ly_camera/2.0-d_frame,ly_camera/2.0+d_frame);
   frame->SetTitle("");
