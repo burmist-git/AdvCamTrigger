@@ -1,5 +1,3 @@
-//my
-#include "src/anashort.hh"
 
 //root
 #include "TROOT.h"
