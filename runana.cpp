@@ -1,5 +1,6 @@
 //my
 #include "src/ana.hh"
+#include "src/anashort.hh"
 
 //root
 #include "TROOT.h"
@@ -40,7 +41,22 @@ int main(int argc, char *argv[]){
     a.Loop(outRootFileF);
   }
   else if(argc == 4 && atoi(argv[1])==2){
-    // if else
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"rootFilesList : "<<rootFilesList<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+    anashort a(rootFilesList);
+    a.Loop(outRootFileF);
+  }
+  else if(argc == 4 && atoi(argv[1])==3){
+    TString inRootFiles = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"inRootFiles   : "<<inRootFiles<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+    anashort a( inRootFiles, atoi(argv[1]));
+    a.Loop(outRootFileF);
   }
   else{
     cout<<" --> ERROR in input arguments "<<endl
@@ -48,6 +64,12 @@ int main(int argc, char *argv[]){
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 1 (execution ID number)"<<endl
+      	<<"       [2] - in root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 2 (execution ID number) short file format"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 3 (execution ID number) short file format"<<endl
       	<<"       [2] - in root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
   }
