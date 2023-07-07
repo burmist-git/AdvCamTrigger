@@ -1,6 +1,7 @@
 //my
 #include "ana.hh"
 #include "sipmCameraHist.hh"
+#include "wfCamSim.hh"
 
 //root
 #include <TH2.h>
@@ -236,9 +237,10 @@ void ana::Loop(TString histOut){
     //
     h1_n_pe->Fill(n_pe);
     //////////////////
-    if(n_pe>35000){
+    if(n_pe>400000){
       //if(energy<0.05){
       generate_gif_for_event("./ev_");
+      cout<<"jentry = "<<(Int_t)jentry<<endl;
     }
     //////////////////
     for(Int_t j = 0;j<nChannels;j++)
@@ -509,4 +511,98 @@ void ana::print_ev_info(Long64_t jentry, Int_t max_pix_info, Int_t chid){
   for(Int_t i = 0;i<nn_fadc_point;i++)
     cout<<wf[chid][i]<<" ";
   cout<<endl;
+}
+
+void ana::save_wf_for_event(TString histOut, Long64_t evID){
+  ////////////////////////////
+  //
+  const unsigned int nn_PMT_channels = nChannels;
+  Int_t fadc_sum_offset = 15;
+  //Float_t fadc_amplitude = 8.25;
+  Int_t fadc_MHz = 1024;
+  Int_t fadc_offset = 300;
+  Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
+  Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
+  Float_t NGB_rate_in_MHz = 386.0;
+  //
+  //auto wfcam = new Int_t [nn_PMT_channels][nn_fadc_point];
+  vector<vector<Int_t>> wfcam(nn_PMT_channels, vector<Int_t>(nn_fadc_point));
+  //
+  TRandom3 *rnd = new TRandom3(123123);
+  wfCamSim *wfc = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
+			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz);
+  wfc->print_wfCamSim_configure();
+  //
+  vector <TGraph*> gr_v;
+  ////////////////////////////
+  //
+  ////////////////////////////
+  TH1D *h1_chID = new TH1D("h1_chID","h1_chID",nChannels,-0.5,(nChannels-1)+0.5);
+  ////////////////////////////
+  Long64_t nbytes = 0, nb = 0;
+  LoadTree(evID);
+  nb = fChain->GetEntry(evID);
+  nbytes += nb;
+  ////////////////////////////
+  for(Int_t j = 0;j<n_pe;j++){
+    h1_chID->Fill(pe_chID[j]);
+  }
+  ////////////////////////////
+  wfc->simulate_cam_event(nn_fadc_point,
+			  nn_PMT_channels,
+			  wfcam,
+			  ev_time,
+			  time_offset,
+			  n_pe,
+			  pe_chID,
+			  pe_time);
+  ////////////////////////////
+  vector<TGraph*> v_gr;
+  vector<TGraph*> v_gr_sim;
+  //
+  for(Int_t j = 0;j<nChannels;j++){
+    //
+    TString gr_name_title = "gr_ch_";
+    gr_name_title += j;
+    TGraph *gr = new TGraph();
+    gr->SetNameTitle(gr_name_title.Data());
+    //
+    TString gr_sim_name_title = "gr_sim_ch_";
+    gr_sim_name_title += j;
+    TGraph *gr_sim = new TGraph();
+    gr_sim->SetNameTitle(gr_sim_name_title.Data());
+    //
+    for(Int_t i = 0;i<nn_fadc_point;i++){
+      gr->SetPoint(i,i,wf[j][i]);
+      gr_sim->SetPoint(i,i,wfcam.at(j).at(i));
+    }
+    v_gr.push_back(gr);
+    v_gr_sim.push_back(gr_sim);
+  }
+  //
+  //TString gif_name_pref = "./ev_";
+  //gif_name_pref += (Int_t)evID;
+  //gif_name_pref += "_";
+  //generate_gif_for_event(gif_name_pref.Data());
+  ////////////////////////////
+  //--------------------------
+  TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
+  rootFile->cd();
+  if(rootFile->IsZombie()){
+    cout<<"  ERROR ---> file "<<histOut.Data()<<" is zombi"<<endl;
+    assert(0);
+  }
+  else{
+    cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
+  }
+  //--------------------------
+  ////////////////////////////
+  for(unsigned int j = 0; j<nChannels; j++){
+    v_gr.at(j)->Write();
+    v_gr_sim.at(j)->Write();
+  }
+  ////////////////////////////
+  h1_chID->Write();
+  //
+  rootFile->Close();
 }

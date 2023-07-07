@@ -58,6 +58,17 @@ int main(int argc, char *argv[]){
     anashort a( inRootFiles, atoi(argv[1]));
     a.Loop(outRootFileF);
   }
+  else if(argc == 5 && atoi(argv[1])==4){
+    TString inRootFiles = argv[2];
+    TString outRootFileF = argv[3];
+    Long64_t evID = (Long64_t)atoi(argv[4]);
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"inRootFiles   : "<<inRootFiles<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl
+      	<<"evID          : "<<evID<<endl;
+    ana a(inRootFiles, 1);
+    a.save_wf_for_event(outRootFileF, evID);
+  }
   else{
     cout<<" --> ERROR in input arguments "<<endl
 	<<" runID [1] = 0 (execution ID number)"<<endl
@@ -72,6 +83,10 @@ int main(int argc, char *argv[]){
     cout<<" runID [1] = 3 (execution ID number) short file format"<<endl
       	<<"       [2] - in root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 4 (execution ID number) short file format"<<endl
+      	<<"       [2] - in root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl
+    	<<"       [4] - evID"<<endl;
   }
   return 0;
 }

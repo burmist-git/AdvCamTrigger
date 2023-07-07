@@ -17,12 +17,12 @@ class TH1D;
 class wfCamSim {
 
 public :
-  wfCamSim( TRandom3 *rnd, TString wf_tamplete, TString spe_dat,
-	    const unsigned int nn_fadc_point,
-	    const unsigned int nn_PMT_channels,
-	    const Float_t fadc_offset, const Float_t fadc_sample_in_ns, const Float_t NGB_rate_in_MHz);
+  //
+  wfCamSim(TRandom3 *rnd, TString wf_tamplete, TString spe_dat,
+	   const unsigned int nn_fadc_point,
+	   const unsigned int nn_PMT_channels,
+	   const Float_t fadc_offset, const Float_t fadc_sample_in_ns, const Float_t NGB_rate_in_MHz);
   ~wfCamSim();
-
   //
   void getWF_ampl(TString name, Double_t &Ampl_Prompt_max, Double_t &Prompt_max);
   void getWF_tmpl(TString name);
