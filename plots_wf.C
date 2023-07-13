@@ -17,12 +17,19 @@ Int_t plots_wf(){
 
   TString fileN;
   TString objectName;
-  fileN = "./hist_corsika_run307_gamma_no_nsb_cut.root";
+  //fileN = "./hist_corsika_run307_gamma_no_nsb_cut.root";
+  fileN = "./hist_corsika_run307.root";
 
   TFile *f1 = new TFile(fileN.Data());
 
-  TGraph *gr = (TGraph*)f1->Get("gr_ch_3336");
-  TGraph *gr_sim = (TGraph*)f1->Get("gr_sim_ch_3336");  
+  //TGraph *gr = (TGraph*)f1->Get("gr_ch_1402");
+  //TGraph *gr_sim = (TGraph*)f1->Get("gr_sim_ch_1402");  
+  //TGraph *gr = (TGraph*)f1->Get("gr_ch_4049");
+  //TGraph *gr_sim = (TGraph*)f1->Get("gr_sim_ch_4049");  
+  //TGraph *gr = (TGraph*)f1->Get("gr_ch_861");
+  //TGraph *gr_sim = (TGraph*)f1->Get("gr_sim_ch_861");  
+  TGraph *gr = (TGraph*)f1->Get("gr_ch_1250");
+  TGraph *gr_sim = (TGraph*)f1->Get("gr_sim_ch_1250");  
 
   
   TCanvas *c1 = new TCanvas("c1",fileN.Data(),10,10,600,600);

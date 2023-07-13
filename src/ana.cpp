@@ -210,10 +210,12 @@ void ana::Loop(TString histOut){
   //
   TH1D *h1_pe_time_shift = new TH1D("h1_pe_time_shift","h1_pe_time_shift",1000,-1.0,nn_fadc_point);
   TH1D *h1_pe_time_shift_cut_0pe = new TH1D("h1_pe_time_shift_cut_0pe","h1_pe_time_shift_cut_0pe",1000,-1.0,nn_fadc_point);
-  TH1D *h1_pe_time_shift_cut_xpe = new TH1D("h1_pe_time_shift_cut_xpe","h1_pe_time_shift_cut_xpe",1000,-1.0,nn_fadc_point);
+  //TH1D *h1_pe_time_shift_cut_xpe = new TH1D("h1_pe_time_shift_cut_xpe","h1_pe_time_shift_cut_xpe",1000,-1.0,nn_fadc_point);
   TH1D *h1_pe_time_shift_cut_1pe = new TH1D("h1_pe_time_shift_cut_1pe","h1_pe_time_shift_cut_1pe",1000,-1.0,nn_fadc_point);  
   TH1D *h1_pe_time_shift_cut_2pe = new TH1D("h1_pe_time_shift_cut_2pe","h1_pe_time_shift_cut_2pe",1000,-1.0,nn_fadc_point);
   TH1D *h1_pe_time_shift_cut_3pe = new TH1D("h1_pe_time_shift_cut_3pe","h1_pe_time_shift_cut_3pe",1000,-1.0,nn_fadc_point);  
+  //
+  TH1D *h1_n_pe_vs_evID = new TH1D("h1_n_pe_vs_evID","h1_n_pe_vs_evID",5001,-0.5,5000.5);
   //
   TH1D *h1_d_v = new TH1D("h1_d_v","h1_d_v",80, -40.0,40.0);
   TH1D *h1_v = new TH1D("h1_v","h1_v",400, -200.0,200.0);  
@@ -236,7 +238,11 @@ void ana::Loop(TString histOut){
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     //
     h1_n_pe->Fill(n_pe);
+    h1_n_pe_vs_evID->Fill((Int_t)jentry,n_pe);
     //////////////////
+    if(n_pe>5 && n_pe<25){
+      print_ev_info(jentry);
+    }
     if(n_pe>400000){
       //if(energy<0.05){
       generate_gif_for_event("./ev_");
@@ -478,7 +484,13 @@ void ana::Loop(TString histOut){
   h1_d_v->Write();
   h1_v->Write();
   //
+  h1_n_pe_vs_evID->Write();
+  //
   rootFile->Close();
+}
+
+void ana::print_ev_info(Long64_t jentry){
+  print_ev_info(jentry, 0, -1);
 }
 
 void ana::print_ev_info(Long64_t jentry, Int_t max_pix_info, Int_t chid){
@@ -508,8 +520,10 @@ void ana::print_ev_info(Long64_t jentry, Int_t max_pix_info, Int_t chid){
     cout<<pe_time[i]<<" ";
   cout<<endl;
   cout<<"wf      : ";
-  for(Int_t i = 0;i<nn_fadc_point;i++)
-    cout<<wf[chid][i]<<" ";
+
+  if(chid>=0 && chid<nChannels)
+    for(Int_t i = 0;i<nn_fadc_point;i++)
+      cout<<wf[chid][i]<<" ";
   cout<<endl;
 }
 
@@ -521,9 +535,12 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   //Float_t fadc_amplitude = 8.25;
   Int_t fadc_MHz = 1024;
   Int_t fadc_offset = 300;
+  //Int_t fadc_offset = 9;
+  //Int_t fadc_offset = 0;
   Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
   Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
-  Float_t NGB_rate_in_MHz = 386.0;
+  //Float_t NGB_rate_in_MHz = 386.0;
+  Float_t NGB_rate_in_MHz = 0.001;
   //
   //auto wfcam = new Int_t [nn_PMT_channels][nn_fadc_point];
   vector<vector<Int_t>> wfcam(nn_PMT_channels, vector<Int_t>(nn_fadc_point));
@@ -532,20 +549,27 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   wfCamSim *wfc = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
 			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz);
   wfc->print_wfCamSim_configure();
+  TGraph *gr_WF_tmpl_array = new TGraph();
+  gr_WF_tmpl_array->SetNameTitle("gr_WF_tmpl_array","gr_WF_tmpl_array");
+  wfc->get_gr_WF_tmpl_array(gr_WF_tmpl_array);
+  //assert(0);
   //
   vector <TGraph*> gr_v;
   ////////////////////////////
   //
   ////////////////////////////
   TH1D *h1_chID = new TH1D("h1_chID","h1_chID",nChannels,-0.5,(nChannels-1)+0.5);
+  TH1D *h1_wf_charge_sim = new TH1D("h1_wf_charge_sim","h1_wf_charge_sim",10000.0,0.0,10000);
   ////////////////////////////
   Long64_t nbytes = 0, nb = 0;
   LoadTree(evID);
   nb = fChain->GetEntry(evID);
   nbytes += nb;
   ////////////////////////////
+  //cout<<"n_pe "<<n_pe<<endl;
   for(Int_t j = 0;j<n_pe;j++){
     h1_chID->Fill(pe_chID[j]);
+    //cout<<"pe_chID[j] = "<<pe_chID[j]<<endl;
   }
   ////////////////////////////
   wfc->simulate_cam_event(nn_fadc_point,
@@ -578,12 +602,31 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
     }
     v_gr.push_back(gr);
     v_gr_sim.push_back(gr_sim);
+    //
+    h1_wf_charge_sim->Fill(wfCamSim::get_charge(wfcam.at(j),fadc_offset));
+    //
   }
   //
-  //TString gif_name_pref = "./ev_";
-  //gif_name_pref += (Int_t)evID;
-  //gif_name_pref += "_";
+  TString gif_name_pref = "./ev_";
+  gif_name_pref += (Int_t)evID;
+  gif_name_pref += "_";
   //generate_gif_for_event(gif_name_pref.Data());
+  //
+  TString gif_sim_name_pref = "./ev_synthetic_";
+  gif_sim_name_pref += (Int_t)evID;
+  gif_sim_name_pref += "_";
+  wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam);
+  //TString particle_type,
+  //Int_t wf_time_id,
+  //Int_t   event_id,
+  //Float_t energy,
+  //Float_t xcore,
+  //Float_t ycore,
+  //Float_t ev_time,
+  //Int_t nphotons,
+  //Int_t n_pe,
+  //Int_t n_pixels);
+  //
   ////////////////////////////
   //--------------------------
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
@@ -597,12 +640,41 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   }
   //--------------------------
   ////////////////////////////
+  TH1D *h1_NGB_adc = new TH1D("h1_NGB_adc","h1_NGB_adc",400,200,400);
+  TH1D *h1_NGB_adc_sim = new TH1D("h1_NGB_adc_sim","h1_NGB_adc_sim",400,200,400); 
+  TH1D *h1_NGB_dadc = new TH1D("h1_NGB_dadc","h1_NGB_dadc",400,-100,100);
+  TH1D *h1_NGB_dadc_sim = new TH1D("h1_NGB_dadc_sim","h1_NGB_dadc_sim",400,-100,100); 
   for(unsigned int j = 0; j<nChannels; j++){
+    //for(unsigned int j = 0; j<100; j++){
     v_gr.at(j)->Write();
     v_gr_sim.at(j)->Write();
+    for(unsigned int i = 0; i<wfcam.at(j).size(); i++){
+      //
+      h1_NGB_adc->Fill(wf[j][i]);
+      h1_NGB_adc_sim->Fill(wfcam.at(j).at(i));
+      //
+      if(i>0){
+	h1_NGB_dadc->Fill(wf[j][i] - wf[j][i-1]);
+	h1_NGB_dadc_sim->Fill(wfcam.at(j).at(i) - wfcam.at(j).at(i-1));
+      }      
+    }
   }
   ////////////////////////////
   h1_chID->Write();
+  gr_WF_tmpl_array->Write();
+  wfc->getTemplate()->Write();
+  wfc->get_gr_wf_ampl()->Write();
+  wfc->get_h1_wf_ampl_ADC()->Write();
+  wfc->get_h1_wf_ampl()->Write();
+  wfc->get_h1_adc_NGB_pedestal()->Write();
+  wfc->get_h1_dadc_NGB_pedestal()->Write();
+  //
+  h1_NGB_adc->Write();
+  h1_NGB_adc_sim->Write();
+  h1_NGB_dadc->Write();
+  h1_NGB_dadc_sim->Write();
+  //
+  h1_wf_charge_sim->Write();
   //
   rootFile->Close();
 }

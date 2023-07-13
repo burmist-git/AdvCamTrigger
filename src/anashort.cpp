@@ -52,7 +52,7 @@ void anashort::Loop(TString histOut){
   wf->print_wfCamSim_configure();
   TGraph *gr_WF_tmpl_array = new TGraph();
   gr_WF_tmpl_array->SetNameTitle("gr_WF_tmpl_array","gr_WF_tmpl_array");
-  wf->ger_gr_WF_tmpl_array(gr_WF_tmpl_array);
+  wf->get_gr_WF_tmpl_array(gr_WF_tmpl_array);
   //
   TH1D *h1_wf_ampl_ADC_test = new TH1D(); 
   h1_wf_ampl_ADC_test->SetNameTitle("h1_wf_ampl_ADC_test","h1_wf_ampl_ADC_test");

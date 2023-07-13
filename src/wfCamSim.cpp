@@ -8,6 +8,7 @@
 #include "TGraph.h"
 #include "TMath.h"
 #include "TH1D.h"
+#include "TColor.h"
 
 //C, C++
 #include <iostream>
@@ -35,8 +36,10 @@ wfCamSim::wfCamSim( TRandom3 *rnd, TString wf_tamplete, TString spe_dat,
   _wf_tamplete = wf_tamplete;
   _spe_dat = spe_dat;
   //
-  _fadc_electronic_noise_RMS = 3.94;
+  //_fadc_electronic_noise_RMS = 3.94;
+  _fadc_electronic_noise_RMS = 0.01;
   _fadc_pedestal = 300;
+  //_fadc_pedestal = 0;
   //
   _wf_tmpl_t_start =  0.0; //ns
   _wf_tmpl_t_stop  = 10.0; //ns
@@ -62,7 +65,11 @@ wfCamSim::wfCamSim( TRandom3 *rnd, TString wf_tamplete, TString spe_dat,
   getWF_tmpl(wf_tamplete);
   generateWF_tmpl_array();
   setupe_ADC_ampl();
-  calculate_pedestal();
+  //
+  _h1_adc_NGB_pedestal = new TH1D("_h1_adc_NGB_pedestal","_h1_adc_NGB_pedestal",200,-100,100);
+  _h1_dadc_NGB_pedestal = new TH1D("_h1_dadc_NGB_pedestal","_h1_dadc_NGB_pedestal",200,-100,100);
+  calculate_pedestal(_h1_adc_NGB_pedestal,_h1_dadc_NGB_pedestal);
+  //calculate_pedestal();
   //
 }
 
@@ -91,7 +98,7 @@ void wfCamSim::generateWF_tmpl_array(){
   }
 }
 
-void wfCamSim::ger_gr_WF_tmpl_array(TGraph *gr){
+void wfCamSim::get_gr_WF_tmpl_array(TGraph *gr){
   for(unsigned int i = 0;i<_n_arr_wf_tmpl;i++)
     gr->SetPoint( i, (_wf_tmpl_t_left + _dt_arr_wf_tmpl*i), _arr_wf_tmpl[i]);
 }
@@ -149,16 +156,6 @@ void wfCamSim::test_single_pe_amplitude_from_hist_generator( TH1D *h1, Int_t n_p
     h1->Fill(((Double_t)generate_single_pe_amplitude_from_hist()),1.0/n_pe_to_sim);
 }
 
-void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
-				  const Int_t nn_PMT_channels,
-				  std::vector<std::vector<int>>& wf){
-  for( unsigned int i = 0; i < wf.size(); i++ ){
-    generate_zero_wf(wf.at(i),(_fadc_offset-_NGB_pedestal_mean));
-    generateNGB(wf.at(i));
-    generate_electronic_noise(wf.at(i));
-  }
-}
-
 void wfCamSim::generateNGB(std::vector<int> &wf){
   Int_t n_pe = _rnd->Poisson(_n_NGB_pe_average_in_window);
   for( Int_t j = 0; j < n_pe; j++)
@@ -175,26 +172,41 @@ void wfCamSim::generate_zero_wf(std::vector<int> &wf, Int_t pedestal){
 }
   
 void wfCamSim::generate_wf(std::vector<int> &wf, Float_t pe_time){
-  unsigned int i0 = (pe_time - _wf_tmpl_t_left)/_dt_arr_wf_tmpl;
-  for( unsigned int i = 0; i < wf.size(); i++)
-    wf.at(i) += (_arr_wf_tmpl[i0+i*100]*generate_single_pe_amplitude());
+  unsigned int i0 = (-pe_time + 1.0 - _wf_tmpl_t_left)/_dt_arr_wf_tmpl;
+  Int_t ampl_single_pe = generate_single_pe_amplitude();
+  for( unsigned int i = 0; i < wf.size(); i++){
+    wf.at(i) += _arr_wf_tmpl[i0+i*100]*ampl_single_pe;
+    if(wf.at(i) > 16384)
+      wf.at(i) = 16384;
+  }
 }
-  
+
+void wfCamSim::generate_wf_from_gr(std::vector<int> &wf, Float_t pe_time){
+  Int_t ampl_single_pe = generate_single_pe_amplitude();
+  for( unsigned int i = 0; i < wf.size(); i++){
+    wf.at(i) += (Int_t)(_gr_wf_tmpl->Eval(pe_time-i*_fadc_sample_in_ns+5)*ampl_single_pe);
+    if(wf.at(i)>16384)
+      wf.at(i) = 16384;
+  }
+}
+
 void wfCamSim::generate_electronic_noise(std::vector<int> &wf){
   for( unsigned int i = 0; i < wf.size(); i++)
     wf.at(i) += (Int_t)_rnd->Gaus(0.0,_fadc_electronic_noise_RMS);
 }
 
 void wfCamSim::calculate_pedestal(){
+  calculate_pedestal(NULL, NULL);
+}
+
+void wfCamSim::calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc){
   std::vector<std::vector<Int_t>> wf_pedestal(_nn_PMT_channels, std::vector<Int_t>(_nn_fadc_point));
   for( unsigned int i = 0; i < wf_pedestal.size(); i++){
     generate_zero_wf(wf_pedestal.at(i));
     generateNGB(wf_pedestal.at(i));
   }
-  calculate_camera_ADC_mean_and_std( wf_pedestal, _NGB_pedestal_mean, _NGB_pedestal_std);
-}
+  calculate_camera_ADC_mean_and_std( wf_pedestal, _NGB_pedestal_mean, _NGB_pedestal_std, h1_adc, h1_dadc);
 
-void wfCamSim::test_calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc){
 }
   
 void wfCamSim::calculate_camera_ADC_mean_and_std(const std::vector<std::vector<Int_t>> &wf, Float_t &meanv, Float_t &stdv){
@@ -238,7 +250,29 @@ void wfCamSim::print_wfCamSim_configure(){
     	   <<"_wf_tmpl_t_stop             "<<_wf_tmpl_t_stop<<std::endl
     	   <<"_wf_tmpl_t_left             "<<_wf_tmpl_t_left<<std::endl
   	   <<"_NGB_pedestal_mean          "<<_NGB_pedestal_mean<<std::endl
-    	   <<"_NGB_pedestal_std           "<<_NGB_pedestal_std<<std::endl;  
+    	   <<"_NGB_pedestal_std           "<<_NGB_pedestal_std<<std::endl;
+}
+
+Int_t wfCamSim::get_charge(const std::vector<int>& wf, Int_t offset){
+  Int_t charge_wf = 0;
+  for( unsigned int i = 0; i < wf.size(); i++ )
+    charge_wf += wf.at(i) - offset;
+  return charge_wf;
+}
+
+Int_t wfCamSim::get_charge(const std::vector<int>& wf){
+  return get_charge(wf, _fadc_offset);
+}
+
+void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
+				  const Int_t nn_PMT_channels,
+				  std::vector<std::vector<int>>& wf){
+  for( unsigned int i = 0; i < wf.size(); i++ ){
+    generate_zero_wf(wf.at(i),(_fadc_offset-_NGB_pedestal_mean));
+    //generate_zero_wf(wf.at(i),_fadc_offset);
+    generateNGB(wf.at(i));
+    generate_electronic_noise(wf.at(i));
+  }
 }
 
 void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
@@ -250,11 +284,6 @@ void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
 				  const Int_t *pe_chID,
 				  const Float_t *pe_time){
   simulate_cam_event( nn_fadc_point, nn_PMT_channels, wf); 
-  //for(Int_t i = 0;i<n_pe;i++){
-  //std::cout<<std::setw(20)<<i
-  //	     <<std::setw(20)<<pe_chID[i]
-  //	     <<std::setw(20)<<pe_time[i]<<std::endl;
-  //}
   for(Int_t i = 0;i<n_pe;i++)
     if(check_pe_chID(pe_chID[i]))
       generate_wf(wf.at((unsigned int)pe_chID[i]), pe_time[i] - ev_time + time_offset);
@@ -410,6 +439,9 @@ Double_t wfCamSim::generate_wf_ampl_from_file(){
 
 void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id, const std::vector<std::vector<Int_t>> &wf){
   //
+  //gStyle->SetPalette(kCherry);
+  //TColor::InvertPalette();
+  //
   TString ev_dir_name = pathPref;
   ev_dir_name += event_id; 
   mkdir(ev_dir_name.Data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -430,16 +462,17 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id, const st
     gif_name += "/sipm_cam_";
     gif_name += i;
     gif_name += ".gif";
+    //gif_name += ".pdf";
     TString gif_name_short = "sipm_cam_";
     gif_name_short += i;
     gif_name_short += ".gif";
+    //gif_name_short += ".pdf";
     sipm_cam_name += i;
-    sipmCameraHist *sipm_cam = new sipmCameraHist(sipm_cam_name.Data(),sipm_cam_name.Data(),"pixel_mapping.csv",-10);
-    sipm_cam->SetMinimum(0.0);
-    sipm_cam->SetMaximum(TMath::Power(2,14));
-    for(Int_t j = 0;j<nChannels;j++){
+    sipmCameraHist *sipm_cam = new sipmCameraHist(sipm_cam_name.Data(),sipm_cam_name.Data(),"pixel_mapping.csv",0);
+    //sipm_cam->SetMinimum(0.0);
+    //sipm_cam->SetMaximum(TMath::Power(2,14));
+    for(Int_t j = 0;j<nChannels;j++)
       sipm_cam->SetBinContent(j+1,wf.at(j).at(i));
-    }
     merge_gif<<gif_name_short<<" ";
     //sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),"gamma",i,event_id,energy,xcore,ycore,ev_time,nphotons,n_pe,n_pixels);
     //sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),"proton",i,event_id,energy,xcore,ycore,ev_time,nphotons,n_pe,n_pixels);

@@ -34,13 +34,16 @@
 #include <TAxis.h>
 #include <TVector2.h>
 #include <TImage.h>
+#include <TColor.h>
 
 using namespace std;
 
-sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg) : TH2Poly(), _rot_alpha_deg(rot_alpha_deg)
+sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg, TH1D *h1_distance_between_pixels) : TH2Poly(), _rot_alpha_deg(rot_alpha_deg)
 {
   //
+  //
   _pixel_size = 0.02329999953508377;
+  _pixel_pitch = 0.024300;
   //
   load_mapping( mapping_csv_file);
   //
@@ -52,6 +55,16 @@ sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* 
   //
   for(unsigned int i = 0;i<_pixel_vec.size();i++)
     AddBin(_pixel_vec.at(0).n,_pixel_vec.at(i).xp,_pixel_vec.at(i).yp);
+  //
+  //for(unsigned int i = 0;i<1;i++)
+  for(unsigned int i = 0;i<_pixel_vec.size();i++) 
+    _pixel_vec.at(i).find_pixel_neighbors(_pixel_vec,_pixel_pitch, h1_distance_between_pixels);
+  for(unsigned int i = 0;i<_pixel_vec.size();i++)
+    _pixel_vec.at(i).build_pixel_super_flower(_pixel_vec);
+}
+
+sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg) : sipmCameraHist(name, title, mapping_csv_file, rot_alpha_deg, NULL)
+{
 }
 
 void sipmCameraHist::load_mapping(const char* mapping_csv_file){
@@ -130,13 +143,20 @@ void sipmCameraHist::Draw_cam( TString settings,
 			       Int_t n_pe,
 			       Int_t n_pixels){
   //
-  Double_t lx_camera = 2.5;
-  Double_t ly_camera = 2.5;
-  //Double_t lx_camera = 0.5;
-  //Double_t ly_camera = 0.5;
+  //Double_t lx_camera = 2.5;
+  //Double_t ly_camera = 2.5;
+  Double_t lx_camera = 0.5;
+  Double_t ly_camera = 0.5;
   Double_t d_frame = 0.1;
   //
-  gStyle->SetPalette(kRainBow);
+  //gStyle->SetPalette(kRainBow);
+  //gStyle->SetPalette(kCool);
+  //gStyle->SetPalette(kIsland);
+  //gStyle->SetPalette(kCherry);
+  //TColor::InvertPalette();
+  //
+  gStyle->SetPalette(kInvertedDarkBodyRadiator);
+  //
   gStyle->SetOptStat(kFALSE);
   SetTitle("");
   SetName("");
@@ -152,8 +172,11 @@ void sipmCameraHist::Draw_cam( TString settings,
   gPad->SetGridy();
   //gPad->SetLogz();
   //
-  SetMaximum(500.0);
-  SetMinimum(300.0);
+  //SetMaximum(500.0);
+  //SetMinimum(300.0);
+  //SetMinimum(280.0);
+  //SetMinimum(299.0);
+  //SetMaximum(308.0);
   //
   TH2F *frame = new TH2F( "h2", "h2", 40, -lx_camera/2.0-d_frame,lx_camera/2.0+d_frame,40, -ly_camera/2.0-d_frame,ly_camera/2.0+d_frame);
   frame->SetTitle("");
@@ -268,14 +291,178 @@ void sipmCameraHist::test03(){
   Draw_cam("","sipmCameraHist_test03.pdf");
 }
 
+void sipmCameraHist::test04(){
+  for(unsigned int i = 0;i<10;i++){
+      SetBinContent(i+1,i+1);
+  }
+  SetMinimum(1.0);
+  Draw_cam("text","sipmCameraHist_test04.pdf");
+}
+
+void sipmCameraHist::test05(){
+  for(unsigned int i = 0;i<10;i++){
+    SetBinContent(i+1,_pixel_vec.at(i).pixel_id);
+  }
+  SetMinimum(1.0);
+  Draw_cam("text","sipmCameraHist_test05.pdf");
+}
+
 void sipmCameraHist::test_drawer_id(){
   for(unsigned int i = 0;i<(unsigned int)GetNcells();i++){
     if(i<_pixel_vec.size()){
-      if(_pixel_vec.at(i).drawer_id < 1000)
-	SetBinContent(i+1,(_pixel_vec.at(i).drawer_id+1)%10+1);
-      else
-	SetBinContent(i+1,0);
+      //if(_pixel_vec.at(i).drawer_id < 1000)
+      SetBinContent(i+1,(_pixel_vec.at(i).drawer_id+1)%10+1);
+      //else
+      //SetBinContent(i+1,0);
     }
   }
+  SetMaximum(20.0);
   Draw_cam("ZCOLOR","sipmCameraHist_test_drawer_id.pdf");
+}
+
+void sipmCameraHist::test_pixel_neighbors_id(){
+  test_pixel_neighbors_id(0);
+}
+
+//pix_id : [0 , _n_pixels)
+void sipmCameraHist::test_pixel_neighbors_id(Int_t pix_id){
+  if( (pix_id < 0) || ((unsigned int)pix_id > _n_pixels)){
+    std::cout<<" ERROR --> (pix_id < 0) || (pix_id > _n_pixels)"<<std::endl
+	     <<"                            pix_id = "<<pix_id<<std::endl;
+    assert(0);
+  }
+  //
+  SetBinContent(pix_id+1,20);
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    if(_pixel_vec.at(i).pixel_id == pix_id){
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors.at(j).pixel_id+1,10);
+    }
+    //
+  }
+  //    
+  SetMaximum(20.0);
+  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_neighbors_id.pdf");
+}
+
+void sipmCameraHist::test_pixel_neighbors_second_id(){
+  test_pixel_neighbors_second_id(0);
+}
+  
+//pix_id : [0 , _n_pixels)
+void sipmCameraHist::test_pixel_neighbors_second_id(Int_t pix_id){
+  if( (pix_id < 0) || ((unsigned int)pix_id > _n_pixels)){
+    std::cout<<" ERROR --> (pix_id < 0) || (pix_id > _n_pixels)"<<std::endl
+	     <<"                            pix_id = "<<pix_id<<std::endl;
+    assert(0);
+  }
+  //
+  SetBinContent(pix_id+1,20);
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    if(_pixel_vec.at(i).pixel_id == pix_id){
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors.at(j).pixel_id+1,10);
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors_second.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors_second.at(j).pixel_id+1,5);
+    }
+    //
+  }
+  //    
+  SetMaximum(20.0);
+  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_neighbors_second_id.pdf");
+}
+
+void sipmCameraHist::test_pixel_neighbors_id(Int_t npixels_n,Int_t *pix_id){
+  for(Int_t i = 0;i<npixels_n;i++)
+    test_pixel_neighbors_id(pix_id[i]);
+}
+
+void sipmCameraHist::test_pixel_neighbors_second_id(Int_t npixels_n,Int_t *pix_id){
+  for(Int_t i = 0;i<npixels_n;i++)
+    test_pixel_neighbors_second_id(pix_id[i]);
+}
+
+void sipmCameraHist::test_pixel_neighbors_third_id(){
+  test_pixel_neighbors_third_id(0);
+}
+  
+//pix_id : [0 , _n_pixels)
+void sipmCameraHist::test_pixel_neighbors_third_id(Int_t pix_id){
+  if( (pix_id < 0) || ((unsigned int)pix_id > _n_pixels)){
+    std::cout<<" ERROR --> (pix_id < 0) || (pix_id > _n_pixels)"<<std::endl
+	     <<"                            pix_id = "<<pix_id<<std::endl;
+    assert(0);
+  }
+  //
+  SetBinContent(pix_id+1,30);
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    if(_pixel_vec.at(i).pixel_id == pix_id){
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors.at(j).pixel_id+1,20);
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors_second.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors_second.at(j).pixel_id+1,10);
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors_third.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors_third.at(j).pixel_id+1,5);
+    }
+    //
+  }
+  //    
+  SetMaximum(30.0);
+  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_neighbors_third_id.pdf");
+}
+
+void sipmCameraHist::test_pixel_neighbors_third_id(Int_t npixels_n,Int_t *pix_id){
+  for(Int_t i = 0;i<npixels_n;i++)
+    test_pixel_neighbors_third_id(pix_id[i]);
+}
+
+void sipmCameraHist::test_pixel_super_flower(){
+  test_pixel_super_flower(0);
+}
+  
+//pix_id : [0 , _n_pixels)
+void sipmCameraHist::test_pixel_super_flower(Int_t pix_id){
+  if( (pix_id < 0) || ((unsigned int)pix_id > _n_pixels)){
+    std::cout<<" ERROR --> (pix_id < 0) || (pix_id > _n_pixels)"<<std::endl
+	     <<"                            pix_id = "<<pix_id<<std::endl;
+    assert(0);
+  }
+  //
+  SetBinContent(pix_id+1,20);
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    if(_pixel_vec.at(i).pixel_id == pix_id){
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_super_flower.size();j++){
+	SetBinContent(_pixel_vec.at(i).v_pixel_super_flower.at(j).pixel_id+1,
+		      (GetBinContent(_pixel_vec.at(i).v_pixel_super_flower.at(j).pixel_id+1)+10));
+      }
+    }
+  }
+  //    
+  SetMaximum(0.0);
+  SetMaximum(20.0);
+  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_super_flower_id.pdf");
+}
+
+void sipmCameraHist::test_pixel_super_flower(Int_t npixels_n,Int_t *pix_id){
+  for(Int_t i = 0;i<npixels_n;i++)
+    test_pixel_super_flower(pix_id[i]);
+}
+
+void sipmCameraHist::test_pixel_neighbors_bubbleSort(Int_t pix_id){
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    if(_pixel_vec.at(i).pixel_id == pix_id){
+      if(_pixel_vec.at(i).v_pixel_neighbors_third.size()>0){
+	_pixel_vec.at(i).v_pixel_neighbors_third.at(0).print_info_header();
+	for(unsigned int j = 0; j < _pixel_vec.at(i).v_pixel_neighbors_third.size(); j++)
+	  _pixel_vec.at(i).v_pixel_neighbors_third.at(j).print_info();
+	//
+	pixel_info::bubbleSort(_pixel_vec.at(i).v_pixel_neighbors_third);
+	//
+	_pixel_vec.at(i).v_pixel_neighbors_third.at(0).print_info_header();
+	for(unsigned int j = 0; j < _pixel_vec.at(i).v_pixel_neighbors_third.size(); j++)
+	  _pixel_vec.at(i).v_pixel_neighbors_third.at(j).print_info();
+
+      }
+    }
+  }
 }

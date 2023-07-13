@@ -31,6 +31,9 @@ public :
   const inline TGraph *get_gr_wf_ampl() {return _gr_wf_ampl;}
   const inline TH1D *get_h1_wf_ampl_ADC() {return _h1_wf_ampl_ADC;}
   const inline TH1D *get_h1_wf_ampl() {return _h1_wf_ampl;}
+  const inline TH1D *get_h1_adc_NGB_pedestal(){return _h1_adc_NGB_pedestal;}
+  const inline TH1D *get_h1_dadc_NGB_pedestal(){return _h1_dadc_NGB_pedestal;}
+  //
   void setupe_ADC_ampl(Double_t bits_per_pe = 8.25, Int_t n_max_pe = 10);
   void test_single_pe_amplitude_generator( TH1D *h1, Int_t n_pe_to_sim);
   void test_single_pe_amplitude_from_hist_generator( TH1D *h1, Int_t n_pe_to_sim);
@@ -49,10 +52,13 @@ public :
 			  std::vector<std::vector<Int_t>> &wf);
   //
   void print_wfCamSim_configure();
-  void ger_gr_WF_tmpl_array(TGraph *gr);
+  void get_gr_WF_tmpl_array(TGraph *gr);
   //
   static void calculate_camera_ADC_mean_and_std(const std::vector<std::vector<Int_t>> &wf, Float_t &meanv, Float_t &stdv);
   static void calculate_camera_ADC_mean_and_std(const std::vector<std::vector<Int_t>> &wf, Float_t &meanv, Float_t &stdv, TH1D *h1_adc, TH1D *h1_dadc);
+  static Int_t get_charge(const std::vector<int>& wf, Int_t offset);
+  Int_t get_charge(const std::vector<int>& wf);
+  
   void test_calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc);
   void generate_gif_for_event(TString pathPref, Int_t event_id, const std::vector<std::vector<Int_t>> &wf);
   
@@ -67,6 +73,10 @@ private:
   TGraph *_gr_wf_ampl;
   TH1D *_h1_wf_ampl;
   TH1D *_h1_wf_ampl_ADC;
+  //
+  TH1D *_h1_adc_NGB_pedestal;
+  TH1D *_h1_dadc_NGB_pedestal;
+  //
   static const unsigned int _n_ADC_arr = 2000000000;
   Double_t _n_ADC_max_for_generator;
   unsigned char *_ampl_ADC_arr;
@@ -80,9 +90,11 @@ private:
   void generate_zero_wf(std::vector<int> &wf);
   void generate_zero_wf(std::vector<int> &wf, Int_t pedestal);
   void generate_wf(std::vector<int> &wf, Float_t pe_time);
+  void generate_wf_from_gr(std::vector<int> &wf, Float_t pe_time);
   void generate_electronic_noise(std::vector<int> &wf);
   //
   void calculate_pedestal();
+  void calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc);
   //
   void generateWF_tmpl_array();
   //
