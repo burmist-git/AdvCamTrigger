@@ -61,6 +61,8 @@ sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* 
     _pixel_vec.at(i).find_pixel_neighbors(_pixel_vec,_pixel_pitch, h1_distance_between_pixels);
   for(unsigned int i = 0;i<_pixel_vec.size();i++)
     _pixel_vec.at(i).build_pixel_super_flower(_pixel_vec);
+  for(unsigned int i = 0;i<_pixel_vec.size();i++)
+    _pixel_vec.at(i).get_flower_contour_lines(_pixel_vec,_pixel_pitch);
 }
 
 sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg) : sipmCameraHist(name, title, mapping_csv_file, rot_alpha_deg, NULL)
@@ -191,6 +193,8 @@ void sipmCameraHist::Draw_cam( TString settings,
   //settings += " same TEXT";
   settings += " same";
   Draw(settings.Data());
+  //
+  
   //
   c1->cd(2);
   //

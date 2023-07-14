@@ -7,6 +7,7 @@
 #include <TVector2.h>
 #include <TCanvas.h>
 #include <TMath.h>
+#include <TLine.h>
 
 //c, c++
 #include <string>
@@ -15,6 +16,61 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+
+/*
+//namespace line_info{
+struct line_flower_info {
+  Float_t x;
+  Float_t y;
+    Float_t phi;
+    line_flower_info(){
+      x = -999.0;
+      y = -999.0;
+      phi = -999.0;
+    }  
+    static void print_info_header(){
+      std::cout<<std::setw(15)<<"x"
+	       <<std::setw(15)<<"y"
+	       <<std::setw(15)<<"phi"
+	       <<std::endl;
+    }
+    void print_info(){
+      std::cout<<std::setw(15)<<x
+	       <<std::setw(15)<<y
+	       <<std::setw(15)<<phi
+	       <<std::endl;
+    }
+    static void print_info(const line_flower_info a){
+      std::cout<<std::setw(15)<<a.x
+	       <<std::setw(15)<<a.y
+	       <<std::setw(15)<<a.phi
+	       <<std::endl;
+    }
+    static void print_info(const std::vector<line_flower_info> &a){
+      print_info_header();
+      for( unsigned int i = 0; i < a.size(); i++)
+	print_info(a.at(i));
+    }
+    static void bubbleSortB(std::vector<line_flower_info> &a){
+      bool swapp = true;
+      while(swapp){
+	swapp = false;
+	for( unsigned int i = 0; i < a.size()-1; i++){
+	  if (a.at(i).phi>a.at(i+1).phi){
+	    //
+	    line_flower_info tmp;
+	    tmp = a.at(i);
+	    //
+	    a.at(i) = a.at(i+1);
+	    a.at(i+1) = tmp;
+	    swapp = true;
+	  }
+	}
+      }
+    }
+};
+//}
+*/
 
 struct pixel_neighbors_info {
   Int_t pixel_id;
@@ -68,6 +124,7 @@ struct pixel_info {
   std::vector<pixel_neighbors_info> v_pixel_neighbors_third;
   std::vector<pixel_neighbors_info> v_pixel_flower;
   std::vector<pixel_neighbors_info> v_pixel_super_flower;
+  std::vector<TLine> v_line_flower;
   pixel_neighbors_info self_neighbors_info;
   //
   pixel_info(){
@@ -104,7 +161,7 @@ struct pixel_info {
       y = v.Rotate(rot_alpha_deg/180.0*TMath::Pi()).Y();
     }
   }
-  void build_Cell(Int_t cell_type_id, Double_t l){
+  void build_Cell(Int_t cell_type_id, Double_t l, Float_t x_v, Float_t y_v){
     if(cell_type_id == 0){
       Double_t alpha   = 2.0*TMath::Pi()/6.0;
       Double_t alpha_2 = alpha/2.0;
@@ -114,14 +171,17 @@ struct pixel_info {
       Double_t theta = 0.0;
       for(Int_t i = 0;i<n;i++){
 	theta = alpha0 + alpha*i;
-	xp[i] = r*TMath::Cos(theta) + x;
-	yp[i] = r*TMath::Sin(theta) + y;
+	xp[i] = r*TMath::Cos(theta) + x_v;
+	yp[i] = r*TMath::Sin(theta) + y_v;
       }
     }
     else{
       std::cout<<"  ---> ERROR : cell_type_id = "<<cell_type_id<<std::endl;
       assert(0);
     }
+  }
+  void build_Cell(Int_t cell_type_id, Double_t l){
+    build_Cell(cell_type_id, l, x, y);
   }
   void find_pixel_neighbors( const std::vector<pixel_info> &pixel_vec, double pixel_pitch){
     find_pixel_neighbors( pixel_vec, pixel_pitch, NULL);
@@ -213,6 +273,15 @@ struct pixel_info {
 	v_pixel_super_flower.push_back(pix_neighb_inf);
       }
     }
+
+  static void print_info(const std::vector<line_flower_info> &a){
+    print_info_header();
+    for( unsigned int i = 0; i < a.size(); i++)
+      print_info(a.at(i))
+  }
+  static void bubbleSort(std::vector<line_flower_info> &a){
+    
+    
   }
   Float_t get_dist_pixel(Float_t px, Float_t py){
     return TMath::Sqrt((px - x)*(px - x) + (py - y)*(py - y));
@@ -276,6 +345,28 @@ struct pixel_info {
 	counter++;
       }
     }
+  }
+  void get_flower_contour_lines(const std::vector<pixel_info> &pixel_vec, double pixel_pitch){
+    Double_t rp_tmp;
+    /*
+    std::vector<line_info::line_flower_info> v_line_flower_points_info;
+    for( unsigned int i = 0; i < pixel_vec.at(0).v_pixel_flower.size(); i++){
+      for(Int_t j = 0;j<n;j++){
+	rp_tmp = TMath::Sqrt(pixel_vec.at(0).v_pixel_flower.at(i).xp[i]*pixel_vec.at(0).v_pixel_flower.at(i).xp[j] +
+			     pixel_vec.at(0).v_pixel_flower.at(i).yp[i]*pixel_vec.at(0).v_pixel_flower.at(i).yp[j]);
+	if(rp_tmp>pixel_pitch){
+	  line_info::line_flower_info line_str;
+	  line_str.x = pixel_vec.at(0).v_pixel_flower.at(i).xp[i]*pixel_vec.at(0).v_pixel_flower.at(i).xp[j];
+	  line_str.y = pixel_vec.at(0).v_pixel_flower.at(i).xp[i]*pixel_vec.at(0).v_pixel_flower.at(i).yp[j];
+	  TVector2 v(line_str.x,line_str.y);
+	  line_str.phi = v.Phi();
+	  v_line_flower_points_info.push_back(line_str);
+	}
+      }
+    }
+    //std::vector<TLine> v_line_flower;    
+    //assert(0);
+    */
   }
 };
 
