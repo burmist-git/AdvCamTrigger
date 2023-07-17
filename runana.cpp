@@ -124,7 +124,7 @@ int main(int argc, char *argv[]){
     //h1_distance_between_pixels->SaveAs("h1_distance_between_pixels.C");
     //
     sipmCameraHist *sipm_cam_test12 = new sipmCameraHist("sipm_cam_test12","sipm_cam_test12","pixel_mapping.csv",0);
-    sipm_cam_test12->test_pixel_super_flower();
+    sipm_cam_test12->test_pixel_super_flower(npix, pix_id);
     //sipm_cam_test12->test_pixel_neighbors_bubbleSort(0);
   }
   else{

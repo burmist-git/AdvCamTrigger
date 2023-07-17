@@ -17,11 +17,11 @@
 #include <fstream>
 #include <iomanip>
 
-/*
-//namespace line_info{
-struct line_flower_info {
-  Float_t x;
-  Float_t y;
+
+namespace line_info{
+  struct line_flower_info {
+    Float_t x;
+    Float_t y;
     Float_t phi;
     line_flower_info(){
       x = -999.0;
@@ -51,7 +51,7 @@ struct line_flower_info {
       for( unsigned int i = 0; i < a.size(); i++)
 	print_info(a.at(i));
     }
-    static void bubbleSortB(std::vector<line_flower_info> &a){
+    static void bubbleSort(std::vector<line_flower_info> &a){
       bool swapp = true;
       while(swapp){
 	swapp = false;
@@ -68,9 +68,8 @@ struct line_flower_info {
 	}
       }
     }
-};
-//}
-*/
+  };
+}
 
 struct pixel_neighbors_info {
   Int_t pixel_id;
@@ -273,15 +272,6 @@ struct pixel_info {
 	v_pixel_super_flower.push_back(pix_neighb_inf);
       }
     }
-
-  static void print_info(const std::vector<line_flower_info> &a){
-    print_info_header();
-    for( unsigned int i = 0; i < a.size(); i++)
-      print_info(a.at(i))
-  }
-  static void bubbleSort(std::vector<line_flower_info> &a){
-    
-    
   }
   Float_t get_dist_pixel(Float_t px, Float_t py){
     return TMath::Sqrt((px - x)*(px - x) + (py - y)*(py - y));
@@ -346,27 +336,144 @@ struct pixel_info {
       }
     }
   }
-  void get_flower_contour_lines(const std::vector<pixel_info> &pixel_vec, double pixel_pitch){
-    Double_t rp_tmp;
-    /*
-    std::vector<line_info::line_flower_info> v_line_flower_points_info;
-    for( unsigned int i = 0; i < pixel_vec.at(0).v_pixel_flower.size(); i++){
-      for(Int_t j = 0;j<n;j++){
-	rp_tmp = TMath::Sqrt(pixel_vec.at(0).v_pixel_flower.at(i).xp[i]*pixel_vec.at(0).v_pixel_flower.at(i).xp[j] +
-			     pixel_vec.at(0).v_pixel_flower.at(i).yp[i]*pixel_vec.at(0).v_pixel_flower.at(i).yp[j]);
-	if(rp_tmp>pixel_pitch){
-	  line_info::line_flower_info line_str;
-	  line_str.x = pixel_vec.at(0).v_pixel_flower.at(i).xp[i]*pixel_vec.at(0).v_pixel_flower.at(i).xp[j];
-	  line_str.y = pixel_vec.at(0).v_pixel_flower.at(i).xp[i]*pixel_vec.at(0).v_pixel_flower.at(i).yp[j];
-	  TVector2 v(line_str.x,line_str.y);
-	  line_str.phi = v.Phi();
-	  v_line_flower_points_info.push_back(line_str);
-	}
-      }
+  //static void print_info(const std::vector<line_info::line_flower_info> &a){
+  //line_info::print_info_header();
+  //for( unsigned int i = 0; i < a.size(); i++)
+  //line_info::print_info(a.at(i))
+  //}
+  //static void bubbleSort(std::vector<line_info::line_flower_info> &a){
+  void get_flower_contour_lines(double pixel_pitch){
+    //
+    Double_t alpha   = 2.0*TMath::Pi()/6.0;
+    Double_t alpha_2 = alpha/2.0;
+    Double_t alpha0  = alpha_2;
+    Double_t pixel_pitch_2 = pixel_pitch/2.0;
+    Double_t r = pixel_pitch_2/TMath::Cos(alpha_2);
+    Double_t theta = 0.0;
+    std::vector<Double_t> xv_v;
+    std::vector<Double_t> yv_v;
+    for(Int_t i = 0;i<n;i++){
+      theta = alpha0 + alpha*i;
+      xv_v.push_back(r*TMath::Cos(theta));
+      yv_v.push_back(r*TMath::Sin(theta));
     }
+    std::vector<Double_t> xc_v;
+    std::vector<Double_t> yc_v;
+    for(Int_t i = 0;i<n;i++){
+      theta = alpha*i;
+      xc_v.push_back(pixel_pitch*TMath::Cos(theta));
+      yc_v.push_back(pixel_pitch*TMath::Sin(theta));
+    }
+    //
+    TLine ln01(x+xc_v.at(0)+xv_v.at(0),
+	       y+yc_v.at(0)+yv_v.at(0),
+	       x+xc_v.at(0)+xv_v.at(1),
+	       y+yc_v.at(0)+yv_v.at(1));
+    v_line_flower.push_back(ln01);
+    TLine ln02(x+xc_v.at(0)+xv_v.at(1),
+	       y+yc_v.at(0)+yv_v.at(1),
+	       x+xc_v.at(1)+xv_v.at(0),
+	       y+yc_v.at(1)+yv_v.at(0));
+    v_line_flower.push_back(ln02);
+    TLine ln03(x+xc_v.at(1)+xv_v.at(0),
+	       y+yc_v.at(1)+yv_v.at(0),
+	       x+xc_v.at(1)+xv_v.at(1),
+	       y+yc_v.at(1)+yv_v.at(1));
+    v_line_flower.push_back(ln03);
+    TLine ln04(x+xc_v.at(1)+xv_v.at(1),
+	       y+yc_v.at(1)+yv_v.at(1),
+	       x+xc_v.at(1)+xv_v.at(2),
+	       y+yc_v.at(1)+yv_v.at(2));
+    v_line_flower.push_back(ln04);
+    TLine ln05(x+xc_v.at(1)+xv_v.at(2),
+	       y+yc_v.at(1)+yv_v.at(2),
+	       x+xc_v.at(2)+xv_v.at(1),
+	       y+yc_v.at(2)+yv_v.at(1));
+    v_line_flower.push_back(ln05);
+    TLine ln06(x+xc_v.at(2)+xv_v.at(1),
+	       y+yc_v.at(2)+yv_v.at(1),
+	       x+xc_v.at(2)+xv_v.at(2),
+	       y+yc_v.at(2)+yv_v.at(2));
+    v_line_flower.push_back(ln06);
+    TLine ln07(x+xc_v.at(2)+xv_v.at(2),
+	       y+yc_v.at(2)+yv_v.at(2),
+	       x+xc_v.at(2)+xv_v.at(3),
+	       y+yc_v.at(2)+yv_v.at(3));
+    v_line_flower.push_back(ln07);
+    TLine ln08(x+xc_v.at(2)+xv_v.at(3),
+	       y+yc_v.at(2)+yv_v.at(3),
+	       x+xc_v.at(3)+xv_v.at(2),
+	       y+yc_v.at(3)+yv_v.at(2));
+    v_line_flower.push_back(ln08);
+    TLine ln09(x+xc_v.at(3)+xv_v.at(2),
+	       y+yc_v.at(3)+yv_v.at(2),
+	       x+xc_v.at(3)+xv_v.at(3),
+	       y+yc_v.at(3)+yv_v.at(3));
+    v_line_flower.push_back(ln09);
+    TLine ln10(x+xc_v.at(3)+xv_v.at(3),
+	       y+yc_v.at(3)+yv_v.at(3),
+	       x+xc_v.at(3)+xv_v.at(4),
+	       y+yc_v.at(3)+yv_v.at(4));
+    v_line_flower.push_back(ln10);
+    TLine ln11(x+xc_v.at(3)+xv_v.at(4),
+	       y+yc_v.at(3)+yv_v.at(4),
+	       x+xc_v.at(4)+xv_v.at(3),
+	       y+yc_v.at(4)+yv_v.at(3));
+    v_line_flower.push_back(ln11);
+    TLine ln12(x+xc_v.at(4)+xv_v.at(3),
+	       y+yc_v.at(4)+yv_v.at(3),
+	       x+xc_v.at(4)+xv_v.at(4),
+	       y+yc_v.at(4)+yv_v.at(4));
+    v_line_flower.push_back(ln12);
+    TLine ln13(x+xc_v.at(4)+xv_v.at(4),
+	       y+yc_v.at(4)+yv_v.at(4),
+	       x+xc_v.at(4)+xv_v.at(5),
+	       y+yc_v.at(4)+yv_v.at(5));
+    v_line_flower.push_back(ln13);
+    TLine ln14(x+xc_v.at(4)+xv_v.at(5),
+	       y+yc_v.at(4)+yv_v.at(5),
+	       x+xc_v.at(5)+xv_v.at(4),
+	       y+yc_v.at(5)+yv_v.at(4));
+    v_line_flower.push_back(ln14);
+    TLine ln15(x+xc_v.at(5)+xv_v.at(4),
+	       y+yc_v.at(5)+yv_v.at(4),
+	       x+xc_v.at(5)+xv_v.at(5),
+	       y+yc_v.at(5)+yv_v.at(5));
+    v_line_flower.push_back(ln15);
+    TLine ln16(x+xc_v.at(5)+xv_v.at(5),
+	       y+yc_v.at(5)+yv_v.at(5),
+	       x+xc_v.at(5)+xv_v.at(6),
+	       y+yc_v.at(5)+yv_v.at(6));
+    v_line_flower.push_back(ln16);
+    TLine ln17(x+xc_v.at(5)+xv_v.at(6),
+    	       y+yc_v.at(5)+yv_v.at(6),
+    	       x+xc_v.at(6)+xv_v.at(5),
+    	       y+yc_v.at(6)+yv_v.at(5));
+    v_line_flower.push_back(ln17);
+    TLine ln18(x+xc_v.at(6)+xv_v.at(5),
+    	       y+yc_v.at(6)+yv_v.at(5),
+    	       x+xc_v.at(6)+xv_v.at(6),
+    	       y+yc_v.at(6)+yv_v.at(6));
+    v_line_flower.push_back(ln18);
+    //
+    //Double_t rp_tmp;
+    //std::vector<line_info::line_flower_info> v_line_flower_points_info;
+    //for( unsigned int i = 0; i < pixel_vec.at(0).v_pixel_flower.size(); i++){
+    //for(Int_t j = 0;j<n;j++){
+    //rp_tmp = TMath::Sqrt(pixel_vec.at(0).v_pixel_flower.at(i).xp[j]*pixel_vec.at(0).v_pixel_flower.at(i).xp[j] +
+    //pixel_vec.at(0).v_pixel_flower.at(i).yp[j]*pixel_vec.at(0).v_pixel_flower.at(i).yp[j]);
+    //if(rp_tmp>pixel_pitch){
+    //line_info::line_flower_info line_str;
+    //line_str.x = pixel_vec.at(0).v_pixel_flower.at(i).xp[i]*pixel_vec.at(0).v_pixel_flower.at(i).xp[j];
+    //line_str.y = pixel_vec.at(0).v_pixel_flower.at(i).xp[i]*pixel_vec.at(0).v_pixel_flower.at(i).yp[j];
+    //TVector2 v(line_str.x,line_str.y);
+    //line_str.phi = v.Phi();
+    //v_line_flower_points_info.push_back(line_str);
+    //}
+    //}
+    //}
     //std::vector<TLine> v_line_flower;    
     //assert(0);
-    */
   }
 };
 
@@ -400,6 +507,7 @@ public:
   void Clean();
   void count_signal(Double_t th_val, Int_t &nch, Int_t &npe);
   void Draw_cam(TString settings, TString pdf_out_file);
+  void Draw_cam(TString settings, TString pdf_out_file, const std::vector<Int_t> &pixel_line_flower_vec);
   void Draw_cam(TString settings,
 		TString pdf_out_file,
 		TString particle_type,
@@ -412,6 +520,19 @@ public:
 		Int_t nphotons,
 		Int_t n_pe,
 		Int_t n_pixels);
+  void Draw_cam(TString settings,
+		TString pdf_out_file,
+		TString particle_type,
+		Int_t wf_time_id,
+		Int_t   event_id,
+		Float_t energy,
+		Float_t xcore,
+		Float_t ycore,
+		Float_t ev_time,
+		Int_t nphotons,
+		Int_t n_pe,
+		Int_t n_pixels,
+		const std::vector<Int_t> &pixel_line_flower_vec);
   //  
   TString _name;
   TString _title;

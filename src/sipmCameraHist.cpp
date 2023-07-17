@@ -61,8 +61,9 @@ sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* 
     _pixel_vec.at(i).find_pixel_neighbors(_pixel_vec,_pixel_pitch, h1_distance_between_pixels);
   for(unsigned int i = 0;i<_pixel_vec.size();i++)
     _pixel_vec.at(i).build_pixel_super_flower(_pixel_vec);
+  //
   for(unsigned int i = 0;i<_pixel_vec.size();i++)
-    _pixel_vec.at(i).get_flower_contour_lines(_pixel_vec,_pixel_pitch);
+    _pixel_vec.at(i).get_flower_contour_lines(_pixel_pitch);
 }
 
 sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg) : sipmCameraHist(name, title, mapping_csv_file, rot_alpha_deg, NULL)
@@ -144,11 +145,29 @@ void sipmCameraHist::Draw_cam( TString settings,
 			       Int_t nphotons,
 			       Int_t n_pe,
 			       Int_t n_pixels){
+  std::vector<Int_t> pixel_line_flower_vec;
+  Draw_cam(settings, pdf_out_file, particle_type, wf_time_id, event_id, energy, xcore, ycore, ev_time, nphotons, n_pe, n_pixels, pixel_line_flower_vec);
+}
+
+
+void sipmCameraHist::Draw_cam( TString settings,
+			       TString pdf_out_file,
+			       TString particle_type,
+			       Int_t wf_time_id,
+			       Int_t event_id,
+			       Float_t energy,
+			       Float_t xcore,
+			       Float_t ycore,
+			       Float_t ev_time,
+			       Int_t nphotons,
+			       Int_t n_pe,
+			       Int_t n_pixels,
+			       const std::vector<Int_t> &pixel_line_flower_vec){
   //
-  //Double_t lx_camera = 2.5;
-  //Double_t ly_camera = 2.5;
-  Double_t lx_camera = 0.5;
-  Double_t ly_camera = 0.5;
+  Double_t lx_camera = 2.5;
+  Double_t ly_camera = 2.5;
+  //Double_t lx_camera = 0.5;
+  //Double_t ly_camera = 0.5;
   Double_t d_frame = 0.1;
   //
   //gStyle->SetPalette(kRainBow);
@@ -194,7 +213,18 @@ void sipmCameraHist::Draw_cam( TString settings,
   settings += " same";
   Draw(settings.Data());
   //
-  
+  cout<<"pixel_line_flower_vec.size() --> "<<pixel_line_flower_vec.size()<<endl;
+  //
+  for( unsigned int i = 0; i < pixel_line_flower_vec.size(); i++){
+    cout<<_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size()<<endl;
+    for( unsigned int j = 0; j < _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size(); j++){
+      cout<<_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size()<<endl;
+      _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).SetLineColor(kRed);
+      _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).SetLineWidth(1.0);
+      _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).Draw("same");
+    }
+  }
+  //  
   //
   c1->cd(2);
   //
@@ -259,6 +289,7 @@ void sipmCameraHist::Draw_cam( TString settings,
   t9->SetTextSize(40);
   t9->Draw("same");
   //
+  //
   if(pdf_out_file != "")
     c1->SaveAs(pdf_out_file.Data());
 }
@@ -266,6 +297,12 @@ void sipmCameraHist::Draw_cam( TString settings,
 void sipmCameraHist::Draw_cam( TString settings,
 			       TString pdf_out_file){
   Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999);
+}
+
+void sipmCameraHist::Draw_cam( TString settings,
+			       TString pdf_out_file,
+			       const std::vector<Int_t> &pixel_line_flower_vec){
+  Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec);
 }
 
 void sipmCameraHist::test(){
@@ -444,7 +481,9 @@ void sipmCameraHist::test_pixel_super_flower(Int_t pix_id){
   //    
   SetMaximum(0.0);
   SetMaximum(20.0);
-  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_super_flower_id.pdf");
+  std::vector<Int_t> pixel_line_flower_vec;
+  pixel_line_flower_vec.push_back(pix_id);
+  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_super_flower_id.pdf",pixel_line_flower_vec);
 }
 
 void sipmCameraHist::test_pixel_super_flower(Int_t npixels_n,Int_t *pix_id){
@@ -465,7 +504,6 @@ void sipmCameraHist::test_pixel_neighbors_bubbleSort(Int_t pix_id){
 	_pixel_vec.at(i).v_pixel_neighbors_third.at(0).print_info_header();
 	for(unsigned int j = 0; j < _pixel_vec.at(i).v_pixel_neighbors_third.size(); j++)
 	  _pixel_vec.at(i).v_pixel_neighbors_third.at(j).print_info();
-
       }
     }
   }
