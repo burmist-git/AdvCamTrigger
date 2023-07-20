@@ -21,7 +21,16 @@ public :
   wfCamSim(TRandom3 *rnd, TString wf_tamplete, TString spe_dat,
 	   const unsigned int nn_fadc_point,
 	   const unsigned int nn_PMT_channels,
-	   const Float_t fadc_offset, const Float_t fadc_sample_in_ns, const Float_t NGB_rate_in_MHz);
+	   const Float_t fadc_offset,
+	   const Float_t fadc_sample_in_ns,
+	   const Float_t NGB_rate_in_MHz);
+  wfCamSim(TRandom3 *rnd, TString wf_tamplete, TString spe_dat,
+	   const unsigned int nn_fadc_point,
+	   const unsigned int nn_PMT_channels,
+	   const Float_t fadc_offset,
+	   const Float_t fadc_sample_in_ns,
+	   const Float_t NGB_rate_in_MHz,
+	   Float_t fadc_electronic_noise_RMS);
   ~wfCamSim();
   //
   void getWF_ampl(TString name, Double_t &Ampl_Prompt_max, Double_t &Prompt_max);
@@ -61,6 +70,10 @@ public :
   
   void test_calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc);
   void generate_gif_for_event(TString pathPref, Int_t event_id, const std::vector<std::vector<Int_t>> &wf);
+  void generate_gif_for_event(TString pathPref, Int_t event_id,
+			      const std::vector<std::vector<Int_t>> &wf,
+			      const std::vector<std::vector<Int_t>> &wf_ref,
+			      const std::vector<std::vector<unsigned int>> &trg_vector);
   
 private:
   //

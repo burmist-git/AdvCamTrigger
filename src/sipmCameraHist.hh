@@ -507,7 +507,9 @@ public:
   void Clean();
   void count_signal(Double_t th_val, Int_t &nch, Int_t &npe);
   void Draw_cam(TString settings, TString pdf_out_file);
-  void Draw_cam(TString settings, TString pdf_out_file, const std::vector<Int_t> &pixel_line_flower_vec);
+  void Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist);
+  void Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const std::vector<unsigned int> &pixel_line_flower_vec);
+  void Draw_cam(TString settings, TString pdf_out_file, const std::vector<unsigned int> &pixel_line_flower_vec);
   void Draw_cam(TString settings,
 		TString pdf_out_file,
 		TString particle_type,
@@ -532,10 +534,26 @@ public:
 		Int_t nphotons,
 		Int_t n_pe,
 		Int_t n_pixels,
-		const std::vector<Int_t> &pixel_line_flower_vec);
+		const std::vector<unsigned int> &pixel_line_flower_vec,
+		sipmCameraHist *simp_ref_hist);
+  void Draw_cam(TString settings,
+		TString pdf_out_file,
+		TString particle_type,
+		Int_t wf_time_id,
+		Int_t event_id,
+		Float_t energy,
+		Float_t xcore,
+		Float_t ycore,
+		Float_t ev_time,
+		Int_t nphotons,
+		Int_t n_pe,
+		Int_t n_pixels,
+		const std::vector<unsigned int> &pixel_line_flower_vec);
   //  
   TString _name;
   TString _title;
+  //
+  inline const std::vector<pixel_info> &get_pixel_vec() const {return _pixel_vec;}
   
  private:
 

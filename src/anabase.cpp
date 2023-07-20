@@ -26,7 +26,7 @@
 
 using namespace std;
 
-anabase::anabase(TString fileList, Bool_t short_format_flag) : _short_format_flag(short_format_flag), fChain(0) 
+anabase::anabase(TString fileList, Bool_t short_format_flag) : _particle_type_name("NONE"), _short_format_flag(short_format_flag), fChain(0) 
 {
   ifstream indata;
   TString rootFileName;
@@ -46,7 +46,7 @@ anabase::anabase(TString fileList, Bool_t short_format_flag) : _short_format_fla
   Init(theChain);
 }
 
-anabase::anabase(TString inFileName, Int_t keyID, Bool_t short_format_flag) : _short_format_flag(short_format_flag), fChain(0) 
+anabase::anabase(TString inFileName, Int_t keyID, Bool_t short_format_flag) : _particle_type_name("NONE"), _short_format_flag(short_format_flag), fChain(0) 
 {
   if(keyID == 1){
     ifstream indata;

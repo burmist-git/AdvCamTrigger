@@ -145,10 +145,9 @@ void sipmCameraHist::Draw_cam( TString settings,
 			       Int_t nphotons,
 			       Int_t n_pe,
 			       Int_t n_pixels){
-  std::vector<Int_t> pixel_line_flower_vec;
+  std::vector<unsigned int> pixel_line_flower_vec;
   Draw_cam(settings, pdf_out_file, particle_type, wf_time_id, event_id, energy, xcore, ycore, ev_time, nphotons, n_pe, n_pixels, pixel_line_flower_vec);
 }
-
 
 void sipmCameraHist::Draw_cam( TString settings,
 			       TString pdf_out_file,
@@ -162,7 +161,27 @@ void sipmCameraHist::Draw_cam( TString settings,
 			       Int_t nphotons,
 			       Int_t n_pe,
 			       Int_t n_pixels,
-			       const std::vector<Int_t> &pixel_line_flower_vec){
+			       const std::vector<unsigned int> &pixel_line_flower_vec){
+  Draw_cam( settings, pdf_out_file,
+	    particle_type, wf_time_id, event_id,
+	    energy, xcore, ycore, ev_time, nphotons,
+	    n_pe, n_pixels, pixel_line_flower_vec, NULL);
+}
+
+void sipmCameraHist::Draw_cam( TString settings,
+			       TString pdf_out_file,
+			       TString particle_type,
+			       Int_t wf_time_id,
+			       Int_t event_id,
+			       Float_t energy,
+			       Float_t xcore,
+			       Float_t ycore,
+			       Float_t ev_time,
+			       Int_t nphotons,
+			       Int_t n_pe,
+			       Int_t n_pixels,
+			       const std::vector<unsigned int> &pixel_line_flower_vec,
+			       sipmCameraHist *simp_ref_hist = NULL){
   //
   Double_t lx_camera = 2.5;
   Double_t ly_camera = 2.5;
@@ -182,15 +201,25 @@ void sipmCameraHist::Draw_cam( TString settings,
   SetTitle("");
   SetName("");
   //
-  TCanvas *c1 = new TCanvas("c1","c1",1400,700);
-  c1->Divide(2,1);
+  TCanvas *c1;
+  if(simp_ref_hist != NULL){
+    c1 = new TCanvas("c1","c1",1800,600);
+    c1->Divide(3,1);
+    //std::cout<<"simp_ref_hist != NULL"<<std::endl;
+  }
+  else{
+    c1 = new TCanvas("c1","c1",1400,700);
+    //std::cout<<"simp_ref_hist == NULL"<<std::endl;
+    c1->Divide(2,1);
+  }
   c1->cd(1);
   gPad->SetRightMargin(0.12);
   gPad->SetLeftMargin(0.12);
-  gPad->SetTopMargin(0.1); gPad->SetBottomMargin(0.15);
+  gPad->SetTopMargin(0.1);
+  gPad->SetBottomMargin(0.15);
   //
-  gPad->SetGridx();
-  gPad->SetGridy();
+  //gPad->SetGridx();
+  //gPad->SetGridy();
   //gPad->SetLogz();
   //
   //SetMaximum(500.0);
@@ -211,22 +240,41 @@ void sipmCameraHist::Draw_cam( TString settings,
   //
   //settings += " same TEXT";
   settings += " same";
-  Draw(settings.Data());
   //
-  cout<<"pixel_line_flower_vec.size() --> "<<pixel_line_flower_vec.size()<<endl;
+  if(simp_ref_hist != NULL)
+    simp_ref_hist->Draw(settings.Data());
+  else
+    Draw(settings.Data());
   //
+  //cout<<"pixel_line_flower_vec.size() --> "<<pixel_line_flower_vec.size()<<endl;
   for( unsigned int i = 0; i < pixel_line_flower_vec.size(); i++){
-    cout<<_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size()<<endl;
+    //cout<<_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size()<<endl;
     for( unsigned int j = 0; j < _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size(); j++){
-      cout<<_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size()<<endl;
+      //cout<<_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size()<<endl;
       _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).SetLineColor(kRed);
       _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).SetLineWidth(1.0);
       _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).Draw("same");
     }
   }
-  //  
   //
-  c1->cd(2);
+  if(simp_ref_hist != NULL){
+    c1->cd(2);
+    frame->Draw();
+    Draw(settings.Data());
+    for( unsigned int i = 0; i < pixel_line_flower_vec.size(); i++){
+      for( unsigned int j = 0; j < _pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size(); j++){
+	//cout<<_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.size()<<endl;
+	_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).SetLineColor(kRed);
+	_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).SetLineWidth(1.0);
+	//_pixel_vec.at(pixel_line_flower_vec.at(i)).v_line_flower.at(j).Draw("same");
+      }
+    }
+  }
+  //
+  if(simp_ref_hist != NULL)
+    c1->cd(3);
+  else
+    c1->cd(2);
   //
   TString wf_time_str  = "wf_time  : "; wf_time_str += wf_time_id; wf_time_str += " ns";
   TString event_id_str = "event_id : "; event_id_str += event_id;
@@ -301,8 +349,19 @@ void sipmCameraHist::Draw_cam( TString settings,
 
 void sipmCameraHist::Draw_cam( TString settings,
 			       TString pdf_out_file,
-			       const std::vector<Int_t> &pixel_line_flower_vec){
-  Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec);
+			       sipmCameraHist *simp_ref_hist){
+  std::vector<unsigned int> pixel_line_flower_vec;
+  Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, simp_ref_hist);
+}
+
+void sipmCameraHist::Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const std::vector<unsigned int> &pixel_line_flower_vec){
+  Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, simp_ref_hist);
+}
+
+void sipmCameraHist::Draw_cam( TString settings,
+			       TString pdf_out_file,
+			       const std::vector<unsigned int> &pixel_line_flower_vec){
+  Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, NULL);
 }
 
 void sipmCameraHist::test(){
@@ -481,7 +540,7 @@ void sipmCameraHist::test_pixel_super_flower(Int_t pix_id){
   //    
   SetMaximum(0.0);
   SetMaximum(20.0);
-  std::vector<Int_t> pixel_line_flower_vec;
+  std::vector<unsigned int> pixel_line_flower_vec;
   pixel_line_flower_vec.push_back(pix_id);
   Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_super_flower_id.pdf",pixel_line_flower_vec);
 }

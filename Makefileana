@@ -8,6 +8,8 @@ CXX += -I./obj/
 
 CXXFLAGS  = -g -Wall -fPIC -Wno-deprecated
 CXXFLAGS += $(ROOTCFLAGS)
+CXXFLAGS += -Wreorder
+#CXXFLAGS += -fpermissive
 
 OUTLIB = ./obj/
 
@@ -15,7 +17,7 @@ OUTLIB = ./obj/
 
 all: runana	
 
-runana: runana.cpp obj/ana.o obj/anashort.o obj/anabase.o
+runana: runana.cpp obj/ana.o obj/anashort.o obj/anabase.o obj/triggerSim.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 obj/ana.o: src/ana.cpp src/ana.hh obj/anabase.o obj/sipmCameraHist.o obj/wfCamSim.o
@@ -31,6 +33,9 @@ obj/sipmCameraHist.o: src/sipmCameraHist.cpp src/sipmCameraHist.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
 
 obj/wfCamSim.o: src/wfCamSim.cpp src/wfCamSim.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
+
+obj/triggerSim.o: src/triggerSim.cpp src/triggerSim.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
 
 clean:

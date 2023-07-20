@@ -21,6 +21,8 @@ public :
   anabase(TString fileListm);
   anabase(TString inFileName, Int_t keyID);
   ~anabase();
+  TString _particle_type_name;
+  inline void set_particle_type_name(TString particle_type_name){_particle_type_name = particle_type_name;};
   
 protected :
   void Loop(TString histOut);

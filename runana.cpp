@@ -59,15 +59,18 @@ int main(int argc, char *argv[]){
     anashort a( inRootFiles, atoi(argv[1]));
     a.Loop(outRootFileF);
   }
-  else if(argc == 5 && atoi(argv[1])==4){
+  else if(argc == 6 && atoi(argv[1])==4){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
     Long64_t evID = (Long64_t)atoi(argv[4]);
+    TString particle_type_name = argv[5];
     cout<<"--> Parameter calculation from the WF <--"<<endl
-	<<"inRootFiles   : "<<inRootFiles<<endl
-	<<"outRootFileF  : "<<outRootFileF<<endl
-      	<<"evID          : "<<evID<<endl;
+	<<"inRootFiles        : "<<inRootFiles<<endl
+	<<"outRootFileF       : "<<outRootFileF<<endl
+      	<<"evID               : "<<evID<<endl
+	<<"particle_type_name : "<<particle_type_name<<endl;
     ana a(inRootFiles, 1);
+    a.set_particle_type_name(particle_type_name);
     a.save_wf_for_event(outRootFileF, evID);
   }
   else if(argc == 2 && atoi(argv[1])==5){

@@ -2,6 +2,7 @@
 #include "ana.hh"
 #include "sipmCameraHist.hh"
 #include "wfCamSim.hh"
+#include "triggerSim.hh"
 
 //root
 #include <TH2.h>
@@ -540,18 +541,32 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
   Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
   //Float_t NGB_rate_in_MHz = 386.0;
-  Float_t NGB_rate_in_MHz = 0.001;
+  Float_t NGB_rate_in_MHz = 0.000001;
+  Float_t fadc_electronic_noise_RMS = 0.01;
+  //Float_t fadc_electronic_noise_RMS = 3.94;
   //
   //auto wfcam = new Int_t [nn_PMT_channels][nn_fadc_point];
   vector<vector<Int_t>> wfcam(nn_PMT_channels, vector<Int_t>(nn_fadc_point));
+  vector<vector<Int_t>> wfcam_real(nn_PMT_channels, vector<Int_t>(nn_fadc_point));
   //
   TRandom3 *rnd = new TRandom3(123123);
   wfCamSim *wfc = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
-			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz);
+			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz, fadc_electronic_noise_RMS);
   wfc->print_wfCamSim_configure();
+  //
   TGraph *gr_WF_tmpl_array = new TGraph();
   gr_WF_tmpl_array->SetNameTitle("gr_WF_tmpl_array","gr_WF_tmpl_array");
   wfc->get_gr_WF_tmpl_array(gr_WF_tmpl_array);
+  //
+  //NGB_rate_in_MHz = 386.0;
+  NGB_rate_in_MHz = 268.0;
+  //fadc_electronic_noise_RMS = 1.5;
+  fadc_electronic_noise_RMS = 3.94;
+  wfCamSim *wfc_real = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
+				    nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz, fadc_electronic_noise_RMS);
+  //
+  sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+  triggerSim *trg_sim = new triggerSim(sipm_cam);  
   //assert(0);
   //
   vector <TGraph*> gr_v;
@@ -580,6 +595,26 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
 			  n_pe,
 			  pe_chID,
 			  pe_time);
+  //
+  wfc_real->simulate_cam_event(nn_fadc_point,
+			       nn_PMT_channels,
+			       wfcam_real,
+			       ev_time,
+			       time_offset,
+			       n_pe,
+			       pe_chID,
+			       pe_time);
+  ////////////////////////////
+  //std::vector<std::array<int, 2>> trg_vec = trg_sim->get_trigger(wfcam_real);
+  //std::vector<std::vector<int>> trg_vec = trg_sim->get_trigger_test(wfcam_real);
+  //std::vector<std::vector<int>> trg_vec = trg_sim->get_trigger_test();
+  //trg_sim->print_trigger_vec(trg_vec);
+  TH1D *h1_digital_sum = new TH1D("h1_digital_sum","h1_digital_sum",1000,0.0,1000);
+  TH1D *h1_digital_sum_3ns = new TH1D("h1_digital_sum_3ns","h1_digital_sum_3ns",1000,0.0,1000);
+  TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns","h1_digital_sum_5ns",1000,0.0,1000);
+  TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val",1000,0.0,1000);
+  std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger( wfcam_real, h1_digital_sum, h1_digital_sum_3ns, h1_digital_sum_5ns, h1_fadc_val);
+  triggerSim::print_trigger_vec(trg_vec);
   ////////////////////////////
   vector<TGraph*> v_gr;
   vector<TGraph*> v_gr_sim;
@@ -615,7 +650,7 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   TString gif_sim_name_pref = "./ev_synthetic_";
   gif_sim_name_pref += (Int_t)evID;
   gif_sim_name_pref += "_";
-  wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam);
+  wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam_real, wfcam, trg_vec);
   //TString particle_type,
   //Int_t wf_time_id,
   //Int_t   event_id,
@@ -675,6 +710,13 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   h1_NGB_dadc_sim->Write();
   //
   h1_wf_charge_sim->Write();
+  //
+  h1_digital_sum->Write();
+  h1_digital_sum_3ns->Write();
+  h1_digital_sum_5ns->Write();
+  h1_fadc_val->Write();
+  //
+  //cout<<"_particle_type_name = "<<_particle_type_name<<endl;
   //
   rootFile->Close();
 }
