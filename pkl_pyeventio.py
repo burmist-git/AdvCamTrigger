@@ -248,14 +248,19 @@ if __name__ == "__main__":
     #pe_info_out = "../compressed_data/no_nsb_cut/gamma/corsika_run307.pe_info.pkl"
     #wf_info_out = "../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info"
     #
-    datafilein = "../simtel_data/no_nsb_cut/proton/data/corsika_run307.simtel.gz"
-    headerout = "../compressed_data/no_nsb_cut/proton/corsika_run307.header.pkl"
-    pe_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.pkl"
-    wf_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.wf_info"
+    #datafilein = "../simtel_data/no_nsb_cut/proton/data/corsika_run307.simtel.gz"
+    #headerout = "../compressed_data/no_nsb_cut/proton/corsika_run307.header.pkl"
+    #pe_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.pkl"
+    #wf_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.wf_info"
     #
     #datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"
     #datafilein = "../simtel_data/electron/data/corsika_run307.simtel.gz"
     #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
+    #
+    datafilein = "../scratch/data_nagaia/data/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/output/corsika_run999.simtel.gz"
+    headerout = "corsika_run999.header.pkl"
+    pe_info_out = "corsika_run999.pe_info.pkl"
+    #
     tic = time.time()
     loop_header( datafilein, 10000000, headerout)
     loop_pe( datafilein, 10000000, pe_info_out)

@@ -87,3 +87,5 @@ ev_synthetic_4540_93106/
 ev_synthetic_896_18009/
 ev_synthetic_929_18701/
 hist_corsika_run307_pe_info.root
+corsika_run*.header.pkl
+corsika_run*.pe_info.pkl
