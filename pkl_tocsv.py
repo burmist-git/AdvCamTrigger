@@ -29,12 +29,19 @@ def conv_header(pklfilein = '../compressed_data/no_nsb_cut/gamma/corsika_run307.
     header = pkl.load(open(pklfilein, 'rb'))
     df = pd.DataFrame({'event_id': header[:,0], 
                        'energy': header[:,1],
-                       'xcore': header[:,2],
-                       'ycore': header[:,3],
-                       'ev_time': header[:,4],
-                       'nphotons': header[:,5],
-                       'n_pe': header[:,6],
-                       'n_pixels': header[:,7]})
+                       'azimuth': header[:,2],
+                       'altitude': header[:,3],
+                       'h_first_int': header[:,4],
+                       'xmax': header[:,5],
+                       'hmax': header[:,6],
+                       'emax': header[:,7],
+                       'cmax': header[:,8],
+                       'xcore': header[:,9],
+                       'ycore': header[:,10],
+                       'ev_time': header[:,11],
+                       'nphotons': header[:,12],
+                       'n_pe': header[:,13],
+                       'n_pixels': header[:,14]})
     df.to_csv(csvfileout,sep=' ',header=False)
     
 if __name__ == "__main__":
@@ -73,8 +80,8 @@ if __name__ == "__main__":
     #        csvfileout = '../compressed_data/no_nsb_cut/gamma/corsika_run307.pe_info.csv')
     #conv_pe(pklfilein = '../compressed_data/gamma/corsika_run307.pe_info.pkl',
     #        csvfileout = '../compressed_data/gamma/corsika_run307.pe_info.csv')
-    conv_pe(pklfilein = '../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.pkl',
-            csvfileout = '../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.csv')
+    #conv_pe(pklfilein = '../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.pkl',
+    #        csvfileout = '../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.csv')
     #
     #wf_pkl_list=['../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info_00000.pkl',
     #             '../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info_00001.pkl',

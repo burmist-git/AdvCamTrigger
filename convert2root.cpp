@@ -23,11 +23,18 @@
 const Int_t nn_max = 1000000;
 const Int_t nn_fadc_point = 75;
 const Int_t nn_PMT_channels = 7987;
-//const Int_t nn_PMT_channels = 3000;
+//const Int_t nn_PMT_channels = 30;
 
 struct wfheaderStr {
   Int_t event_id;
   Float_t energy;
+  Float_t azimuth;
+  Float_t altitude;
+  Float_t h_first_int;
+  Float_t xmax;
+  Float_t hmax;
+  Float_t emax;
+  Float_t cmax;
   Float_t xcore;
   Float_t ycore;
   Float_t ev_time;
@@ -45,7 +52,8 @@ struct pe_info_str {
 std::vector<pe_info_str> pe_info_vec;
 
 struct wf_str {
-  Int_t wf[nn_PMT_channels][nn_fadc_point];
+  //Int_t wf[nn_PMT_channels][nn_fadc_point];
+  Int_t wf[1][1];
 };
 std::vector<wf_str> wf_str_vec;
   
@@ -92,6 +100,13 @@ int main(int argc, char *argv[]){
     //
     Int_t event_id;
     Float_t energy;
+    Float_t azimuth;
+    Float_t altitude;
+    Float_t h_first_int;
+    Float_t xmax;
+    Float_t hmax;
+    Float_t emax;
+    Float_t cmax;
     Float_t xcore;
     Float_t ycore;
     Float_t ev_time;
@@ -103,11 +118,19 @@ int main(int argc, char *argv[]){
     Int_t pe_chID[nn_max];
     Float_t pe_time[nn_max];
     //
-    Int_t wf[nn_PMT_channels][nn_fadc_point];
+    //Int_t wf[nn_PMT_channels][nn_fadc_point];
+    Int_t wf[1][1];
     //
     //Event////////////////////////////////////////////////
     tree->Branch("event_id",&event_id, "event_id/I");
     tree->Branch("energy",&energy, "energy/F");
+    tree->Branch("azimuth",&azimuth, "azimuth/F");
+    tree->Branch("altitude",&altitude, "altitude/F");
+    tree->Branch("h_first_int",&h_first_int, "h_first_int/F");
+    tree->Branch("xmax",&xmax, "xmax/F");
+    tree->Branch("hmax",&hmax, "hmax/F");
+    tree->Branch("emax",&emax, "emax/F");
+    tree->Branch("cmax",&cmax, "cmax/F");
     tree->Branch("xcore", &xcore, "xcore/F");
     tree->Branch("ycore", &ycore, "ycore/F");
     tree->Branch("ev_time",&ev_time, "ev_time/F");
@@ -123,8 +146,8 @@ int main(int argc, char *argv[]){
     ///////////////////////////////////////////////////////
     //
     std::cout<<"header_vec.size()  "<<header_vec.size()<<std::endl
-	     <<"pe_info_vec.size() "<<pe_info_vec.size()<<std::endl
-    	     <<"wf_str_vec.size()  "<<wf_str_vec.size()<<std::endl;
+	     <<"pe_info_vec.size() "<<pe_info_vec.size()<<std::endl;
+    std::cout<<"wf_str_vec.size()  "<<wf_str_vec.size()<<std::endl;
     if(header_vec.size() != pe_info_vec.size()){
       std::cout<<" --> ERROR : header_vec.size() != pe_info_vec.size() "<<std::endl
 	       <<"             header_vec.size()  = "<<header_vec.size()<<std::endl
@@ -138,6 +161,13 @@ int main(int argc, char *argv[]){
       //
       event_id = header_vec.at(i).event_id;
       energy = header_vec.at(i).energy;
+      azimuth = header_vec.at(i).azimuth;
+      altitude = header_vec.at(i).altitude;
+      h_first_int = header_vec.at(i).h_first_int;
+      xmax = header_vec.at(i).xmax;
+      hmax = header_vec.at(i).hmax;
+      emax = header_vec.at(i).emax;
+      cmax = header_vec.at(i).cmax;
       xcore = header_vec.at(i).xcore;
       ycore = header_vec.at(i).ycore;
       ev_time = header_vec.at(i).ev_time;
@@ -214,6 +244,13 @@ int main(int argc, char *argv[]){
     //
     Int_t event_id;
     Float_t energy;
+    Float_t azimuth;
+    Float_t altitude;
+    Float_t h_first_int;
+    Float_t xmax;
+    Float_t hmax;
+    Float_t emax;
+    Float_t cmax;
     Float_t xcore;
     Float_t ycore;
     Float_t ev_time;
@@ -228,6 +265,13 @@ int main(int argc, char *argv[]){
     //Event////////////////////////////////////////////////
     tree->Branch("event_id",&event_id, "event_id/I");
     tree->Branch("energy",&energy, "energy/F");
+    tree->Branch("azimuth",&azimuth, "azimuth/F");
+    tree->Branch("altitude",&altitude, "altitude/F");
+    tree->Branch("h_first_int",&h_first_int, "h_first_int/F");
+    tree->Branch("xmax",&xmax, "xmax/F");
+    tree->Branch("hmax",&hmax, "hmax/F");
+    tree->Branch("emax",&emax, "emax/F");
+    tree->Branch("cmax",&cmax, "cmax/F");
     tree->Branch("xcore", &xcore, "xcore/F");
     tree->Branch("ycore", &ycore, "ycore/F");
     tree->Branch("ev_time",&ev_time, "ev_time/F");
@@ -254,6 +298,13 @@ int main(int argc, char *argv[]){
       //
       event_id = header_vec.at(i).event_id;
       energy = header_vec.at(i).energy;
+      azimuth = header_vec.at(i).azimuth;
+      altitude = header_vec.at(i).altitude;
+      h_first_int = header_vec.at(i).h_first_int;
+      xmax = header_vec.at(i).xmax;
+      hmax = header_vec.at(i).hmax;
+      emax = header_vec.at(i).emax;
+      cmax = header_vec.at(i).cmax;
       xcore = header_vec.at(i).xcore;
       ycore = header_vec.at(i).ycore;
       ev_time = header_vec.at(i).ev_time;
@@ -319,20 +370,55 @@ void read_header(TString file_name){
   std::ifstream fFile(file_name.Data());
   std::cout<<file_name<<std::endl;
   //
-  std::string mot;
-  Float_t event_id;
-  Float_t energy;
-  Float_t xcore;
-  Float_t ycore;
-  Float_t ev_time;
-  Float_t nphotons;
-  Float_t n_pe;
-  Float_t n_pixels;
+  std::string mot;     //0
+  Float_t event_id;    //1
+  Float_t energy;      //2
+  Float_t azimuth;     //3
+  Float_t altitude;    //4
+  Float_t h_first_int; //5
+  Float_t xmax;        //6
+  Float_t hmax;        //7
+  Float_t emax;        //8
+  Float_t cmax;        //9
+  Float_t xcore;       //10
+  Float_t ycore;       //11
+  Float_t ev_time;     //12
+  Float_t nphotons;    //13
+  Float_t n_pe;        //14
+  Float_t n_pixels;    //15
+  //
+  //0 0
+  //1 38608.0
+  //2 7.01853084564209
+  //3 7.01853084564209
+  //4 3.2043185234069824
+  //5 1.07183837890625
+  //6 19472.216796875
+  //7 392.4561462402344
+  //8 7753.76318359375
+  //9 392.52252197265625
+  //10 394.76361083984375
+  //11 618.92919921875
+  //12 -27.958635330200195
+  //13 -1012.3057250976562
+  //14 6657.0
+  //15 158.0
+  //
+  //
+  // 157 38608.0 7934.0 -968.3527221679688
+  // 158 42404.0    5.0 -358.64276123046875
   //
   if(fFile.is_open()){
     while(fFile>>mot>>
 	  event_id>>
 	  energy>>
+	  azimuth>>
+	  altitude>>
+	  h_first_int>>
+	  xmax>>
+	  hmax>>
+	  emax>>
+	  cmax>>
 	  xcore>>
 	  ycore>>
 	  ev_time>>
@@ -342,6 +428,13 @@ void read_header(TString file_name){
       wfheaderStr tmp;      
       tmp.event_id=event_id;
       tmp.energy=energy;
+      tmp.azimuth=azimuth;
+      tmp.altitude=altitude;
+      tmp.h_first_int=h_first_int;
+      tmp.xmax=xmax;
+      tmp.hmax=hmax;
+      tmp.emax=emax;
+      tmp.cmax=cmax;
       tmp.xcore=xcore;
       tmp.ycore=ycore;
       tmp.ev_time=ev_time;
@@ -349,6 +442,7 @@ void read_header(TString file_name){
       tmp.n_pe=n_pe;
       tmp.n_pixels=n_pixels;
       //std::cout<<tmp.event_id<<std::endl;
+      //assert(0);
       header_vec.push_back(tmp);
     }
     fFile.close();
@@ -373,6 +467,10 @@ void read_pe_info(TString file_name){
       pe_info.event_id = header_vec.at(i).event_id;
       for(unsigned int j = 0; j < (unsigned int)header_vec.at(i).n_pe; j++){
 	fFile>>id>>event_id>>ch_id>>pe_time;
+	//std::cout<<std::setw(10)<<"id       "<<std::setw(10)<<id
+	//	 <<std::setw(10)<<"event_id "<<std::setw(10)<<event_id
+	//	 <<std::setw(10)<<"ch_id    "<<std::setw(10)<<ch_id
+	//	 <<std::setw(10)<<"pe_time  "<<std::setw(10)<<pe_time<<std::endl;
 	if(verbosity>1){
 	  if(j%1000000==0)
 	    std::cout<<std::setw(10)<<"id       "<<std::setw(10)<<id
@@ -380,10 +478,21 @@ void read_pe_info(TString file_name){
 		     <<std::setw(10)<<"ch_id    "<<std::setw(10)<<ch_id
 		     <<std::setw(10)<<"pe_time  "<<std::setw(10)<<pe_time<<std::endl;
 	}
+	//else if (verbosity>2){
+	//std::cout<<std::setw(10)<<"id       "<<std::setw(10)<<id
+	//	   <<std::setw(10)<<"event_id "<<std::setw(10)<<event_id
+	//	   <<std::setw(10)<<"ch_id    "<<std::setw(10)<<ch_id
+	//	   <<std::setw(10)<<"pe_time  "<<std::setw(10)<<pe_time<<std::endl;
+	//}
 	if((Int_t)event_id != header_vec.at(i).event_id){
 	  std::cout<<" ERROR ---> (Int_t)event_id != header_vec.at(i).event_id "<<std::endl
 		   <<"            (Int_t)event_id "<<(Int_t)event_id<<std::endl
-		   <<"  header_vec.at(i).event_id "<<header_vec.at(i).event_id<<std::endl;
+		   <<"  header_vec.at(i).event_id "<<header_vec.at(i).event_id<<std::endl
+		   <<"  header_vec.at(0).event_id "<<header_vec.at(0).event_id<<std::endl;
+	  //std::cout<<std::setw(10)<<"id       "<<std::setw(10)<<id
+	  //	   <<std::setw(10)<<"event_id "<<std::setw(10)<<event_id
+	  //	   <<std::setw(10)<<"ch_id    "<<std::setw(10)<<ch_id
+	  //	   <<std::setw(10)<<"pe_time  "<<std::setw(10)<<pe_time<<std::endl;
 	  assert(0);
 	}
 	pe_info.chID.push_back((Int_t)ch_id);

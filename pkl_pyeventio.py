@@ -181,8 +181,23 @@ def loop_header(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz
         #print("n_pe             ", ev['photoelectrons'][0]['n_pe'])
         #print("n_pixels         ", (ev['photoelectrons'][0]['n_pixels']-np.sum(ev['photoelectrons'][0]['photoelectrons']==0)))
         #print("----------------------------------")
+        #'azimuth' 3.1415927410125732, 
+        #'altitude' 1.2217304706573486, 
+        #'h_first_int' 26537.1640625,
+        #'xmax' 256.582275390625,
+        #'hmax' 10661.2880859375,
+        #'emax' 256.582275390625,
+        #'cmax' 262.06817626953125,
+
         tot_list.append([ev['event_id'],
                          ev['mc_shower']['energy'],
+                         ev['mc_shower']['azimuth'],
+                         ev['mc_shower']['altitude'],
+                         ev['mc_shower']['h_first_int'],
+                         ev['mc_shower']['xmax'],
+                         ev['mc_shower']['hmax'],
+                         ev['mc_shower']['emax'],
+                         ev['mc_shower']['cmax'],
                          ev['mc_event']['xcore'],
                          ev['mc_event']['ycore'],
                          ev['telescope_events'][1]['header']['readout_time'],
@@ -245,7 +260,7 @@ if __name__ == "__main__":
     loop_header( datafilein, 500000, headerout)
     loop_pe( datafilein, 500000, pe_info_out)
     #loop_wf_stack( datafilein, 100000, wf_info_out)
-    loop_wf( datafilein, 500000, wf_info_out, True)
+    #loop_wf( datafilein, 500000, wf_info_out, True)
     #
     #loop_wf_test( datafilein, 100000, wf_info_out)
     #

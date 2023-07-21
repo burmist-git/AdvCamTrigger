@@ -54,7 +54,7 @@ else
 	header_file="../compressed_data/no_nsb_cut/$particle/corsika_run307.header.csv"
 	pe_info_file="../compressed_data/no_nsb_cut/$particle/corsika_run307.pe_info.csv"
 	outputRootFile="../compressed_data/no_nsb_cut/$particle/corsika_run307.compressed.root"
-	#./convert2root 0 $header_file $pe_info_file $outputRootFile
+	./convert2root 1 $header_file $pe_info_file $outputRootFile
     elif [ "$1" = "--inc_reduce_stack" ]; then	
 	echo " ulimit -s           : current limit"
 	echo " ulimit -s unlimited : set stack unlimited"
