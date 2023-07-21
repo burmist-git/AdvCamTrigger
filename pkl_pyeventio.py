@@ -257,8 +257,8 @@ if __name__ == "__main__":
     #datafilein = "../simtel_data/electron/data/corsika_run307.simtel.gz"
     #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
     tic = time.time()
-    loop_header( datafilein, 500000, headerout)
-    loop_pe( datafilein, 500000, pe_info_out)
+    loop_header( datafilein, 10000000, headerout)
+    loop_pe( datafilein, 10000000, pe_info_out)
     #loop_wf_stack( datafilein, 100000, wf_info_out)
     #loop_wf( datafilein, 500000, wf_info_out, True)
     #
