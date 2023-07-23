@@ -225,6 +225,7 @@ def loop_header_pe(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel
     #
     sf = SimTelFile(datafilein)
     it_cout = 0
+    file_counter = 0;
     tot_list=[]
     tot_arr=np.array([])
     #
@@ -262,13 +263,22 @@ def loop_header_pe(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel
             tot_arr = new_ev
         else :
             tot_arr = np.concatenate((tot_arr,new_ev), axis=0)                
-        
+            
         it_cout = it_cout + 1
+
+        if(it_cout == 10000):
+            pkl.dump(np.array(tot_list), open(str(headrefilename + "_" +str(file_counter)), "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
+            pkl.dump(tot_arr, open(str(pefilename + "_" +str(file_counter)), "wb"), protocol=pkl.HIGHEST_PROTOCOL)
+            file_counter = file_counter + 1
+            #
+            it_cout = 0
+
+        
         if (it_cout>=max_ev) :
             break
 
-    pkl.dump(np.array(tot_list), open(headrefilename, "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
-    pkl.dump(tot_arr, open(pefilename, "wb"), protocol=pkl.HIGHEST_PROTOCOL)
+    pkl.dump(np.array(tot_list), open(str(headrefilename + "_" +str(file_counter), "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
+    pkl.dump(tot_arr, open(str(pefilename + "_" +str(file_counter), "wb"), protocol=pkl.HIGHEST_PROTOCOL)
     
     sf.close()
 
