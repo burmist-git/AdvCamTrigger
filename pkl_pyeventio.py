@@ -1,7 +1,8 @@
 from eventio import SimTelFile
+
 import numpy as np
 import pickle as pkl
-
+import sys
 import time
 
 def loop_wf(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz", max_ev = 100, outfilename = 'wf_info', csv_flag=True):
@@ -237,38 +238,49 @@ def get_pixel_mapping(datafilein = "../simtel_data/gamma/data/corsika_run307.sim
     sf.close()
     
 if __name__ == "__main__":
-    #
-    #datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"
-    #headerout = "../compressed_data/gamma/corsika_run307.header.pkl"
-    #pe_info_out = "../compressed_data/gamma/corsika_run307.pe_info.pkl"
-    #wf_info_out = "../compressed_data/gamma/corsika_run307.wf_info"
-    #
-    #datafilein = "../simtel_data/no_nsb_cut/gamma/data/corsika_run307.simtel.gz"
-    #headerout = "../compressed_data/no_nsb_cut/gamma/corsika_run307.header.pkl"
-    #pe_info_out = "../compressed_data/no_nsb_cut/gamma/corsika_run307.pe_info.pkl"
-    #wf_info_out = "../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info"
-    #
-    #datafilein = "../simtel_data/no_nsb_cut/proton/data/corsika_run307.simtel.gz"
-    #headerout = "../compressed_data/no_nsb_cut/proton/corsika_run307.header.pkl"
-    #pe_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.pkl"
-    #wf_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.wf_info"
-    #
-    #datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"
-    #datafilein = "../simtel_data/electron/data/corsika_run307.simtel.gz"
-    #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
-    #
-    datafilein = "../scratch/data_nagaia/data/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/output/corsika_run999.simtel.gz"
-    headerout = "corsika_run999.header.pkl"
-    pe_info_out = "corsika_run999.pe_info.pkl"
-    #
-    tic = time.time()
-    loop_header( datafilein, 10000000, headerout)
-    loop_pe( datafilein, 10000000, pe_info_out)
-    #loop_wf_stack( datafilein, 100000, wf_info_out)
-    #loop_wf( datafilein, 500000, wf_info_out, True)
-    #
-    #loop_wf_test( datafilein, 100000, wf_info_out)
-    #
-    #get_pixel_mapping(datafilein, outmap_csv = 'pixel_mapping.csv')
-    toc = time.time()
-    print('{:.2f} s'.format(toc - tic))
+
+    if (len(sys.argv)==4):
+        filenameNpz = str(sys.argv[1])
+        filenameRoot = str(sys.argv[2])
+        #
+        #datafilein = "../scratch/data_nagaia/data/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/output/corsika_run999.simtel.gz"
+        #headerout = "corsika_run999.header.pkl"
+        #pe_info_out = "corsika_run999.pe_info.pkl"
+        datafilein = str(sys.argv[1])
+        headerout = str(sys.argv[2])
+        pe_info_out = str(sys.argv[3])
+        #
+        print("datafilein  = ", datafilein)
+        print("headerout   = ", headerout)
+        print("pe_info_out = ", pe_info_out)
+        #
+        #datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"
+        #headerout = "../compressed_data/gamma/corsika_run307.header.pkl"
+        #pe_info_out = "../compressed_data/gamma/corsika_run307.pe_info.pkl"
+        #wf_info_out = "../compressed_data/gamma/corsika_run307.wf_info"
+        #
+        #datafilein = "../simtel_data/no_nsb_cut/gamma/data/corsika_run307.simtel.gz"
+        #headerout = "../compressed_data/no_nsb_cut/gamma/corsika_run307.header.pkl"
+        #pe_info_out = "../compressed_data/no_nsb_cut/gamma/corsika_run307.pe_info.pkl"
+        #wf_info_out = "../compressed_data/no_nsb_cut/gamma/corsika_run307.wf_info"
+        #
+        #datafilein = "../simtel_data/no_nsb_cut/proton/data/corsika_run307.simtel.gz"
+        #headerout = "../compressed_data/no_nsb_cut/proton/corsika_run307.header.pkl"
+        #pe_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.pe_info.pkl"
+        #wf_info_out = "../compressed_data/no_nsb_cut/proton/corsika_run307.wf_info"
+        #
+        #datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"
+        #datafilein = "../simtel_data/electron/data/corsika_run307.simtel.gz"
+        #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
+        #
+        tic = time.time()
+        #loop_header( datafilein, 10000000, headerout)
+        #loop_pe( datafilein, 10000000, pe_info_out)
+        #loop_wf_stack( datafilein, 100000, wf_info_out)
+        #loop_wf( datafilein, 500000, wf_info_out, True)
+        #
+        #loop_wf_test( datafilein, 100000, wf_info_out)
+        #
+        #get_pixel_mapping(datafilein, outmap_csv = 'pixel_mapping.csv')
+        toc = time.time()
+        print('{:.2f} s'.format(toc - tic))
