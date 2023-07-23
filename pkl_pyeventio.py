@@ -277,8 +277,8 @@ def loop_header_pe(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel
         if (it_cout>=max_ev) :
             break
 
-    pkl.dump(np.array(tot_list), open(str(headrefilename + "_" +str(file_counter), "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
-    pkl.dump(tot_arr, open(str(pefilename + "_" +str(file_counter), "wb"), protocol=pkl.HIGHEST_PROTOCOL)
+    pkl.dump(np.array(tot_list), open(str(headrefilename + "_" +str(file_counter)), "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
+    pkl.dump(tot_arr, open(str(pefilename + "_" +str(file_counter)), "wb"), protocol=pkl.HIGHEST_PROTOCOL)
     
     sf.close()
 
