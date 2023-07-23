@@ -108,6 +108,8 @@ def loop_wf_stack(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.
 
 def loop_pe(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz", max_ev = 100, headrefilename = 'pe_info.pkl'):
     #
+    print("loop_pe")
+    #
     sf = SimTelFile(datafilein)
     it_cout = 0
     tot_arr=np.array([])
@@ -158,6 +160,8 @@ def loop_pe(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz", m
     sf.close()
 
 def loop_header(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz", max_ev = 100, headrefilename = 'header.pkl'):
+    #
+    print("loop_header")
     #
     sf = SimTelFile(datafilein)
     it_cout = 0
@@ -274,8 +278,8 @@ if __name__ == "__main__":
         #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
         #
         tic = time.time()
-        #loop_header( datafilein, 10000000, headerout)
-        #loop_pe( datafilein, 10000000, pe_info_out)
+        loop_header( datafilein, 10000000, headerout)
+        loop_pe( datafilein, 10000000, pe_info_out)
         #loop_wf_stack( datafilein, 100000, wf_info_out)
         #loop_wf( datafilein, 500000, wf_info_out, True)
         #
