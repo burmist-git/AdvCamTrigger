@@ -20,7 +20,8 @@ function conv_to_pkl {
     particlein=$2
     ind_start=$3
     ind_stop=$4
-    simtelpath="../scratch/data_nagaia/data/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/output/"
+    #simtelpath="../scratch/data_nagaia/data/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/output/"
+    simtelpath="../simtel_data/$particle/data/"
     echo "particle   $particle"
     echo "particlein $particlein"
     echo "ind_start  $ind_start"

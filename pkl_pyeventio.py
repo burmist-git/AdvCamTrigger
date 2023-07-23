@@ -219,6 +219,60 @@ def loop_header(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz
     sf.close()
 
 
+def loop_header_pe(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz", max_ev = 100, headrefilename = 'header.pkl', pefilename = 'pe_info.pkl'):
+    #
+    print("loop_header_pe")
+    #
+    sf = SimTelFile(datafilein)
+    it_cout = 0
+    tot_list=[]
+    tot_arr=np.array([])
+    #
+    tic = time.time()
+    toc = time.time()
+    #
+    for ev in sf:
+        if (it_cout%1000==0) :
+            toc = time.time()
+            print('{:10d} {:10d} {:10.2f} s'.format(it_cout, ev['event_id'], toc - tic))
+            tic = time.time()
+
+        tot_list.append([ev['event_id'],
+                         ev['mc_shower']['energy'],
+                         ev['mc_shower']['azimuth'],
+                         ev['mc_shower']['altitude'],
+                         ev['mc_shower']['h_first_int'],
+                         ev['mc_shower']['xmax'],
+                         ev['mc_shower']['hmax'],
+                         ev['mc_shower']['emax'],
+                         ev['mc_shower']['cmax'],
+                         ev['mc_event']['xcore'],
+                         ev['mc_event']['ycore'],
+                         ev['telescope_events'][1]['header']['readout_time'],
+                         len(ev['photons'][0]),
+                         ev['photoelectrons'][0]['n_pe'],
+                         (ev['photoelectrons'][0]['n_pixels']-np.sum(ev['photoelectrons'][0]['photoelectrons']==0))])
+
+        npe = ev['photoelectrons'][0]['n_pe']
+        new_ev = np.concatenate((np.ones((npe,1))*ev['event_id'],
+                                 np.reshape(np.array(ev['photoelectrons'][0]['pixel_id']),(npe,1)),
+                                 np.reshape(np.array(ev['photoelectrons'][0]['time']),(npe,1))), axis=1)
+        
+        if(it_cout == 0):
+            tot_arr = new_ev
+        else :
+            tot_arr = np.concatenate((tot_arr,new_ev), axis=0)                
+        
+        it_cout = it_cout + 1
+        if (it_cout>=max_ev) :
+            break
+
+    pkl.dump(np.array(tot_list), open(headrefilename, "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
+    pkl.dump(tot_arr, open(pefilename, "wb"), protocol=pkl.HIGHEST_PROTOCOL)
+    
+    sf.close()
+
+
 def get_pixel_mapping(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz", outmap_csv = 'pixel_mapping.csv'):
     sf = SimTelFile(datafilein)
     #
@@ -278,8 +332,9 @@ if __name__ == "__main__":
         #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
         #
         tic = time.time()
-        loop_header( datafilein, 10000, headerout)
-        loop_pe( datafilein, 10000, pe_info_out)
+        loop_header_pe(datafilein, 1000001, headerout, pe_info_out)
+        #loop_header( datafilein, 10000, headerout)
+        #loop_pe( datafilein, 10000, pe_info_out)
         #loop_wf_stack( datafilein, 100000, wf_info_out)
         #loop_wf( datafilein, 500000, wf_info_out, True)
         #
