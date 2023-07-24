@@ -7,6 +7,7 @@ function printHelp {
     echo " [1]   part_type   : (g/gd/e/p)"
     echo " [2]   i_start     : i_start"
     echo " [3]   i_stop      : i_stop"
+    echo " [0] --size        : get data size"
     echo " [0] -h            : print help"
 }
 
@@ -73,6 +74,11 @@ else
 	else
             printHelp
 	fi
+    elif [ "$1" = "--size" ]; then
+	du -hs gamma
+	du -hs gamma_diffuse
+	du -hs electron
+	du -hs proton
     elif [ "$1" = "-d" ]; then
         printHelp
     elif [ "$1" = "-h" ]; then
