@@ -5,6 +5,37 @@ import pickle as pkl
 import sys
 import time
 
+def test(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz"):
+    #
+    sf = SimTelFile(datafilein)
+    tic = time.time()
+    toc = time.time()
+    #
+    it_cout = 0
+    file_counter=0
+    first_evne_in_file=True
+    #
+    for ev in sf :
+        event_id = -999
+        #try :
+        #    event_id = ev['event_id']
+        #except:
+        #    event_id == -999
+
+        #if (it_cout%1000==0) :
+        #    toc = time.time()
+        #    print('{:10d} {:10d} {:10.2f} s'.format(it_cout, event_id, toc - tic))
+        #    tic = time.time()
+
+        if (it_cout%1000==0) :
+            toc = time.time()
+            print('{:10d} {:10.2f} s'.format(it_cout, toc - tic))
+            tic = time.time()
+        it_cout = it_cout + 1
+    
+    sf.close()
+    
+
 def loop_wf(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel.gz", max_ev = 100, outfilename = 'wf_info', csv_flag=True):
     #
     sf = SimTelFile(datafilein)
@@ -342,7 +373,8 @@ if __name__ == "__main__":
         #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
         #
         tic = time.time()
-        loop_header_pe(datafilein, 1000001, headerout, pe_info_out)
+        test(datafilein)
+        #loop_header_pe(datafilein, 1000001, headerout, pe_info_out)
         #loop_header( datafilein, 10000, headerout)
         #loop_pe( datafilein, 10000, pe_info_out)
         #loop_wf_stack( datafilein, 100000, wf_info_out)
