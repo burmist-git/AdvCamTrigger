@@ -269,6 +269,17 @@ def loop_header_pe(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel
             print('{:10d} {:10d} {:10.2f} s'.format(it_cout, ev['event_id'], toc - tic))
             tic = time.time()
 
+        npe = ev['photoelectrons'][0]['n_pe']
+        new_ev = np.concatenate((np.ones((npe,1))*ev['event_id'],
+                                 np.reshape(np.array(ev['photoelectrons'][0]['pixel_id']),(npe,1)),
+                                 np.reshape(np.array(ev['photoelectrons'][0]['time']),(npe,1))), axis=1)
+        
+        if(it_cout == 0):
+            tot_arr = new_ev
+            tot_list = []
+        else :
+            tot_arr = np.concatenate((tot_arr,new_ev), axis=0)                
+
         tot_list.append([ev['event_id'],
                          ev['mc_shower']['energy'],
                          ev['mc_shower']['azimuth'],
@@ -283,18 +294,9 @@ def loop_header_pe(datafilein = "../simtel_data/gamma/data/corsika_run307.simtel
                          ev['telescope_events'][1]['header']['readout_time'],
                          len(ev['photons'][0]),
                          ev['photoelectrons'][0]['n_pe'],
-                         (ev['photoelectrons'][0]['n_pixels']-np.sum(ev['photoelectrons'][0]['photoelectrons']==0))])
+                        (ev['photoelectrons'][0]['n_pixels']-np.sum(ev['photoelectrons'][0]['photoelectrons']==0))])
 
-        npe = ev['photoelectrons'][0]['n_pe']
-        new_ev = np.concatenate((np.ones((npe,1))*ev['event_id'],
-                                 np.reshape(np.array(ev['photoelectrons'][0]['pixel_id']),(npe,1)),
-                                 np.reshape(np.array(ev['photoelectrons'][0]['time']),(npe,1))), axis=1)
-        
-        if(it_cout == 0):
-            tot_arr = new_ev
-        else :
-            tot_arr = np.concatenate((tot_arr,new_ev), axis=0)                
-            
+
         it_cout = it_cout + 1
 
         if(it_cout == 10000):
@@ -373,8 +375,8 @@ if __name__ == "__main__":
         #datafilein = "../simtel_data/proton/data/corsika_run307.simtel.gz"
         #
         tic = time.time()
-        test(datafilein)
-        #loop_header_pe(datafilein, 1000001, headerout, pe_info_out)
+        #test(datafilein)
+        loop_header_pe(datafilein, 1000001, headerout, pe_info_out)
         #loop_header( datafilein, 10000, headerout)
         #loop_pe( datafilein, 10000, pe_info_out)
         #loop_wf_stack( datafilein, 100000, wf_info_out)
