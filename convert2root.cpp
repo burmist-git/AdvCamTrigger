@@ -214,7 +214,6 @@ int main(int argc, char *argv[]){
     hfile->Close();
   }
   else if(argc == 5 && atoi(argv[1]) == 1){
-    //
     TString header_file = argv[2];
     TString pe_info_file = argv[3];
     TString outputRootFile = argv[4];
@@ -222,129 +221,8 @@ int main(int argc, char *argv[]){
 	     <<"header_file    "<<header_file<<std::endl
 	     <<"pe_info_file   "<<pe_info_file<<std::endl
 	     <<"outputRootFile "<<outputRootFile<<std::endl;
-    ////////////////
-    read_header(header_file);
-    read_pe_info(pe_info_file);
-    ////////////////
-    //
-    ///////////////////Root file with data/////////////////
-    TFile *hfile = new TFile(outputRootFile, "RECREATE", "Simtel log data", 1);
-    if (hfile->IsZombie()) {
-      std::cout<<" ---> ERROR : PROBLEM with the initialization of the output ROOT file : "<<std::endl
-	       <<outputRootFile
-	       <<std::endl;
-      assert(0);
-    }
-    TTree *tree = new TTree("T", "Simtel data");
-    hfile->SetCompressionLevel(2);
-    tree->SetAutoSave(1000000);  
-    // Create new event
-    TTree::SetBranchStyle(0);
-    ///////////////////////////////////////////////////////
-    //
-    Int_t event_id;
-    Float_t energy;
-    Float_t azimuth;
-    Float_t altitude;
-    Float_t h_first_int;
-    Float_t xmax;
-    Float_t hmax;
-    Float_t emax;
-    Float_t cmax;
-    Float_t xcore;
-    Float_t ycore;
-    Float_t ev_time;
-    //
-    Int_t nphotons;
-    Int_t n_pe;
-    Int_t n_pixels;
-    //
-    Int_t pe_chID[nn_max];
-    Float_t pe_time[nn_max];
-    //
-    //Event////////////////////////////////////////////////
-    tree->Branch("event_id",&event_id, "event_id/I");
-    tree->Branch("energy",&energy, "energy/F");
-    tree->Branch("azimuth",&azimuth, "azimuth/F");
-    tree->Branch("altitude",&altitude, "altitude/F");
-    tree->Branch("h_first_int",&h_first_int, "h_first_int/F");
-    tree->Branch("xmax",&xmax, "xmax/F");
-    tree->Branch("hmax",&hmax, "hmax/F");
-    tree->Branch("emax",&emax, "emax/F");
-    tree->Branch("cmax",&cmax, "cmax/F");
-    tree->Branch("xcore", &xcore, "xcore/F");
-    tree->Branch("ycore", &ycore, "ycore/F");
-    tree->Branch("ev_time",&ev_time, "ev_time/F");
-    tree->Branch("nphotons",&nphotons, "nphotons/I");
-    tree->Branch("n_pe",&n_pe, "n_pe/I");
-    tree->Branch("n_pixels",&n_pixels, "n_pixels/I");
-    //
-    tree->Branch("pe_chID",pe_chID, "pe_chID[n_pe]/I");
-    tree->Branch("pe_time",pe_time, "pe_time[n_pe]/F");
-    //
-    ///////////////////////////////////////////////////////
-    //
-    std::cout<<"header_vec.size()  "<<header_vec.size()<<std::endl
-	     <<"pe_info_vec.size() "<<pe_info_vec.size()<<std::endl;
-    if(header_vec.size() != pe_info_vec.size()){
-      std::cout<<" --> ERROR : header_vec.size() != pe_info_vec.size() "<<std::endl
-	       <<"             header_vec.size()  = "<<header_vec.size()<<std::endl;
-      assert(0);
-    }     
-    //
-    for(unsigned int i = 0; i < header_vec.size(); i++){
-      if(i%10000 == 0)
-        std::cout<<i<<std::endl;
-      //
-      event_id = header_vec.at(i).event_id;
-      energy = header_vec.at(i).energy;
-      azimuth = header_vec.at(i).azimuth;
-      altitude = header_vec.at(i).altitude;
-      h_first_int = header_vec.at(i).h_first_int;
-      xmax = header_vec.at(i).xmax;
-      hmax = header_vec.at(i).hmax;
-      emax = header_vec.at(i).emax;
-      cmax = header_vec.at(i).cmax;
-      xcore = header_vec.at(i).xcore;
-      ycore = header_vec.at(i).ycore;
-      ev_time = header_vec.at(i).ev_time;
-      nphotons = header_vec.at(i).nphotons;
-      n_pe = header_vec.at(i).n_pe;
-      n_pixels = header_vec.at(i).n_pixels;
-      //
-      if(pe_info_vec.at(i).event_id != event_id){
-	std::cout<<" --> ERROR : pe_info_vec.at(i).event_id != event_id "<<std::endl
-		 <<"             pe_info_vec.at(i).event_id  = "<<pe_info_vec.at(i).event_id<<std::endl
-		 <<"                               event_id  = "<<event_id<<std::endl;
-	assert(0);
-      }
-      //
-      if(pe_info_vec.at(i).chID.size() != (unsigned int)n_pe ||
-	 pe_info_vec.at(i).time.size() != (unsigned int)n_pe){
-	std::cout<<" --> ERROR : pe_info_vec.at(i).chID.size() != (unsigned int)n_pe || "<<std::endl
-		 <<"             pe_info_vec.at(i).time.size() != (unsigned int)n_pe"<<std::endl
-		 <<"             pe_info_vec.at(i).chID.size()  = "<<pe_info_vec.at(i).chID.size()<<std::endl
-		 <<"             pe_info_vec.at(i).time.size()  = "<<pe_info_vec.at(i).time.size()<<std::endl
-		 <<"                                      n_pe  = "<<n_pe<<std::endl;
-	assert(0);
-      }
-      for(int j = 0; j < nn_max; j++){
-	pe_chID[j] = 0;
-	pe_time[j] = 0.0;
-      }
-      ////////////////////
-      if(n_pe<nn_max){
-	for(unsigned int j = 0; j < pe_info_vec.at(i).chID.size(); j++){
-	  pe_chID[j] = pe_info_vec.at(i).chID.at(j);
-	  pe_time[j] = pe_info_vec.at(i).time.at(j);
-	}
-	//
-	tree->Fill();
-      }
-    }
-    hfile = tree->GetCurrentFile();
-    hfile->Write();
-    hfile->Close();
+
+
   }
   else{
     std::cout<<"  runID [1] = 0        "<<std::endl
@@ -531,4 +409,137 @@ void read_wf(TString wf_file_list){
     indataFile.close();
   }
   indataList.close();
+}
+
+void convert2root() {   //
+    TString header_file = argv[2];
+    TString pe_info_file = argv[3];
+    TString outputRootFile = argv[4];
+    std::cout<<std::endl
+	     <<"header_file    "<<header_file<<std::endl
+	     <<"pe_info_file   "<<pe_info_file<<std::endl
+	     <<"outputRootFile "<<outputRootFile<<std::endl;
+    ////////////////
+    read_header(header_file);
+    read_pe_info(pe_info_file);
+    ////////////////
+    //
+    ///////////////////Root file with data/////////////////
+    TFile *hfile = new TFile(outputRootFile, "RECREATE", "Simtel log data", 1);
+    if (hfile->IsZombie()) {
+      std::cout<<" ---> ERROR : PROBLEM with the initialization of the output ROOT file : "<<std::endl
+	       <<outputRootFile
+	       <<std::endl;
+      assert(0);
+    }
+    TTree *tree = new TTree("T", "Simtel data");
+    hfile->SetCompressionLevel(2);
+    tree->SetAutoSave(1000000);  
+    // Create new event
+    TTree::SetBranchStyle(0);
+    ///////////////////////////////////////////////////////
+    //
+    Int_t event_id;
+    Float_t energy;
+    Float_t azimuth;
+    Float_t altitude;
+    Float_t h_first_int;
+    Float_t xmax;
+    Float_t hmax;
+    Float_t emax;
+    Float_t cmax;
+    Float_t xcore;
+    Float_t ycore;
+    Float_t ev_time;
+    //
+    Int_t nphotons;
+    Int_t n_pe;
+    Int_t n_pixels;
+    //
+    Int_t pe_chID[nn_max];
+    Float_t pe_time[nn_max];
+    //
+    //Event////////////////////////////////////////////////
+    tree->Branch("event_id",&event_id, "event_id/I");
+    tree->Branch("energy",&energy, "energy/F");
+    tree->Branch("azimuth",&azimuth, "azimuth/F");
+    tree->Branch("altitude",&altitude, "altitude/F");
+    tree->Branch("h_first_int",&h_first_int, "h_first_int/F");
+    tree->Branch("xmax",&xmax, "xmax/F");
+    tree->Branch("hmax",&hmax, "hmax/F");
+    tree->Branch("emax",&emax, "emax/F");
+    tree->Branch("cmax",&cmax, "cmax/F");
+    tree->Branch("xcore", &xcore, "xcore/F");
+    tree->Branch("ycore", &ycore, "ycore/F");
+    tree->Branch("ev_time",&ev_time, "ev_time/F");
+    tree->Branch("nphotons",&nphotons, "nphotons/I");
+    tree->Branch("n_pe",&n_pe, "n_pe/I");
+    tree->Branch("n_pixels",&n_pixels, "n_pixels/I");
+    //
+    tree->Branch("pe_chID",pe_chID, "pe_chID[n_pe]/I");
+    tree->Branch("pe_time",pe_time, "pe_time[n_pe]/F");
+    //
+    ///////////////////////////////////////////////////////
+    //
+    std::cout<<"header_vec.size()  "<<header_vec.size()<<std::endl
+	     <<"pe_info_vec.size() "<<pe_info_vec.size()<<std::endl;
+    if(header_vec.size() != pe_info_vec.size()){
+      std::cout<<" --> ERROR : header_vec.size() != pe_info_vec.size() "<<std::endl
+	       <<"             header_vec.size()  = "<<header_vec.size()<<std::endl;
+      assert(0);
+    }     
+    //
+    for(unsigned int i = 0; i < header_vec.size(); i++){
+      if(i%10000 == 0)
+        std::cout<<i<<std::endl;
+      //
+      event_id = header_vec.at(i).event_id;
+      energy = header_vec.at(i).energy;
+      azimuth = header_vec.at(i).azimuth;
+      altitude = header_vec.at(i).altitude;
+      h_first_int = header_vec.at(i).h_first_int;
+      xmax = header_vec.at(i).xmax;
+      hmax = header_vec.at(i).hmax;
+      emax = header_vec.at(i).emax;
+      cmax = header_vec.at(i).cmax;
+      xcore = header_vec.at(i).xcore;
+      ycore = header_vec.at(i).ycore;
+      ev_time = header_vec.at(i).ev_time;
+      nphotons = header_vec.at(i).nphotons;
+      n_pe = header_vec.at(i).n_pe;
+      n_pixels = header_vec.at(i).n_pixels;
+      //
+      if(pe_info_vec.at(i).event_id != event_id){
+	std::cout<<" --> ERROR : pe_info_vec.at(i).event_id != event_id "<<std::endl
+		 <<"             pe_info_vec.at(i).event_id  = "<<pe_info_vec.at(i).event_id<<std::endl
+		 <<"                               event_id  = "<<event_id<<std::endl;
+	assert(0);
+      }
+      //
+      if(pe_info_vec.at(i).chID.size() != (unsigned int)n_pe ||
+	 pe_info_vec.at(i).time.size() != (unsigned int)n_pe){
+	std::cout<<" --> ERROR : pe_info_vec.at(i).chID.size() != (unsigned int)n_pe || "<<std::endl
+		 <<"             pe_info_vec.at(i).time.size() != (unsigned int)n_pe"<<std::endl
+		 <<"             pe_info_vec.at(i).chID.size()  = "<<pe_info_vec.at(i).chID.size()<<std::endl
+		 <<"             pe_info_vec.at(i).time.size()  = "<<pe_info_vec.at(i).time.size()<<std::endl
+		 <<"                                      n_pe  = "<<n_pe<<std::endl;
+	assert(0);
+      }
+      for(int j = 0; j < nn_max; j++){
+	pe_chID[j] = 0;
+	pe_time[j] = 0.0;
+      }
+      ////////////////////
+      if(n_pe<nn_max){
+	for(unsigned int j = 0; j < pe_info_vec.at(i).chID.size(); j++){
+	  pe_chID[j] = pe_info_vec.at(i).chID.at(j);
+	  pe_time[j] = pe_info_vec.at(i).time.at(j);
+	}
+	//
+	tree->Fill();
+      }
+    }
+    hfile = tree->GetCurrentFile();
+    hfile->Write();
+    hfile->Close();
 }
