@@ -19,6 +19,7 @@
 #include <fstream>
 #include <iomanip>
 #include <time.h>
+#include <vector>
 
 const Int_t nn_max = 1000000;
 const Int_t nn_fadc_point = 75;
@@ -60,6 +61,8 @@ std::vector<wf_str> wf_str_vec;
 void read_header(TString file_name);
 void read_pe_info(TString file_name);
 void read_wf(TString wf_file_list);
+void read_list( std::vector<TString> &header_file_v, std::vector<TString> &pe_info_file_v, TString inDir, TString list_file);
+void convert2root(const std::vector<TString> &header_file_v, const std::vector<TString> &pe_info_file_v, TString outputRootFile);
 
 int main(int argc, char *argv[]){
   //
@@ -221,8 +224,26 @@ int main(int argc, char *argv[]){
 	     <<"header_file    "<<header_file<<std::endl
 	     <<"pe_info_file   "<<pe_info_file<<std::endl
 	     <<"outputRootFile "<<outputRootFile<<std::endl;
-
-
+    //
+    std::vector<TString> header_file_v;
+    std::vector<TString> pe_info_file_v;
+    header_file_v.push_back(header_file);
+    pe_info_file_v.push_back(pe_info_file);
+    convert2root(header_file_v, pe_info_file_v, outputRootFile);
+  }
+  else if(argc == 5 && atoi(argv[1]) == 2){
+    TString inDir = argv[2];
+    TString list_file = argv[3];
+    TString outputRootFile = argv[4];
+    std::cout<<std::endl
+	     <<"inDir          "<<inDir<<std::endl
+	     <<"list_file      "<<list_file<<std::endl
+	     <<"outputRootFile "<<outputRootFile<<std::endl;
+    //
+    std::vector<TString> header_file_v;
+    std::vector<TString> pe_info_file_v;
+    read_list( header_file_v, pe_info_file_v, inDir, list_file);
+    convert2root(header_file_v, pe_info_file_v, outputRootFile);
   }
   else{
     std::cout<<"  runID [1] = 0        "<<std::endl
@@ -233,6 +254,10 @@ int main(int argc, char *argv[]){
     std::cout<<"  runID [1] = 1        "<<std::endl
 	     <<"        [2] - header_file "<<std::endl
 	     <<"        [3] - pe_info_file "<<std::endl
+	     <<"        [5] - outputRootFile "<<std::endl;
+    std::cout<<"  runID [1] = 2        "<<std::endl
+	     <<"        [2] - inDir "<<std::endl
+	     <<"        [3] - list_file "<<std::endl
 	     <<"        [5] - outputRootFile "<<std::endl;
   }  //
   finish = clock();
@@ -411,76 +436,80 @@ void read_wf(TString wf_file_list){
   indataList.close();
 }
 
-void convert2root() {   //
-    TString header_file = argv[2];
-    TString pe_info_file = argv[3];
-    TString outputRootFile = argv[4];
+void convert2root(const std::vector<TString> &header_file_v, const std::vector<TString> &pe_info_file_v, TString outputRootFile) {
+  //
+  ////////////////
+  //
+  ///////////////////Root file with data/////////////////
+  TFile *hfile = new TFile(outputRootFile, "RECREATE", "Simtel log data", 1);
+  if (hfile->IsZombie()) {
+    std::cout<<" ---> ERROR : PROBLEM with the initialization of the output ROOT file : "<<std::endl
+	     <<outputRootFile
+	     <<std::endl;
+    assert(0);
+  }
+  TTree *tree = new TTree("T", "Simtel data");
+  hfile->SetCompressionLevel(2);
+  tree->SetAutoSave(1000000);  
+  // Create new event
+  TTree::SetBranchStyle(0);
+  ///////////////////////////////////////////////////////
+  //
+  Int_t event_id;
+  Float_t energy;
+  Float_t azimuth;
+  Float_t altitude;
+  Float_t h_first_int;
+  Float_t xmax;
+  Float_t hmax;
+  Float_t emax;
+  Float_t cmax;
+  Float_t xcore;
+  Float_t ycore;
+  Float_t ev_time;
+  //
+  Int_t nphotons;
+  Int_t n_pe;
+  Int_t n_pixels;
+  //
+  Int_t pe_chID[nn_max];
+  Float_t pe_time[nn_max];
+  //
+  //Event////////////////////////////////////////////////
+  tree->Branch("event_id",&event_id, "event_id/I");
+  tree->Branch("energy",&energy, "energy/F");
+  tree->Branch("azimuth",&azimuth, "azimuth/F");
+  tree->Branch("altitude",&altitude, "altitude/F");
+  tree->Branch("h_first_int",&h_first_int, "h_first_int/F");
+  tree->Branch("xmax",&xmax, "xmax/F");
+  tree->Branch("hmax",&hmax, "hmax/F");
+  tree->Branch("emax",&emax, "emax/F");
+  tree->Branch("cmax",&cmax, "cmax/F");
+  tree->Branch("xcore", &xcore, "xcore/F");
+  tree->Branch("ycore", &ycore, "ycore/F");
+  tree->Branch("ev_time",&ev_time, "ev_time/F");
+  tree->Branch("nphotons",&nphotons, "nphotons/I");
+  tree->Branch("n_pe",&n_pe, "n_pe/I");
+  tree->Branch("n_pixels",&n_pixels, "n_pixels/I");
+  //
+  tree->Branch("pe_chID",pe_chID, "pe_chID[n_pe]/I");
+  tree->Branch("pe_time",pe_time, "pe_time[n_pe]/F");
+  //
+  ///////////////////////////////////////////////////////
+  //
+  ////////////////
+  for(unsigned int j = 0; j<header_file_v.size();j++){
+    //
+    header_vec.clear();
+    pe_info_vec.clear();
+    //
     std::cout<<std::endl
-	     <<"header_file    "<<header_file<<std::endl
-	     <<"pe_info_file   "<<pe_info_file<<std::endl
-	     <<"outputRootFile "<<outputRootFile<<std::endl;
-    ////////////////
-    read_header(header_file);
-    read_pe_info(pe_info_file);
-    ////////////////
+	     <<"header_file    "<<header_file_v.at(j)<<std::endl
+	     <<"pe_info_file   "<<pe_info_file_v.at(j)<<std::endl;
     //
-    ///////////////////Root file with data/////////////////
-    TFile *hfile = new TFile(outputRootFile, "RECREATE", "Simtel log data", 1);
-    if (hfile->IsZombie()) {
-      std::cout<<" ---> ERROR : PROBLEM with the initialization of the output ROOT file : "<<std::endl
-	       <<outputRootFile
-	       <<std::endl;
-      assert(0);
-    }
-    TTree *tree = new TTree("T", "Simtel data");
-    hfile->SetCompressionLevel(2);
-    tree->SetAutoSave(1000000);  
-    // Create new event
-    TTree::SetBranchStyle(0);
-    ///////////////////////////////////////////////////////
-    //
-    Int_t event_id;
-    Float_t energy;
-    Float_t azimuth;
-    Float_t altitude;
-    Float_t h_first_int;
-    Float_t xmax;
-    Float_t hmax;
-    Float_t emax;
-    Float_t cmax;
-    Float_t xcore;
-    Float_t ycore;
-    Float_t ev_time;
-    //
-    Int_t nphotons;
-    Int_t n_pe;
-    Int_t n_pixels;
-    //
-    Int_t pe_chID[nn_max];
-    Float_t pe_time[nn_max];
-    //
-    //Event////////////////////////////////////////////////
-    tree->Branch("event_id",&event_id, "event_id/I");
-    tree->Branch("energy",&energy, "energy/F");
-    tree->Branch("azimuth",&azimuth, "azimuth/F");
-    tree->Branch("altitude",&altitude, "altitude/F");
-    tree->Branch("h_first_int",&h_first_int, "h_first_int/F");
-    tree->Branch("xmax",&xmax, "xmax/F");
-    tree->Branch("hmax",&hmax, "hmax/F");
-    tree->Branch("emax",&emax, "emax/F");
-    tree->Branch("cmax",&cmax, "cmax/F");
-    tree->Branch("xcore", &xcore, "xcore/F");
-    tree->Branch("ycore", &ycore, "ycore/F");
-    tree->Branch("ev_time",&ev_time, "ev_time/F");
-    tree->Branch("nphotons",&nphotons, "nphotons/I");
-    tree->Branch("n_pe",&n_pe, "n_pe/I");
-    tree->Branch("n_pixels",&n_pixels, "n_pixels/I");
-    //
-    tree->Branch("pe_chID",pe_chID, "pe_chID[n_pe]/I");
-    tree->Branch("pe_time",pe_time, "pe_time[n_pe]/F");
-    //
-    ///////////////////////////////////////////////////////
-    //
+    read_header(header_file_v.at(j));
+    read_pe_info(pe_info_file_v.at(j));
+    //    
     std::cout<<"header_vec.size()  "<<header_vec.size()<<std::endl
 	     <<"pe_info_vec.size() "<<pe_info_vec.size()<<std::endl;
     if(header_vec.size() != pe_info_vec.size()){
@@ -491,7 +520,7 @@ void convert2root() {   //
     //
     for(unsigned int i = 0; i < header_vec.size(); i++){
       if(i%10000 == 0)
-        std::cout<<i<<std::endl;
+	std::cout<<i<<std::endl;
       //
       event_id = header_vec.at(i).event_id;
       energy = header_vec.at(i).energy;
@@ -539,7 +568,33 @@ void convert2root() {   //
 	tree->Fill();
       }
     }
-    hfile = tree->GetCurrentFile();
-    hfile->Write();
-    hfile->Close();
+  }
+  hfile = tree->GetCurrentFile();
+  hfile->Write();
+  hfile->Close();
+}
+
+void read_list( std::vector<TString> &header_file_v, std::vector<TString> &pe_info_file_v, TString inDir, TString list_file){
+  //
+  Int_t verbosity = 2;
+  //
+  std::ifstream fFile(list_file.Data());
+  if(verbosity>0)
+    std::cout<<" read_list --> "<<list_file<<std::endl;
+  //
+  //
+  TString header_file;
+  TString pe_info_file;
+  //
+  if(fFile.is_open()){
+    while(fFile>>header_file>>pe_info_file){
+      header_file_v.push_back(inDir+header_file);
+      pe_info_file_v.push_back(inDir+pe_info_file);
+      if(verbosity>1){
+	std::cout<<"inDir+header_file  "<<inDir+header_file<<std::endl
+		 <<"inDir+pe_info_file "<<inDir+pe_info_file<<std::endl;
+      }
+    }
+    fFile.close();
+  }
 }
