@@ -14,6 +14,7 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TProfile.h>
+#include <TVector2.h>
 
 //C, C++
 #include <iostream>
@@ -173,6 +174,15 @@ void anabase::Init(TTree *tree){
   // ADD HERE :
   fChain->SetBranchAddress("event_id", &event_id, &b_event_id);
   fChain->SetBranchAddress("energy", &energy, &b_energy);
+  //
+  fChain->SetBranchAddress("azimuth", &azimuth, &b_azimuth);
+  fChain->SetBranchAddress("altitude", &altitude, &b_altitude);
+  fChain->SetBranchAddress("h_first_int", &h_first_int, &b_h_first_int);
+  fChain->SetBranchAddress("xmax", &xmax, &b_xmax);
+  fChain->SetBranchAddress("hmax", &hmax, &b_hmax);
+  fChain->SetBranchAddress("emax", &emax, &b_emax);
+  fChain->SetBranchAddress("cmax", &cmax, &b_cmax);
+  //
   fChain->SetBranchAddress("xcore", &xcore, &b_xcore);
   fChain->SetBranchAddress("ycore", &ycore, &b_ycore);
   fChain->SetBranchAddress("ev_time", &ev_time, &b_ev_time);
@@ -181,8 +191,13 @@ void anabase::Init(TTree *tree){
   fChain->SetBranchAddress("n_pixels", &n_pixels, &b_n_pixels);
   fChain->SetBranchAddress("pe_chID", pe_chID, &b_pe_chID);
   fChain->SetBranchAddress("pe_time", pe_time, &b_pe_time);
-  if(!_short_format_flag)
+  if(!_short_format_flag){
+    std::cout<<"_short_format_flag "<<_short_format_flag<<std::endl;
     fChain->SetBranchAddress("wf", wf, &b_wf);
+  }
+  else{
+    std::cout<<"_short_format_flag "<<_short_format_flag<<std::endl;
+  }
   //---------------------------------------------------
   Notify();
 }
@@ -208,4 +223,49 @@ Int_t anabase::Cut(Long64_t entry){
   // returns  1 if entry is accepted.
   // returns -1 otherwise.
   return 1;
+}
+
+void anabase::printEv(){
+  cout<<"event_id        "<<event_id<<endl
+      <<"energy          "<<energy<<endl
+      <<"azimuth         "<<azimuth<<endl
+      <<"altitude        "<<altitude<<endl
+      <<"h_first_int     "<<h_first_int<<endl
+      <<"xmax            "<<xmax<<endl
+      <<"hmax            "<<hmax<<endl
+      <<"emax            "<<emax<<endl
+      <<"cmax            "<<cmax<<endl
+      <<"xcore           "<<xcore<<endl
+      <<"ycore           "<<ycore<<endl
+      <<"ev_time         "<<ev_time<<endl
+      <<"nphotons        "<<nphotons<<endl
+      <<"n_pe            "<<n_pe<<endl
+      <<"n_pixels        "<<n_pixels<<endl
+      <<"pe_chID[0]      "<<pe_chID[0]<<endl
+      <<"pe_time[0]      "<<pe_time[0]<<endl
+      <<"pe_chID[n_pe-1] "<<pe_chID[n_pe-1]<<endl
+      <<"pe_time[n_pe-1] "<<pe_time[n_pe-1]<<endl;
+}
+
+void anabase::TH2D_divide( TH2D *h2_w, TH2D *h2, TH2D *h2_norm){
+  Double_t val;
+  Double_t norm;
+  Double_t val_norm;
+  for(Int_t i = 1;i<=h2_w->GetNbinsX();i++){
+    for(Int_t j = 1;j<=h2_w->GetNbinsY();j++){
+      val = h2_w->GetBinContent(i,j);
+      norm = h2->GetBinContent(i,j);
+      if(norm>0)
+	val_norm = val/norm;
+      else
+	val_norm = 0.0;
+      h2_norm->SetBinContent(i,j,val_norm);
+    }
+  }
+}
+
+void anabase::getCore_rel_R_theta(const Double_t x0, const Double_t y0, const Double_t xx, const Double_t yy, Double_t &rr, Double_t &theta){
+  TVector2 vv(xx-x0,yy-y0);
+  rr = vv.Mod();
+  theta = vv.Phi();
 }

@@ -17,15 +17,20 @@ outHistF="./hist_corsika_run307.root"
 #inRootFile="../compressed_data/gamma/corsika_run307.compressed.root"
 #outHistF="./hist_corsika_run307.root"
 
-make -f Makefileana clean; make -f Makefileana runana;
+#make -f Makefileana clean; make -f Makefileana runana;
+make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j
 
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] -d  : single root file"
-    echo " [0] -ds : single root file (short format)"
-    echo " [0] -tw : test waveforms"
-    echo " [0] -th : test cam sipmCameraHist"
-    echo " [0] -h  : print help"
+    echo " [0] -d   : single root file"
+    echo " [0] -ds  : single root file (short format)"
+    echo " [0] -tw  : test waveforms"
+    echo " [0] -th  : test cam sipmCameraHist"
+    echo " [0] -sg  : gamma"
+    echo " [0] -sgd : gamma diffuse"
+    echo " [0] -se  : electron"
+    echo " [0] -sp  : proton"
+    echo " [0] -h   : print help"
 }
 
 if [ $# -eq 0 ] 
@@ -71,6 +76,18 @@ else
 	#./runana 4 $inRootFile $outHistF 959 gamma # 20 pe
     elif [ "$1" = "-th" ]; then
 	./runana 5
+    elif [ "$1" = "-sg" ]; then
+	#./runana 6 gamma_on_nsb_1x.list hist_gamma_on_nsb_1x.root
+	./runana 6 gamma_on_nsb_1x_short.list hist_gamma_on_nsb_1x.root
+    elif [ "$1" = "-sgd" ]; then
+	#./runana 6 gamma_diffuse_nsb_1x.list hist_gamma_diffuse_nsb_1x.root
+	./runana 6 gamma_diffuse_nsb_1x_short.list hist_gamma_diffuse_nsb_1x.root
+    elif [ "$1" = "-se" ]; then
+	#./runana 6 electron_nsb_1x.list hist_electron_nsb_1x.root
+	./runana 6 electron_nsb_1x_short.list hist_electron_nsb_1x.root
+    elif [ "$1" = "-sp" ]; then
+	#./runana 6 proton_nsb_1x.list hist_proton_nsb_1x.root
+	./runana 6 proton_nsb_1x_short.list hist_proton_nsb_1x.root
     elif [ "$1" = "-h" ]; then
         printHelp
     else

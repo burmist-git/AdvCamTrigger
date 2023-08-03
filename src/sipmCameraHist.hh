@@ -113,6 +113,8 @@ struct pixel_info {
   Int_t pixel_id;
   Float_t x;
   Float_t y;
+  Float_t pix_phi;
+  Float_t pix_r;
   Int_t drawer_id;
   //
   const Int_t n = 7;
@@ -132,6 +134,9 @@ struct pixel_info {
     x = -999.0;
     y = -999.0;
     drawer_id = -999;
+    //
+    pix_phi = -999.0;
+    pix_r = -999.0;
     //
     for(Int_t i = 0;i<n;i++){
       xp[i] = -999.0;
@@ -554,6 +559,14 @@ public:
   TString _title;
   //
   inline const std::vector<pixel_info> &get_pixel_vec() const {return _pixel_vec;}
+  void Fill_wf(const std::vector<std::vector<Int_t>> &wf);
+  void Fill_wf(const std::vector<Int_t> &wf);
+  void Fill_pe(const Int_t npixels_n, const Int_t *pix_id);
+  void Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha);
+  void Fill_pe_center(const Int_t npixels_n, const Int_t *pix_id);
+  void get_pix_mean( const Int_t npixels_n, const Int_t *pix_id, Double_t &x_mean, Double_t &y_mean);
+  
+  static void rotatePix(Double_t alpha, const Double_t xo, const Double_t yo, Double_t &xn, Double_t &yn);
   
  private:
 

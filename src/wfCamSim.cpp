@@ -188,9 +188,12 @@ void wfCamSim::generate_wf(std::vector<int> &wf, Float_t pe_time){
   unsigned int i0 = (-pe_time + 1.0 - _wf_tmpl_t_left)/_dt_arr_wf_tmpl;
   Int_t ampl_single_pe = generate_single_pe_amplitude();
   for( unsigned int i = 0; i < wf.size(); i++){
-    wf.at(i) += _arr_wf_tmpl[i0+i*100]*ampl_single_pe;
-    if(wf.at(i) > 16384)
-      wf.at(i) = 16384;
+    unsigned int jj = i0+i*100;
+    if(jj>=0 &&jj<_n_arr_wf_tmpl){
+      wf.at(i) += _arr_wf_tmpl[jj]*ampl_single_pe;
+      if(wf.at(i) > 16384)
+	wf.at(i) = 16384;
+    }
   }
 }
 

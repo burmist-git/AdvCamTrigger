@@ -87,6 +87,10 @@ void sipmCameraHist::load_mapping(const char* mapping_csv_file){
       pix_i.drawer_id = (Int_t)drawer_id;
       pix_i.rotatePix(_rot_alpha_deg);
       //
+      TVector2 vv(pix_i.x,pix_i.y);
+      pix_i.pix_phi = vv.Phi();
+      pix_i.pix_r = vv.Mod();
+      //
       pix_i.build_Cell(0, _pixel_size);
       //
       pixel_id++;
@@ -565,5 +569,67 @@ void sipmCameraHist::test_pixel_neighbors_bubbleSort(Int_t pix_id){
 	  _pixel_vec.at(i).v_pixel_neighbors_third.at(j).print_info();
       }
     }
+  }
+}
+
+void sipmCameraHist::Fill_wf(const std::vector<std::vector<Int_t>> &wf){
+  for( unsigned int i = 0; i < wf.size(); i++ ){
+    for( unsigned int j = 0; j < wf.at(i).size(); j++){
+      SetBinContent(i+1,GetBinContent(i+1) + wf.at(i).at(j));
+    }
+  }
+}
+
+void sipmCameraHist::Fill_wf(const std::vector<Int_t> &wf){
+  for( unsigned int i = 0; i < wf.size(); i++ ){
+    SetBinContent(i+1,GetBinContent(i+1) + wf.at(i));
+  }
+}
+
+void sipmCameraHist::Fill_pe(const Int_t npixels_n, const Int_t *pix_id){
+  for(Int_t i = 0;i<npixels_n;i++)
+    Fill((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x,
+	 (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y);
+}
+
+void sipmCameraHist::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha){
+  for(Int_t i = 0;i<npixels_n;i++){
+    Double_t xn;
+    Double_t yn;
+    rotatePix(alpha,
+	      (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x,
+	      (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y,
+	      xn, yn);    
+    Fill(xn,yn);
+  }
+}
+
+void sipmCameraHist::get_pix_mean( const Int_t npixels_n, const Int_t *pix_id, Double_t &x_mean, Double_t &y_mean){
+  x_mean = 0.0;
+  y_mean = 0.0;
+  if(npixels_n<=0.0)
+    return;
+  for(Int_t i = 0;i<npixels_n;i++){
+    x_mean += _pixel_vec.at((unsigned int)pix_id[i]).x;
+    y_mean += _pixel_vec.at((unsigned int)pix_id[i]).y;
+  }
+  x_mean /= npixels_n;
+  y_mean /= npixels_n;
+}
+
+void sipmCameraHist::Fill_pe_center(const Int_t npixels_n, const Int_t *pix_id){
+  Double_t x_mean = 0.0;
+  Double_t y_mean = 0.0;
+  get_pix_mean( npixels_n, pix_id, x_mean, y_mean);
+  for(Int_t i = 0;i<npixels_n;i++)
+    Fill(((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x - x_mean),
+	 ((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y - y_mean));
+}
+
+void sipmCameraHist::rotatePix(Double_t alpha, const Double_t xo, const Double_t yo, Double_t &xn, Double_t &yn){
+  if(alpha != 0.0){
+    TVector2 v( xo, yo);
+    xn = v.Rotate(alpha).X();
+    yn = v.Rotate(alpha).Y();
   }
 }

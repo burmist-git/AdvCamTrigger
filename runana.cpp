@@ -1,6 +1,7 @@
 //my
 #include "src/ana.hh"
 #include "src/anashort.hh"
+#include "src/anaPCA.hh"
 #include "src/sipmCameraHist.hh"
 
 //root
@@ -23,6 +24,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
+  cout<<"--> main "<<endl;
   if(argc == 4 && atoi(argv[1])==0){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
@@ -130,6 +132,15 @@ int main(int argc, char *argv[]){
     sipm_cam_test12->test_pixel_super_flower(npix, pix_id);
     //sipm_cam_test12->test_pixel_neighbors_bubbleSort(0);
   }
+  else if(argc == 4 && atoi(argv[1])==6){
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"rootFilesList : "<<rootFilesList<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+    anaPCA a(rootFilesList);
+    a.Loop(outRootFileF);
+  }
   else{
     cout<<" --> ERROR in input arguments "<<endl
 	<<" runID [1] = 0 (execution ID number)"<<endl
@@ -149,6 +160,9 @@ int main(int argc, char *argv[]){
 	<<"       [3] - name of root file with histograms"<<endl
     	<<"       [4] - evID"<<endl;
     cout<<" runID [1] = 5 (execution ID number) test of camera hist."<<endl;
+    cout<<" runID [1] = 6 (execution ID number) short file format"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
   }
   return 0;
 }

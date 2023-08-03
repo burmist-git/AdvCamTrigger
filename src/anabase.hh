@@ -23,6 +23,8 @@ public :
   ~anabase();
   TString _particle_type_name;
   inline void set_particle_type_name(TString particle_type_name){_particle_type_name = particle_type_name;};
+  void printEv();  
+  void getCore_rel_R_theta(const Double_t x0, const Double_t y0, const Double_t xx, const Double_t yy, Double_t &rr, Double_t &theta);
   
 protected :
   void Loop(TString histOut);
@@ -52,16 +54,25 @@ protected :
   const TString treeName = "T";
   //
   ////////////////////////////////////
-  Int_t   event_id;
-  Float_t energy;
-  Float_t xcore;
-  Float_t ycore;
-  Float_t ev_time;
-  Int_t   nphotons;
-  Int_t   n_pe;
-  Int_t   n_pixels;
-  Int_t   pe_chID[405309];
-  Float_t pe_time[405309];
+  Int_t           event_id;
+  Float_t         energy;
+  //
+  Float_t         azimuth;
+  Float_t         altitude;
+  Float_t         h_first_int;
+  Float_t         xmax;
+  Float_t         hmax;
+  Float_t         emax;
+  Float_t         cmax;
+  //
+  Float_t         xcore;
+  Float_t         ycore;
+  Float_t         ev_time;
+  Int_t           nphotons;
+  Int_t           n_pe;
+  Int_t           n_pixels;
+  Int_t   pe_chID[946466];
+  Float_t pe_time[946466];
   Int_t   wf[7987][75];
   ////////////////////////////////////  
   static const Int_t nChannels = 7987;
@@ -80,6 +91,15 @@ protected :
   // ADD HERE :
   TBranch *b_event_id;   //!
   TBranch *b_energy;   //!
+  //
+  TBranch *b_azimuth;   //!
+  TBranch *b_altitude;   //!
+  TBranch *b_h_first_int;   //!
+  TBranch *b_xmax;   //!
+  TBranch *b_hmax;   //!
+  TBranch *b_emax;   //!
+  TBranch *b_cmax;   //!
+  //
   TBranch *b_xcore;   //!
   TBranch *b_ycore;   //!
   TBranch *b_ev_time;   //!
@@ -100,7 +120,8 @@ protected :
                  Int_t Nbin, Float_t Vmin, Float_t Vmax);
   double getUnixTimeFromTime(double d_year, double d_month, double d_day, double d_hour, double d_min, double d_sec);  
   //
-  
+  void TH2D_divide( TH2D *h2_w, TH2D *h2,TH2D *h2_norm);
+  //
 };
 
 #endif
