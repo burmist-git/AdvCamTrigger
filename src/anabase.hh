@@ -3,6 +3,8 @@
 
 #include <TROOT.h>
 
+#include <vector>
+
 class TChain;
 class TFile;
 class TTree;
@@ -113,11 +115,18 @@ protected :
   void tGraphInit(TGraph *gr[nChannels], TString grName, TString grTitle);
   void h1D1Init(TH1D *h1D1[nChannels],TString h1name, TString h1Title,
 		Int_t Nbin, Float_t Vmin, Float_t Vmax);
-  void h2D2Init(TH2D *h2D1[nChannels],TString h2name, TString h2Title,
+  void h1D1Init(std::vector<TH1D*> &h1D1_v, unsigned int n_len, TString h1name, TString h1Title,
+		Int_t Nbin, Float_t Vmin, Float_t Vmax);
+  void h2D2Init(TH2D *h2D1[nChannels], TString h2name, TString h2Title,
+                Int_t Nbin1, Float_t Vmin1, Float_t Vmax1,
+                Int_t Nbin2, Float_t Vmin2, Float_t Vmax2);
+  void h2D2Init(std::vector<TH2D*> &h2D1_v, unsigned int n_len, TString h2name, TString h2Title,
                 Int_t Nbin1, Float_t Vmin1, Float_t Vmax1,
                 Int_t Nbin2, Float_t Vmin2, Float_t Vmax2);
   void tProfInit(TProfile *tprof[nChannels],TString prname, TString prTitle,
                  Int_t Nbin, Float_t Vmin, Float_t Vmax);
+  void tProfInit(std::vector<TProfile*> &tprof_v, unsigned int n_len,
+		 TString prname, TString prTitle, Int_t Nbin, Float_t Vmin, Float_t Vmax);
   double getUnixTimeFromTime(double d_year, double d_month, double d_day, double d_hour, double d_min, double d_sec);  
   //
   void TH2D_divide( TH2D *h2_w, TH2D *h2,TH2D *h2_norm);

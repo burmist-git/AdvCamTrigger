@@ -38,6 +38,23 @@
 
 using namespace std;
 
+sipmCameraHist::sipmCameraHist(const char* name, const char* title, sipmCameraHist *sipmHist) : TH2Poly()
+{
+  //
+  
+  //
+  SetName(name);
+  SetTitle(title);
+  //
+  _name = name;
+  _title = title;
+  //
+  for(unsigned int i = 0;i<sipmHist->get_pixel_vec().size();i++)
+    AddBin(sipmHist->get_pixel_vec().at(0).n,
+	   sipmHist->get_pixel_vec().at(i).xp,
+	   sipmHist->get_pixel_vec().at(i).yp);
+}
+
 sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg, TH1D *h1_distance_between_pixels) : TH2Poly(), _rot_alpha_deg(rot_alpha_deg)
 {
   //
@@ -368,13 +385,13 @@ void sipmCameraHist::Draw_cam( TString settings,
   Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, NULL);
 }
 
-void sipmCameraHist::test(){
+void sipmCameraHist::test(TString pdf_out_name){
   TRandom3 *rnd = new TRandom3(123123); 
   //cout<<"GetN() "<<GetNcells()<<endl;
   for(Int_t i = 0;i<GetNcells();i++)
     SetBinContent(i,(Int_t)rnd->Uniform(1,10));
   //
-  Draw_cam("ZCOLOR","sipmCameraHist_test.pdf");
+  Draw_cam("ZCOLOR",pdf_out_name.Data());
 }
 
 void sipmCameraHist::test02(){
@@ -588,26 +605,189 @@ void sipmCameraHist::Fill_wf(const std::vector<Int_t> &wf){
 
 void sipmCameraHist::Fill_pe(const Int_t npixels_n, const Int_t *pix_id){
   for(Int_t i = 0;i<npixels_n;i++)
-    Fill((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x,
-	 (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y);
+    if(pix_id[i]>=0 && pix_id[i]<(Int_t)_n_pixels)
+      Fill((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x,
+	   (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y);
 }
 
-void sipmCameraHist::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha){
+void sipmCameraHist::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha, TH1D *h1_theta, TH1D *h1_theta_deg, TH1D *h1_r){
   for(Int_t i = 0;i<npixels_n;i++){
-    Double_t xn;
-    Double_t yn;
-    rotatePix(alpha,
-	      (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x,
-	      (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y,
-	      xn, yn);    
-    Fill(xn,yn);
+    if(pix_id[i]>=0 && pix_id[i]<(Int_t)_n_pixels){
+      Double_t xn;
+      Double_t yn;
+      rotatePix(alpha,
+		(Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x,
+		(Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y,
+		xn, yn);    
+      Fill(xn,yn);
+      if(h1_theta != NULL){
+	TVector2 vn( xn, yn);
+	h1_theta->Fill(vn.Phi());
+	h1_theta_deg->Fill(vn.Phi()*180.0/TMath::Pi());
+	h1_r->Fill(vn.Mod());
+      }
+    } 
+  }
+}
+
+void sipmCameraHist::Fill_pe_center(const Int_t npixels_n, const Int_t *pix_id){
+  Double_t x_mean = 0.0;
+  Double_t y_mean = 0.0;
+  get_pix_mean( npixels_n, pix_id, x_mean, y_mean);
+  for(Int_t i = 0;i<npixels_n;i++)
+    if(pix_id[i]>=0 && pix_id[i]<(Int_t)_n_pixels)
+      Fill(((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x - x_mean),
+	   ((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y - y_mean));
+}
+
+void sipmCameraHist::get_pix_density_info( const Int_t npixels_n, const Int_t *pix_id,
+					   Double_t &x_mean, Double_t &y_mean,
+					   Double_t &x_min, Double_t &x_max,
+					   Double_t &y_min, Double_t &y_max,
+					   Double_t &dx, Double_t &dy,
+					   Double_t &x_std, Double_t &y_std, Int_t verbosity){
+  x_mean = 0.0;
+  y_mean = 0.0;
+  x_min = 0.0;
+  x_max = 0.0;
+  y_min = 0.0;
+  y_max = 0.0;
+  dx = 0.0;
+  dy = 0.0;
+  x_std = 0.0;
+  y_std = 0.0;
+  //
+  Double_t x_mean_sq = 0.0;
+  Double_t y_mean_sq = 0.0;
+  //  
+  if(npixels_n<=0)
+    return;
+  //
+  Double_t x_val = _pixel_vec.at((unsigned int)pix_id[0]).x;
+  Double_t y_val = _pixel_vec.at((unsigned int)pix_id[0]).y;
+  x_min = x_val;
+  x_max = x_val;
+  y_min = y_val;
+  y_max = y_val;
+  //  
+  for(Int_t i = 0;i<npixels_n;i++){
+    //
+    x_val = _pixel_vec.at((unsigned int)pix_id[i]).x;
+    y_val = _pixel_vec.at((unsigned int)pix_id[i]).y;
+    //
+    x_mean += x_val;
+    y_mean += y_val;
+    x_mean_sq += x_val*x_val;
+    y_mean_sq += y_val*y_val;
+    //
+    if(x_min>x_val)
+      x_min = x_val;
+    //
+    if(y_min>y_val)
+      y_min = y_val;
+    //
+    if(x_max<x_val)
+      x_max = x_val;
+    //
+    if(y_max<y_val)
+      y_max = y_val;
+  }
+  //
+  x_mean /= npixels_n;
+  y_mean /= npixels_n;
+  //
+  x_mean_sq /= npixels_n;
+  y_mean_sq /= npixels_n;
+  //
+  dx = TMath::Abs((x_max - x_min));
+  dy = TMath::Abs((y_max - y_min));
+  //
+  //for(Int_t i = 0;i<npixels_n;i++){
+  //x_val = _pixel_vec.at((unsigned int)pix_id[i]).x;
+  //y_val = _pixel_vec.at((unsigned int)pix_id[i]).y;
+  //x_std += (x_val-x_mean)*(x_val-x_mean);
+  //y_std += (y_val-y_mean)*(y_val-y_mean);
+  //}  
+  //
+  //x_std /= npixels_n;
+  //y_std /= npixels_n;
+  //
+  //x_std = TMath::Sqrt(x_std);
+  //y_std = TMath::Sqrt(y_std);
+  //  
+  x_std = TMath::Sqrt(x_mean_sq - x_mean*x_mean);
+  y_std = TMath::Sqrt(y_mean_sq - y_mean*y_mean);
+  //
+  if(verbosity>0){
+    cout<<"x_min  "<<x_min<<endl
+	<<"x_max  "<<x_max<<endl
+	<<"y_min  "<<y_min<<endl
+	<<"y_max  "<<y_max<<endl
+	<<"x_mean "<<x_mean<<endl
+	<<"y_mean "<<y_mean<<endl
+	<<"dx     "<<dx<<endl
+	<<"dy     "<<dy<<endl
+	<<"x_std  "<<x_std<<endl
+	<<"y_std  "<<y_std<<endl;  
+  }
+}
+
+void sipmCameraHist::get_pix_time_info( const Int_t npixels_n, const Float_t *pe_time,
+					const Float_t ev_time,
+					const Float_t time_offset,
+					Double_t &t_min, Double_t &t_max,
+					Double_t &t_mean, Double_t &t_std,
+					Int_t &dt, Int_t verbosity){
+  t_min = 0.0;
+  t_max = 0.0;
+  t_mean = 0.0;
+  t_std = 0.0;
+  dt = 0;
+  //  
+  if(npixels_n<=0)
+    return;
+  //
+  t_min = pe_time[0] - ev_time + time_offset;
+  t_max = pe_time[0] - ev_time + time_offset;
+  //
+  Double_t t_val;
+  Double_t t_mean_sq = 0.0;
+  //
+  for(Int_t i = 0;i<npixels_n;i++){
+    //
+    t_val = pe_time[i] - ev_time + time_offset;
+    //
+    t_mean += t_val;
+    t_mean_sq += t_val*t_val;
+    //
+    if(t_min>t_val)
+      t_min = t_val;
+    //
+    if(t_max<t_val)
+      t_max = t_val;
+  }
+  //
+  t_mean /= npixels_n;
+  //
+  t_mean_sq /= npixels_n;
+  //
+  dt = floor(TMath::Abs((t_max - t_min))+1);
+  //
+  t_std = TMath::Sqrt(t_mean_sq - t_mean*t_mean);
+  //
+  if(verbosity>0){
+    cout<<"t_min  "<<t_min<<endl
+	<<"t_max  "<<t_max<<endl
+	<<"t_mean "<<t_mean<<endl
+	<<"t_std  "<<t_std<<endl
+	<<"dt     "<<dt<<endl;
   }
 }
 
 void sipmCameraHist::get_pix_mean( const Int_t npixels_n, const Int_t *pix_id, Double_t &x_mean, Double_t &y_mean){
   x_mean = 0.0;
   y_mean = 0.0;
-  if(npixels_n<=0.0)
+  if(npixels_n<=0)
     return;
   for(Int_t i = 0;i<npixels_n;i++){
     x_mean += _pixel_vec.at((unsigned int)pix_id[i]).x;
@@ -617,19 +797,34 @@ void sipmCameraHist::get_pix_mean( const Int_t npixels_n, const Int_t *pix_id, D
   y_mean /= npixels_n;
 }
 
-void sipmCameraHist::Fill_pe_center(const Int_t npixels_n, const Int_t *pix_id){
-  Double_t x_mean = 0.0;
-  Double_t y_mean = 0.0;
-  get_pix_mean( npixels_n, pix_id, x_mean, y_mean);
-  for(Int_t i = 0;i<npixels_n;i++)
-    Fill(((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x - x_mean),
-	 ((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y - y_mean));
-}
-
 void sipmCameraHist::rotatePix(Double_t alpha, const Double_t xo, const Double_t yo, Double_t &xn, Double_t &yn){
   if(alpha != 0.0){
     TVector2 v( xo, yo);
     xn = v.Rotate(alpha).X();
     yn = v.Rotate(alpha).Y();
+  }
+}
+
+void sipmCameraHist::simulateFlover_ideal_resp(Int_t pixelID, Int_t npixels_n,
+					       Int_t *pix_id, Float_t *pe_time){
+  if(npixels_n<=0)
+    return;
+  Int_t i_counter = 0;
+  //cout<<"v_pixel_flower_size : "<<_pixel_vec.at((unsigned int)pixelID).v_pixel_flower.size()<<endl;
+  //assert(0);
+  unsigned int j_max = (unsigned int)npixels_n/(_pixel_vec.at((unsigned int)pixelID).v_pixel_flower.size()+1);
+  for(unsigned int j = 0;j<j_max;j++){
+    for(unsigned int i = 0;i<(_pixel_vec.at((unsigned int)pixelID).v_pixel_flower.size()+1);i++){
+      if(i == 0){
+	pix_id[i_counter] = pixelID;
+	pe_time[i_counter] = 30.0;
+	i_counter++;
+      }
+      if(i_counter<npixels_n){
+	pix_id[i_counter] = _pixel_vec.at((unsigned int)pixelID).v_pixel_flower.at(i).pixel_id;
+	pe_time[i_counter] = 30.0;
+	i_counter++;
+      }
+    }
   }
 }

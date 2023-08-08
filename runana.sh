@@ -77,8 +77,8 @@ else
     elif [ "$1" = "-th" ]; then
 	./runana 5
     elif [ "$1" = "-sg" ]; then
-	#./runana 6 gamma_on_nsb_1x.list hist_gamma_on_nsb_1x.root
-	./runana 6 gamma_on_nsb_1x_short.list hist_gamma_on_nsb_1x.root
+	./runana 6 gamma_on_nsb_1x.list hist_gamma_on_nsb_1x.root
+	#./runana 6 gamma_on_nsb_1x_short.list hist_gamma_on_nsb_1x.root
     elif [ "$1" = "-sgd" ]; then
 	#./runana 6 gamma_diffuse_nsb_1x.list hist_gamma_diffuse_nsb_1x.root
 	./runana 6 gamma_diffuse_nsb_1x_short.list hist_gamma_diffuse_nsb_1x.root

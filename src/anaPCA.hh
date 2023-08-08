@@ -4,14 +4,18 @@
 //My
 #include "anabase.hh"
 #include "anashort.hh"
+#include "anaConf.hh"
 
 //root
 #include <TROOT.h>
 
 class TString;
+struct anaConf;
 
 class anaPCA: public anashort {
 public:
+
+  anaPCA(TString fileList, TString anaConfFile);
 
   anaPCA(TString fileList) : anashort(fileList)
   {
@@ -26,6 +30,8 @@ public:
 
   Double_t _r_core;
   Double_t _theta_core;
+
+  anaConf _anaConf;
   
 };
 

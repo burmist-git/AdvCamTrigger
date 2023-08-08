@@ -24,6 +24,7 @@
 #include <iomanip>
 #include <time.h>
 #include <bits/stdc++.h>
+#include <vector>
 
 using namespace std;
 
@@ -90,6 +91,19 @@ void anabase::h1D1Init(TH1D *h1D1[nChannels],TString h1name, TString h1Title,
   }
 }
 
+void anabase::h1D1Init(vector<TH1D*> &h1D1_v, unsigned int n_len,
+		       TString h1name, TString h1Title,
+		       Int_t Nbin, Float_t Vmin, Float_t Vmax){
+  unsigned int i;
+  TString h1nameh;
+  TString h1Titleh;
+  for(i = 0;i<n_len;i++){    
+    h1nameh = h1name; h1nameh += "_"; h1nameh += "ch_"; h1nameh += i;
+    h1Titleh = h1Title; h1nameh += " "; h1Titleh += "ch "; h1Titleh += i;
+    h1D1_v.push_back(new TH1D(h1nameh.Data(), h1Titleh.Data(), Nbin, Vmin, Vmax));
+  }
+}
+
 void anabase::h2D2Init(TH2D *h2D1[nChannels],TString h2name, TString h2Title,
 		      Int_t Nbin1, Float_t Vmin1, Float_t Vmax1,
 		      Int_t Nbin2, Float_t Vmin2, Float_t Vmax2){
@@ -105,6 +119,21 @@ void anabase::h2D2Init(TH2D *h2D1[nChannels],TString h2name, TString h2Title,
   }  
 }
 
+void anabase::h2D2Init(vector<TH2D*> &h2D1_v, unsigned int n_len,TString h2name, TString h2Title,
+		      Int_t Nbin1, Float_t Vmin1, Float_t Vmax1,
+		      Int_t Nbin2, Float_t Vmin2, Float_t Vmax2){
+  unsigned int i;
+  TString h2nameh;
+  TString h2Titleh;
+  for(i = 0;i<n_len;i++){    
+    h2nameh = h2name; h2nameh += "_"; h2nameh += "ch_"; h2nameh += i;
+    h2Titleh = h2Title; h2nameh += " "; h2Titleh += "ch "; h2Titleh += i;
+    h2D1_v.push_back(new TH2D(h2nameh.Data(), h2Titleh.Data(),
+			      Nbin1, Vmin1, Vmax1,
+			      Nbin2, Vmin2, Vmax2));
+  }  
+}
+
 void anabase::tProfInit(TProfile *tprof[nChannels],TString prname, TString prTitle,
 		       Int_t Nbin, Float_t Vmin, Float_t Vmax){
   Int_t i;
@@ -114,6 +143,19 @@ void anabase::tProfInit(TProfile *tprof[nChannels],TString prname, TString prTit
     prnameh = prname; prnameh += "_"; prnameh += "ch_"; prnameh += i;
     prTitleh = prTitle; prnameh += " "; prTitleh += "ch "; prTitleh += i;
     tprof[i] = new TProfile(prnameh.Data(), prTitleh.Data(), Nbin, Vmin, Vmax,"");
+  }
+}
+
+void anabase::tProfInit(vector<TProfile*> &tprof_v, unsigned int n_len,
+			TString prname, TString prTitle,
+			Int_t Nbin, Float_t Vmin, Float_t Vmax){
+  unsigned int i;
+  TString prnameh;
+  TString prTitleh;
+  for(i = 0;i<n_len;i++){
+    prnameh = prname; prnameh += "_"; prnameh += "ch_"; prnameh += i;
+    prTitleh = prTitle; prnameh += " "; prTitleh += "ch "; prTitleh += i;
+    tprof_v.push_back(new TProfile(prnameh.Data(), prTitleh.Data(), Nbin, Vmin, Vmax,""));
   }
 }
 
