@@ -14,6 +14,7 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TProfile.h>
+#include <TVector2.h>
 
 //C, C++
 #include <iostream>
@@ -23,6 +24,7 @@
 #include <iomanip>
 #include <time.h>
 #include <bits/stdc++.h>
+#include <vector>
 
 using namespace std;
 
@@ -89,6 +91,19 @@ void anabase::h1D1Init(TH1D *h1D1[nChannels],TString h1name, TString h1Title,
   }
 }
 
+void anabase::h1D1Init(vector<TH1D*> &h1D1_v, unsigned int n_len,
+		       TString h1name, TString h1Title,
+		       Int_t Nbin, Float_t Vmin, Float_t Vmax){
+  unsigned int i;
+  TString h1nameh;
+  TString h1Titleh;
+  for(i = 0;i<n_len;i++){    
+    h1nameh = h1name; h1nameh += "_"; h1nameh += "ch_"; h1nameh += i;
+    h1Titleh = h1Title; h1nameh += " "; h1Titleh += "ch "; h1Titleh += i;
+    h1D1_v.push_back(new TH1D(h1nameh.Data(), h1Titleh.Data(), Nbin, Vmin, Vmax));
+  }
+}
+
 void anabase::h2D2Init(TH2D *h2D1[nChannels],TString h2name, TString h2Title,
 		      Int_t Nbin1, Float_t Vmin1, Float_t Vmax1,
 		      Int_t Nbin2, Float_t Vmin2, Float_t Vmax2){
@@ -104,6 +119,21 @@ void anabase::h2D2Init(TH2D *h2D1[nChannels],TString h2name, TString h2Title,
   }  
 }
 
+void anabase::h2D2Init(vector<TH2D*> &h2D1_v, unsigned int n_len,TString h2name, TString h2Title,
+		      Int_t Nbin1, Float_t Vmin1, Float_t Vmax1,
+		      Int_t Nbin2, Float_t Vmin2, Float_t Vmax2){
+  unsigned int i;
+  TString h2nameh;
+  TString h2Titleh;
+  for(i = 0;i<n_len;i++){    
+    h2nameh = h2name; h2nameh += "_"; h2nameh += "ch_"; h2nameh += i;
+    h2Titleh = h2Title; h2nameh += " "; h2Titleh += "ch "; h2Titleh += i;
+    h2D1_v.push_back(new TH2D(h2nameh.Data(), h2Titleh.Data(),
+			      Nbin1, Vmin1, Vmax1,
+			      Nbin2, Vmin2, Vmax2));
+  }  
+}
+
 void anabase::tProfInit(TProfile *tprof[nChannels],TString prname, TString prTitle,
 		       Int_t Nbin, Float_t Vmin, Float_t Vmax){
   Int_t i;
@@ -113,6 +143,19 @@ void anabase::tProfInit(TProfile *tprof[nChannels],TString prname, TString prTit
     prnameh = prname; prnameh += "_"; prnameh += "ch_"; prnameh += i;
     prTitleh = prTitle; prnameh += " "; prTitleh += "ch "; prTitleh += i;
     tprof[i] = new TProfile(prnameh.Data(), prTitleh.Data(), Nbin, Vmin, Vmax,"");
+  }
+}
+
+void anabase::tProfInit(vector<TProfile*> &tprof_v, unsigned int n_len,
+			TString prname, TString prTitle,
+			Int_t Nbin, Float_t Vmin, Float_t Vmax){
+  unsigned int i;
+  TString prnameh;
+  TString prTitleh;
+  for(i = 0;i<n_len;i++){
+    prnameh = prname; prnameh += "_"; prnameh += "ch_"; prnameh += i;
+    prTitleh = prTitle; prnameh += " "; prTitleh += "ch "; prTitleh += i;
+    tprof_v.push_back(new TProfile(prnameh.Data(), prTitleh.Data(), Nbin, Vmin, Vmax,""));
   }
 }
 
@@ -173,6 +216,15 @@ void anabase::Init(TTree *tree){
   // ADD HERE :
   fChain->SetBranchAddress("event_id", &event_id, &b_event_id);
   fChain->SetBranchAddress("energy", &energy, &b_energy);
+  //
+  fChain->SetBranchAddress("azimuth", &azimuth, &b_azimuth);
+  fChain->SetBranchAddress("altitude", &altitude, &b_altitude);
+  fChain->SetBranchAddress("h_first_int", &h_first_int, &b_h_first_int);
+  fChain->SetBranchAddress("xmax", &xmax, &b_xmax);
+  fChain->SetBranchAddress("hmax", &hmax, &b_hmax);
+  fChain->SetBranchAddress("emax", &emax, &b_emax);
+  fChain->SetBranchAddress("cmax", &cmax, &b_cmax);
+  //
   fChain->SetBranchAddress("xcore", &xcore, &b_xcore);
   fChain->SetBranchAddress("ycore", &ycore, &b_ycore);
   fChain->SetBranchAddress("ev_time", &ev_time, &b_ev_time);
@@ -181,8 +233,13 @@ void anabase::Init(TTree *tree){
   fChain->SetBranchAddress("n_pixels", &n_pixels, &b_n_pixels);
   fChain->SetBranchAddress("pe_chID", pe_chID, &b_pe_chID);
   fChain->SetBranchAddress("pe_time", pe_time, &b_pe_time);
-  if(!_short_format_flag)
+  if(!_short_format_flag){
+    std::cout<<"_short_format_flag "<<_short_format_flag<<std::endl;
     fChain->SetBranchAddress("wf", wf, &b_wf);
+  }
+  else{
+    std::cout<<"_short_format_flag "<<_short_format_flag<<std::endl;
+  }
   //---------------------------------------------------
   Notify();
 }
@@ -208,4 +265,49 @@ Int_t anabase::Cut(Long64_t entry){
   // returns  1 if entry is accepted.
   // returns -1 otherwise.
   return 1;
+}
+
+void anabase::printEv(){
+  cout<<"event_id        "<<event_id<<endl
+      <<"energy          "<<energy<<endl
+      <<"azimuth         "<<azimuth<<endl
+      <<"altitude        "<<altitude<<endl
+      <<"h_first_int     "<<h_first_int<<endl
+      <<"xmax            "<<xmax<<endl
+      <<"hmax            "<<hmax<<endl
+      <<"emax            "<<emax<<endl
+      <<"cmax            "<<cmax<<endl
+      <<"xcore           "<<xcore<<endl
+      <<"ycore           "<<ycore<<endl
+      <<"ev_time         "<<ev_time<<endl
+      <<"nphotons        "<<nphotons<<endl
+      <<"n_pe            "<<n_pe<<endl
+      <<"n_pixels        "<<n_pixels<<endl
+      <<"pe_chID[0]      "<<pe_chID[0]<<endl
+      <<"pe_time[0]      "<<pe_time[0]<<endl
+      <<"pe_chID[n_pe-1] "<<pe_chID[n_pe-1]<<endl
+      <<"pe_time[n_pe-1] "<<pe_time[n_pe-1]<<endl;
+}
+
+void anabase::TH2D_divide( TH2D *h2_w, TH2D *h2, TH2D *h2_norm){
+  Double_t val;
+  Double_t norm;
+  Double_t val_norm;
+  for(Int_t i = 1;i<=h2_w->GetNbinsX();i++){
+    for(Int_t j = 1;j<=h2_w->GetNbinsY();j++){
+      val = h2_w->GetBinContent(i,j);
+      norm = h2->GetBinContent(i,j);
+      if(norm>0)
+	val_norm = val/norm;
+      else
+	val_norm = 0.0;
+      h2_norm->SetBinContent(i,j,val_norm);
+    }
+  }
+}
+
+void anabase::getCore_rel_R_theta(const Double_t x0, const Double_t y0, const Double_t xx, const Double_t yy, Double_t &rr, Double_t &theta){
+  TVector2 vv(xx-x0,yy-y0);
+  rr = vv.Mod();
+  theta = vv.Phi();
 }

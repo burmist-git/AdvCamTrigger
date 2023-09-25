@@ -1,7 +1,9 @@
 //my
 #include "src/ana.hh"
 #include "src/anashort.hh"
+#include "src/anaPCA.hh"
 #include "src/sipmCameraHist.hh"
+#include "src/sipmCameraHistCropped.hh"
 
 //root
 #include "TROOT.h"
@@ -23,6 +25,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
+  cout<<"--> main "<<endl;
   if(argc == 4 && atoi(argv[1])==0){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
@@ -76,30 +79,33 @@ int main(int argc, char *argv[]){
   else if(argc == 2 && atoi(argv[1])==5){
     cout<<"--> Parameter calculation from the WF <--"<<endl
 	<<"argv[1] : "<<atoi(argv[1])<<endl;
-    /*
-    sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
-    sipm_cam->test();
+    //sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+    //sipm_cam->test();
     //
-    sipmCameraHist *sipm_cam_test02 = new sipmCameraHist("sipm_cam_test02","sipm_cam_test02","pixel_mapping.csv",0);
-    sipm_cam_test02->test02();
+    //sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+    //sipm_cam->test();
+    //sipmCameraHist *sipm_cam_form_simpHist = new sipmCameraHist("sipm_cam_form_simpHist","sipm_cam_form_simpHist",sipm_cam);
+    //sipm_cam_form_simpHist->test("sipmCameraHist_formSimpHist_test.pdf");
     //
-    sipmCameraHist *sipm_cam_test03 = new sipmCameraHist("sipm_cam_test03","sipm_cam_test03","pixel_mapping.csv",0);
-    sipm_cam_test03->test03();
+    //sipmCameraHist *sipm_cam_test02 = new sipmCameraHist("sipm_cam_test02","sipm_cam_test02","pixel_mapping.csv",0);
+    //sipm_cam_test02->test02();
     //
-    sipmCameraHist *sipm_cam_test04 = new sipmCameraHist("sipm_cam_test04","sipm_cam_test04","pixel_mapping.csv",0);
-    sipm_cam_test04->test04();
+    //sipmCameraHist *sipm_cam_test03 = new sipmCameraHist("sipm_cam_test03","sipm_cam_test03","pixel_mapping.csv",0);
+    //sipm_cam_test03->test03();
     //
-    sipmCameraHist *sipm_cam_test05 = new sipmCameraHist("sipm_cam_test05","sipm_cam_test05","pixel_mapping.csv",0);
-    sipm_cam_test05->test05();
+    //sipmCameraHist *sipm_cam_test04 = new sipmCameraHist("sipm_cam_test04","sipm_cam_test04","pixel_mapping.csv",0);
+    //sipm_cam_test04->test04();
     //
-    sipmCameraHist *sipm_cam_test06 = new sipmCameraHist("sipm_cam_test06","sipm_cam_test06","pixel_mapping.csv",0);
-    sipm_cam_test06->test_drawer_id();
+    //sipmCameraHist *sipm_cam_test05 = new sipmCameraHist("sipm_cam_test05","sipm_cam_test05","pixel_mapping.csv",0);
+    //sipm_cam_test05->test05();
     //
-    sipmCameraHist *sipm_cam_test07 = new sipmCameraHist("sipm_cam_test07","sipm_cam_test07","pixel_mapping.csv",0);
-    sipm_cam_test07->test_pixel_neighbors_id();
-    sipmCameraHist *sipm_cam_test08 = new sipmCameraHist("sipm_cam_test08","sipm_cam_test08","pixel_mapping.csv",0);
-    sipm_cam_test08->test_pixel_neighbors_id(1000);
-    */
+    //sipmCameraHist *sipm_cam_test06 = new sipmCameraHist("sipm_cam_test06","sipm_cam_test06","pixel_mapping.csv",0);
+    //sipm_cam_test06->test_drawer_id();
+    //
+    //sipmCameraHist *sipm_cam_test07 = new sipmCameraHist("sipm_cam_test07","sipm_cam_test07","pixel_mapping.csv",0);
+    //sipm_cam_test07->test_pixel_neighbors_id();
+    //sipmCameraHist *sipm_cam_test08 = new sipmCameraHist("sipm_cam_test08","sipm_cam_test08","pixel_mapping.csv",0);
+    //sipm_cam_test08->test_pixel_neighbors_id(1000);
     //
     Int_t npix = 10;
     int *pix_id = new int[10];
@@ -113,14 +119,14 @@ int main(int argc, char *argv[]){
     pix_id[7] = 1000;
     pix_id[8] = 2000;
     pix_id[9] = 5000;
-    sipmCameraHist *sipm_cam_test09 = new sipmCameraHist("sipm_cam_test09","sipm_cam_test09","pixel_mapping.csv",0);
-    sipm_cam_test09->test_pixel_neighbors_id(npix, pix_id);
+    //sipmCameraHist *sipm_cam_test09 = new sipmCameraHist("sipm_cam_test09","sipm_cam_test09","pixel_mapping.csv",0);
+    //sipm_cam_test09->test_pixel_neighbors_id(npix, pix_id);
     //
-    sipmCameraHist *sipm_cam_test10 = new sipmCameraHist("sipm_cam_test10","sipm_cam_test10","pixel_mapping.csv",0);
-    sipm_cam_test10->test_pixel_neighbors_second_id(npix, pix_id);
+    //sipmCameraHist *sipm_cam_test10 = new sipmCameraHist("sipm_cam_test10","sipm_cam_test10","pixel_mapping.csv",0);
+    //sipm_cam_test10->test_pixel_neighbors_second_id(npix, pix_id);
     //
-    sipmCameraHist *sipm_cam_test11 = new sipmCameraHist("sipm_cam_test11","sipm_cam_test11","pixel_mapping.csv",0);
-    sipm_cam_test11->test_pixel_neighbors_third_id(npix, pix_id);
+    //sipmCameraHist *sipm_cam_test11 = new sipmCameraHist("sipm_cam_test11","sipm_cam_test11","pixel_mapping.csv",0);
+    //sipm_cam_test11->test_pixel_neighbors_third_id(npix, pix_id);
     //
     //TH1D *h1_distance_between_pixels = new TH1D("h1_distance_between_pixels","h1_distance_between_pixels",100000,-0.001,3.0);
     //sipmCameraHist *sipm_cam_test10 = new sipmCameraHist("sipm_cam_test10","sipm_cam_test10","pixel_mapping.csv",0,h1_distance_between_pixels);
@@ -129,6 +135,20 @@ int main(int argc, char *argv[]){
     sipmCameraHist *sipm_cam_test12 = new sipmCameraHist("sipm_cam_test12","sipm_cam_test12","pixel_mapping.csv",0);
     sipm_cam_test12->test_pixel_super_flower(npix, pix_id);
     //sipm_cam_test12->test_pixel_neighbors_bubbleSort(0);
+    //
+    sipmCameraHistCropped *sipm_cam_crop = new sipmCameraHistCropped("sipm_cam_crop","sipm_cam_crop",sipm_cam_test12);
+    sipm_cam_crop->test();
+    sipm_cam_crop->test01(sipm_cam_test12);
+    sipm_cam_crop->test02();
+  }
+  else if(argc == 4 && atoi(argv[1])==6){
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"rootFilesList : "<<rootFilesList<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+    anaPCA a(rootFilesList,"anaPCA.conf");
+    a.Loop(outRootFileF);
   }
   else{
     cout<<" --> ERROR in input arguments "<<endl
@@ -149,6 +169,9 @@ int main(int argc, char *argv[]){
 	<<"       [3] - name of root file with histograms"<<endl
     	<<"       [4] - evID"<<endl;
     cout<<" runID [1] = 5 (execution ID number) test of camera hist."<<endl;
+    cout<<" runID [1] = 6 (execution ID number) short file format"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
   }
   return 0;
 }

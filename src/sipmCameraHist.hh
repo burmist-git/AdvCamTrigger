@@ -113,6 +113,8 @@ struct pixel_info {
   Int_t pixel_id;
   Float_t x;
   Float_t y;
+  Float_t pix_phi;
+  Float_t pix_r;
   Int_t drawer_id;
   //
   const Int_t n = 7;
@@ -132,6 +134,9 @@ struct pixel_info {
     x = -999.0;
     y = -999.0;
     drawer_id = -999;
+    //
+    pix_phi = -999.0;
+    pix_r = -999.0;
     //
     for(Int_t i = 0;i<n;i++){
       xp[i] = -999.0;
@@ -481,11 +486,12 @@ class sipmCameraHist: public TH2Poly {
 
 public:
   
+  sipmCameraHist(const char* name, const char* title, sipmCameraHist *sipmHist);
   sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg);
   sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg, TH1D *h1_distance_between_pixels);
   ~sipmCameraHist();
   void dump_mapping_info();
-  void test();
+  void test(TString pdf_out_name = "sipmCameraHist_test.pdf");
   void test02();
   void test03();
   void test04();
@@ -554,6 +560,31 @@ public:
   TString _title;
   //
   inline const std::vector<pixel_info> &get_pixel_vec() const {return _pixel_vec;}
+  void Fill_wf(const std::vector<std::vector<Int_t>> &wf);
+  void Fill_wf(const std::vector<Int_t> &wf);
+  void Fill_pe(const Int_t npixels_n, const Int_t *pix_id);
+  void Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha, TH1D *h1_theta = NULL, TH1D *h1_theta_deg = NULL, TH1D *h1_r = NULL);
+  void Fill_pe_center(const Int_t npixels_n, const Int_t *pix_id);
+  void get_pix_mean( const Int_t npixels_n, const Int_t *pix_id, Double_t &x_mean, Double_t &y_mean);
+  //
+  void get_pix_density_info(const Int_t npixels_n, const Int_t *pix_id,
+			    Double_t &x_mean, Double_t &y_mean,
+			    Double_t &x_min, Double_t &x_max,
+			    Double_t &y_min, Double_t &y_max,
+			    Double_t &dx, Double_t &dy,
+			    Double_t &x_std, Double_t &y_std, Int_t verbosity = 0);
+  //
+  void get_pix_time_info(const Int_t npixels_n, const Float_t *pe_time,
+			 const Float_t ev_time,
+			 const Float_t time_offset,
+			 Double_t &t_min, Double_t &t_max,
+			 Double_t &t_mean, Double_t &t_std,
+			 Int_t &dt, Int_t verbosity = 0);
+  //
+  void simulateFlover_ideal_resp(Int_t pixelID, Int_t npixels_n,
+				 Int_t *pix_id, Float_t *pe_time);
+  //  
+  static void rotatePix(Double_t alpha, const Double_t xo, const Double_t yo, Double_t &xn, Double_t &yn);
   
  private:
 

@@ -35,12 +35,12 @@ void anashort::Loop(TString histOut){
   const unsigned int nn_fadc_point = 75;
   const unsigned int nn_PMT_channels = 7987;
   //
-  Int_t fadc_sum_offset = 15;
+  //Int_t fadc_sum_offset = 15;
   //Float_t fadc_amplitude = 8.25;
   Int_t fadc_MHz = 1024;
   Int_t fadc_offset = 300;
   Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
-  Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
+  //Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
   Float_t NGB_rate_in_MHz = 386.0;
   //
   //auto wfcam = new Int_t [nn_PMT_channels][nn_fadc_point];
@@ -69,7 +69,7 @@ void anashort::Loop(TString histOut){
   cout<<"nentries = "<<nentries<<endl;
   Long64_t nbytes = 0, nb = 0;
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-    if(jentry%100 == 0)
+    if(jentry%100000 == 0)
       cout<<jentry<<endl;
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
@@ -95,37 +95,37 @@ void anashort::Loop(TString histOut){
     //6685 -25.1899
     //6685 -25.1899
     //
-    if(n_pe<101){
-      cout<<"n_pe "<<n_pe<<endl;
-      //for(Int_t i = 0;i<n_pe;i++){
-      //cout<<pe_chID[i]<<endl
-      //    <<pe_time[i]<<endl;
-      //}
-      //
-      wf->simulate_cam_event(nn_fadc_point,
-			     nn_PMT_channels,
-			     wfcam,
-			     ev_time,
-			     time_offset,
-			     n_pe,
-			     pe_chID,
-			     pe_time);
-      wf->generate_gif_for_event("ev_synthetic_", event_id, wfcam);
-      cout<<"wfcam.size() "<<wfcam.size()<<endl;
-      for(unsigned int i = 0; i<wfcam.size();i++){
-	TGraph *gr_wf = new TGraph();
-	TString gr_name = "gr_wf_";
-	gr_name += i;
-	gr_wf->SetNameTitle(gr_name.Data(),gr_name.Data());
-	for(unsigned int j = 0; j<wfcam.at(i).size();j++){
-	  gr_wf->SetPoint(j,j,wfcam.at(i).at(j));
-	}
-	gr_v.push_back(gr_wf);
-	//delete gr_wf;
-      }
-      //assert(0);
-      break;
-    }
+    //if(n_pe<101){
+    //cout<<"n_pe "<<n_pe<<endl;
+    //for(Int_t i = 0;i<n_pe;i++){
+    //cout<<pe_chID[i]<<endl
+    //    <<pe_time[i]<<endl;
+    //}
+    //
+    //wf->simulate_cam_event(nn_fadc_point,
+    //			     nn_PMT_channels,
+    //			     wfcam,
+    //			     ev_time,
+    //			     time_offset,
+    //			     n_pe,
+    //			     pe_chID,
+    //			     pe_time);
+    //wf->generate_gif_for_event("ev_synthetic_", event_id, wfcam);
+    //cout<<"wfcam.size() "<<wfcam.size()<<endl;
+    //for(unsigned int i = 0; i<wfcam.size();i++){
+    //	TGraph *gr_wf = new TGraph();
+    //	TString gr_name = "gr_wf_";
+    //	gr_name += i;
+    //	gr_wf->SetNameTitle(gr_name.Data(),gr_name.Data());
+    //	for(unsigned int j = 0; j<wfcam.at(i).size();j++){
+    //	  gr_wf->SetPoint(j,j,wfcam.at(i).at(j));
+    //	}
+    //	gr_v.push_back(gr_wf);
+    //delete gr_wf;
+    //}
+    //assert(0);
+    //  break;
+    //}
     //
   }
   //
@@ -139,9 +139,9 @@ void anashort::Loop(TString histOut){
   else
     cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
   //
-  cout<<"gr_v.size() "<<gr_v.size()<<endl;
-  for(unsigned int i = 0; i<gr_v.size();i++)
-    gr_v.at(i)->Write();
+  //cout<<"gr_v.size() "<<gr_v.size()<<endl;
+  //for(unsigned int i = 0; i<gr_v.size();i++)
+  //gr_v.at(i)->Write();
   //
   h1_nphotons->Write();
   h1_n_pe->Write();

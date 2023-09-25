@@ -17,7 +17,7 @@ OUTLIB = ./obj/
 
 all: runana	
 
-runana: runana.cpp obj/ana.o obj/anashort.o obj/anabase.o obj/triggerSim.o
+runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anabase.o obj/triggerSim.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 obj/ana.o: src/ana.cpp src/ana.hh obj/anabase.o obj/sipmCameraHist.o obj/wfCamSim.o
@@ -26,10 +26,16 @@ obj/ana.o: src/ana.cpp src/ana.hh obj/anabase.o obj/sipmCameraHist.o obj/wfCamSi
 obj/anashort.o: src/anashort.cpp src/anashort.hh obj/sipmCameraHist.o obj/wfCamSim.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anashort.o $<
 
+obj/anaPCA.o: src/anaPCA.cpp src/anaPCA.hh src/anaConf.hh obj/anashort.o obj/sipmCameraHist.o obj/wfCamSim.o obj/sipmCameraHistCropped.o
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anaPCA.o $<
+
 obj/anabase.o: src/anabase.cpp src/anabase.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anabase.o $<
 
 obj/sipmCameraHist.o: src/sipmCameraHist.cpp src/sipmCameraHist.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
+
+obj/sipmCameraHistCropped.o: src/sipmCameraHistCropped.cpp src/sipmCameraHistCropped.hh obj/sipmCameraHist.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
 
 obj/wfCamSim.o: src/wfCamSim.cpp src/wfCamSim.hh
