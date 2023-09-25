@@ -94,6 +94,7 @@ gamma/
 gamma_diffuse/
 proton/
 screenlog.0
+<<<<<<< Updated upstream
 y_core_vs_xcore_electron_1_20_stat.pdf
 y_core_vs_xcore_electron_more10_less40pe_1_20_stat.pdf
 y_core_vs_xcore_full_stat.pdf
@@ -121,3 +122,9 @@ camera_mercedes_gamma.pdf
 camera_mercedes_gamma_diff.pdf
 camera_rotation_gamma.pdf
 digi_sum.pdf
+=======
+ID_to_rm.gamma
+ID_to_rm.electron
+ID_to_rm.proton
+ID_to_rm.gamma_diffuse
+>>>>>>> Stashed changes
