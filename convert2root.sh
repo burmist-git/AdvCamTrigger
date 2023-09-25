@@ -22,16 +22,21 @@ function creat_csv2toot_list {
     #corsika_run1.header.pkl_0.csv
     #corsika_run1.pe_info.pkl_0.csv
     csv_dir=$1
+    csv_dir_int=$2
     n_run_header=`ls $csv_dir/corsika_run*.header.pkl_0.csv | wc -w`
     n_run_pe=`ls $csv_dir/corsika_run*.pe_info.pkl_0.csv | wc -w`
     list="$csv_dir/list"
     rm -rf $list
+    run_i_start=$(echo "$csv_dir_int*100 + 1" | bc)
+    run_i_stop=$(echo "$csv_dir_int*100 + $n_run_header" | bc)
     echo " creat_csv2toot_list     --> $csv_dir"
     echo " n_run_header            --> $n_run_header"
     echo " n_run_pe                --> $n_run_pe"
     echo " list                    --> $list"
+    echo " run_i_start             --> $run_i_start"
+    echo " run_i_stop              --> $run_i_stop"
     #
-    for run_i in `seq 1 $n_run_header`
+    for run_i in `seq $run_i_start $run_i_stop`
     do
 	n_files_header=`ls $csv_dir/corsika_run$run_i.header.pkl_*.csv | wc -w`
 	n_files_pe=`ls $csv_dir/corsika_run$run_i.pe_info.pkl_*.csv | wc -w`
@@ -119,11 +124,12 @@ else
 	load_modules
     elif [ "$1" = "--convert_gm" ]; then
 	load_modules
+	ulimit -s unlimited
 	#
 	particle="gamma"
 	particlein="gamma_on_nsb_1x"
 	i_start=0
-	i_stop=0
+	i_stop=9
 	#
 	for i in `seq $i_start $i_stop`
 	do
@@ -131,16 +137,17 @@ else
 	    csv_dir="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/csv/$folderID/"
 	    outputRootFilePath="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/root/$folderID/"
 	    mkdir -p $outputRootFilePath
-	    creat_csv2toot_list $csv_dir
+	    creat_csv2toot_list $csv_dir $i
 	    ./convert2root 2 $csv_dir "$csv_dir/list" $outputRootFilePath/"corsika_"$folderID"ID.root"
 	done
     elif [ "$1" = "--convert_gd" ]; then
 	load_modules
+	ulimit -s unlimited
 	#
 	particle="gamma_diffuse"
 	particlein="gamma_diffuse_nsb_1x"
 	i_start=0
-	i_stop=0
+	i_stop=9
 	#
 	for i in `seq $i_start $i_stop`
 	do
@@ -148,16 +155,17 @@ else
 	    csv_dir="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/csv/$folderID/"
 	    outputRootFilePath="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/root/$folderID/"
 	    mkdir -p $outputRootFilePath
-	    creat_csv2toot_list $csv_dir
+	    creat_csv2toot_list $csv_dir $i
 	    ./convert2root 2 $csv_dir "$csv_dir/list" $outputRootFilePath/"corsika_"$folderID"ID.root"
 	done
     elif [ "$1" = "--convert_el" ]; then
 	load_modules
+	ulimit -s unlimited
 	#
 	particle="electron"
 	particlein="electron_nsb_1x"
 	i_start=0
-	i_stop=0
+	i_stop=19
 	#
 	for i in `seq $i_start $i_stop`
 	do
@@ -165,16 +173,17 @@ else
 	    csv_dir="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/csv/$folderID/"
 	    outputRootFilePath="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/root/$folderID/"
 	    mkdir -p $outputRootFilePath
-	    creat_csv2toot_list $csv_dir
+	    creat_csv2toot_list $csv_dir $i
 	    ./convert2root 2 $csv_dir "$csv_dir/list" $outputRootFilePath/"corsika_"$folderID"ID.root"
 	done
     elif [ "$1" = "--convert_pr" ]; then
 	load_modules
+	ulimit -s unlimited
 	#
 	particle="proton"
 	particlein="proton_nsb_1x"
 	i_start=0
-	i_stop=0
+	i_stop=24
 	#
 	for i in `seq $i_start $i_stop`
 	do
@@ -182,7 +191,7 @@ else
 	    csv_dir="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/csv/$folderID/"
 	    outputRootFilePath="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/root/$folderID/"
 	    mkdir -p $outputRootFilePath
-	    creat_csv2toot_list $csv_dir
+	    creat_csv2toot_list $csv_dir $i
 	    ./convert2root 2 $csv_dir "$csv_dir/list" $outputRootFilePath/"corsika_"$folderID"ID.root"
 	done
     elif [ "$1" = "--inc_reduce_stack" ]; then	

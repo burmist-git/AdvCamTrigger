@@ -13,7 +13,49 @@ function printHelp {
     echo " [0] --conv_all_gamma_diffuse : convert to pkl all gamma_diffuse"
     echo " [0] --conv_all_electron      : convert to pkl all electron"
     echo " [0] --conv_all_proton        : convert to pkl all proton"
-    echo " [0] -h            : print help"
+    echo " [0] --rm_900_gamma_simtel_gz          : rm 900 gamma simtel.gz files"
+    echo " [0] --rm_1800_gamma_diffuse_simtel_gz : rm 1800 gamma diffuse simtel.gz files"
+    echo " [0] --rm_1800_electron_simtel_gz      : rm 1800 electron simtel.gz files"
+    echo " [0] --rm_4500_proton_simtel_gz        : rm 4500 proton simtel.gz files"
+    echo " [0] -h                                : print help"
+}
+
+function rm_simtel_gz {
+    particle=$1
+    particlein=$2
+    n_rm_files=$3
+    n_files_max=$4
+    simtelpath="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/output/"
+    echo "particle   $particle"
+    echo "particlein $particlein"
+    echo "n_rm_files $n_rm_files"
+
+    echo "simtelpath $simtelpath"
+    python gen_rand_tuple.py $n_rm_files $n_files_max > "ID_to_rm."$particle
+    #while read -r runID;
+    #do rm $simtelpath/corsika_run$runID.simtel.gz;
+    #done < "ID_to_rm."$particle
+}
+
+function rm_percentage_simtel_gz {
+    particle=$1
+    particlein=$2
+    percentage=$3
+    simtelpath="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/$particlein/output/"
+    echo "particle   $particle"
+    echo "particlein $particlein"
+    echo "percentage $percentage"
+    echo "simtelpath $simtelpath"
+    #
+    for f in $simtelpath/*
+    do
+	if [ $((1 + $RANDOM % 100)) \> $percentage ];
+	then
+	    echo "$f"
+	else
+	    rm $f
+	fi;
+    done
 }
 
 function conv_to_pkl {
@@ -101,7 +143,7 @@ else
 	conda activate pyeventio
 	particle="gamma_diffuse"
 	particlein="gamma_diffuse_nsb_1x"
-	i_start=1
+	i_start=1901
 	i_stop=2000
 	conv_to_pkl $particle $particlein $i_start $i_stop
     elif [ "$1" = "--conv_all_electron" ]; then
@@ -118,6 +160,38 @@ else
 	i_start=1
 	i_stop=5000
 	conv_to_pkl $particle $particlein $i_start $i_stop	
+    elif [ "$1" = "--rm_900_gamma_simtel_gz" ]; then
+	particle="gamma"
+	particlein="gamma_on_nsb_1x"
+	n_rm_files=900
+	n_files_max=1000
+	percentage=47
+	#rm_simtel_gz $particle $particlein $n_rm_files $n_files_max
+	#rm_percentage_simtel_gz $particle $particlein $percentage
+    elif [ "$1" = "--rm_1800_gamma_diffuse_simtel_gz" ]; then
+	particle="gamma_diffuse"
+	particlein="gamma_diffuse_nsb_1x"
+	n_rm_files=1800
+	n_files_max=2000
+	percentage=83
+	#rm_simtel_gz $particle $particlein $n_rm_files $n_files_max
+	#rm_percentage_simtel_gz $particle $particlein $percentage
+    elif [ "$1" = "--rm_1800_electron_simtel_gz" ]; then
+	particle="electron"
+	particlein="electron_nsb_1x"
+	n_rm_files=1800
+	n_files_max=2000
+	percentage=61
+	#rm_simtel_gz $particle $particlein $n_rm_files $n_files_max
+	#rm_percentage_simtel_gz $particle $particlein $percentage
+    elif [ "$1" = "--rm_4500_proton_simtel_gz" ]; then
+	particle="proton"
+	particlein="proton_nsb_1x"
+	n_rm_files=4500
+	n_files_max=5000
+	percentage=80
+	#rm_simtel_gz $particle $particlein $n_rm_files $n_files_max
+	#rm_percentage_simtel_gz $particle $particlein $percentage
     elif [ "$1" = "--size" ]; then
 	#
 	rootPathsimteldata="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/"

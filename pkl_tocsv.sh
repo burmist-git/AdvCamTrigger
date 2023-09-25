@@ -52,7 +52,7 @@ else
 		particle="gamma"
 		particlein="gamma_on_nsb_1x"
 		i_start=0
-		i_stop=0
+		i_stop=9
 		#
 		for i in `seq $i_start $i_stop`
 		do
@@ -65,7 +65,7 @@ else
 		particle="gamma_diffuse"
 		particlein="gamma_diffuse_nsb_1x"
 		i_start=0
-		i_stop=0
+		i_stop=9
 		#
 		for i in `seq $i_start $i_stop`
 		do
@@ -77,7 +77,7 @@ else
 		particle="electron"
 		particlein="electron_nsb_1x"
 		i_start=0
-		i_stop=0
+		i_stop=19
 		#
 		for i in `seq $i_start $i_stop`
 		do
@@ -89,7 +89,7 @@ else
 		particle="proton"
 		particlein="proton_nsb_1x"
 		i_start=0
-		i_stop=0
+		i_stop=24
 		#
 		for i in `seq $i_start $i_stop`
 		do
