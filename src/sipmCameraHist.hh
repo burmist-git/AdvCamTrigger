@@ -559,6 +559,9 @@ public:
   TString _name;
   TString _title;
   //
+  static const unsigned int _n_pixels = 7987;
+  static const unsigned int _n_drawers = 1141;
+  //
   inline const std::vector<pixel_info> &get_pixel_vec() const {return _pixel_vec;}
   void Fill_wf(const std::vector<std::vector<Int_t>> &wf);
   void Fill_wf(const std::vector<Int_t> &wf);
@@ -585,11 +588,12 @@ public:
 				 Int_t *pix_id, Float_t *pe_time);
   //  
   static void rotatePix(Double_t alpha, const Double_t xo, const Double_t yo, Double_t &xn, Double_t &yn);
+  const bool check_ch_ID(const Int_t chIDval) const;
+  const bool check_ch_ID(const unsigned int chIDval) const;
+  const bool check_ch_ID() const;
   
- private:
+  private:
 
-  static const unsigned int _n_pixels = 7987;
-  static const unsigned int _n_drawers = 1141;
   double _pixel_size;
   double _pixel_pitch;
   std::vector<pixel_info> _pixel_vec;

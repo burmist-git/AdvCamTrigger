@@ -20,6 +20,7 @@
 #include <TH2D.h>
 #include <TProfile.h>
 #include <TRandom3.h>
+#include "TPrincipal.h"
 
 //C, C++
 #include <iostream>
@@ -143,7 +144,8 @@ void anaPCA::Loop(TString histOut){
   std::vector<TH1D*> h1_y_std_v;
   h1D1Init(h1_y_std_v, n_pe_steps, "h1_y_std_v", "h1_y_std_v", 1000, 0, 1);
   //
-  std::vector<sipmCameraHistCropped*> simp_hist_crop_v; 
+  std::vector<sipmCameraHistCropped*> simp_hist_crop_v;
+  TString sipm_hist_crop_name;
   //
   Double_t x0_LST01 = -70.93;
   Double_t y0_LST01 = -52.07;
@@ -163,6 +165,11 @@ void anaPCA::Loop(TString histOut){
   Double_t t_pix_std;
   Int_t dt_pix;
   Double_t V_phase;
+  //
+  TPrincipal *principal = NULL;
+  //
+  sipmCameraHistCropped *tmp_cam_hist = new sipmCameraHistCropped("tmp","tmp",sipm_cam,"sipmCameraHistCropped_pix.map");  
+  //principal = new TPrincipal(tmp_cam_hist->get_n_pixels(),"princ");
   //
   Long64_t nentries = fChain->GetEntriesFast();
   Long64_t nbytes = 0, nb = 0;
@@ -278,20 +285,26 @@ void anaPCA::Loop(TString histOut){
 	//sipm_cam->Fill_pe_center(n_pe, pe_chID);
 	//sipm_cam->Fill_pe(n_pe, pe_chID);
       }
-      //sipm_cam->Fill_pe(n_pe, pe_chID);
+      sipm_cam->Fill_pe(n_pe, pe_chID);
       //sipm_cam->Fill_pe(n_pe, pe_chID, -theta_core);
-      sipm_cam->Fill_pe(n_pe, pe_chID, -theta_core, h1_theta_pix_rot, h1_theta_deg_pix_rot, h1_r_pix_rot);
+      //sipm_cam->Fill_pe(n_pe, pe_chID, -theta_core, h1_theta_pix_rot, h1_theta_deg_pix_rot, h1_r_pix_rot);
       //
-      sipmCameraHistCropped* simp_hist_crop_tmp = new sipmCameraHistCropped("sipm_cam_crop","sipm_cam_crop",sipm_cam);
-    sipm_cam_crop->test();
-
-  TString sipm_cam_test12
-
-
-      sipmCameraHistCropped* simp_hist_crop_tmp = new 
-
-sipmCameraHistCropped*> simp_hist_crop_v; 
-	
+      sipm_hist_crop_name = "sipm_cam_crop";
+      sipm_hist_crop_name += "_ev";
+      sipm_hist_crop_name += n_ev_cuts;
+      sipmCameraHistCropped* simp_hist_crop_tmp = new sipmCameraHistCropped(sipm_hist_crop_name.Data(),
+									    sipm_hist_crop_name.Data(),
+									    sipm_cam,
+									    tmp_cam_hist->get_pixel_map());
+      simp_hist_crop_tmp->Fill_pe(n_pe, pe_chID, pe_time, ev_time, time_offset, -theta_core, principal);
+      simp_hist_crop_v.push_back(simp_hist_crop_tmp);
+      if(simp_hist_crop_v.size() == 1000){
+	tmp_cam_hist->Save_to_csv("data_non_normalized.csv",simp_hist_crop_v);
+	for(unsigned int iii = 0; iii<simp_hist_crop_v.size();iii++)
+	  delete simp_hist_crop_v.at(iii);
+	simp_hist_crop_v.clear();
+      }
+      //delete simp_hist_crop_tmp;
       //
       //sipm_cam->Fill(0,0);
       //}
@@ -321,12 +334,20 @@ sipmCameraHistCropped*> simp_hist_crop_v;
 			      dt_pix, 1);
   V_phase = dx_pix*dy_pix*dt_pix;
   if(V_phase>0)
-    cout<<"npixels_n_test_flower/V_phase "<<npixels_n_test_flower/V_phase<<endl;
-  
+    cout<<"npixels_n_test_flower/V_phase "<<npixels_n_test_flower/V_phase<<endl;  
   //
   //----------------------
   TH2D_divide( h2_ycore_vs_xcore_w, h2_ycore_vs_xcore, h2_ycore_vs_xcore_norm);
   //----------------------
+  //
+  // Do the actual analysis
+  if(principal != NULL){
+    principal->MakePrincipals();
+    principal->Print();
+  }
+  //
+  //
+  //
   //
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
@@ -336,6 +357,30 @@ sipmCameraHistCropped*> simp_hist_crop_v;
   }
   else
     cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
+  //
+  tmp_cam_hist->Save_to_csv("data_non_normalized.csv",simp_hist_crop_v);
+  //
+  load_S_Vh_data("./S.cvs","./Vh.cvs");
+  //
+  std::vector<sipmCameraHistCropped*> sipm_cam_principal_hist_v;
+  tmp_cam_hist->Fill_principal( sipm_cam_principal_hist_v, _data_Vh);
+  //
+  for(unsigned int ii = 0;ii<simp_hist_crop_v.size();ii++)
+    simp_hist_crop_v.at(ii)->Write(); 
+  //
+  //
+  TCanvas *c1 = NULL;
+  TCanvas *c2 = NULL;
+  c1 = new TCanvas("c1","c1",10,10,1500,1000);
+  tmp_cam_hist->draw_crop_vector( 11, 3, sipm_cam_principal_hist_v, c1);
+  //c2 = new TCanvas("c2","c2",10,10,1500,1000);
+  //tmp_cam_hist->draw_crop_vector( 11, 3, simp_hist_crop_v, c2);
+  //
+  //
+  //cout<<"sipm_cam_principal_hist_v.size() = "<<sipm_cam_principal_hist_v.size()<<endl;
+  for(unsigned int ii = 0;ii<sipm_cam_principal_hist_v.size();ii++)
+    sipm_cam_principal_hist_v.at(ii)->Write();  
+  //
   //
   for(unsigned int ii = 0;ii<n_pe_steps;ii++){
     pr_hmax_vs_e_v.at(ii)->Write();
@@ -384,7 +429,13 @@ sipmCameraHistCropped*> simp_hist_crop_v;
   //
   sipm_cam->Write();
   //
+  if(c1 != NULL)
+    c1->Write();
+  if(c2 != NULL)
+    c2->Write();
+  //
   rootFile->Close();
+  //
   //
   cout<<"n_ev_cuts = "<<n_ev_cuts<<endl;
 }
@@ -403,8 +454,9 @@ bool anaPCA::cuts(){
   //if(hmax > 10000 && hmax < 11000)
   //if(n_pe>1000 && n_pe<1100)
   //return true;
-  if(n_pe>10 && n_pe<50)
-    return true;
+  if(hmax > 10000 && hmax < 11000)
+    if(n_pe>1000 && n_pe<2000)
+      return true;
   //if(n_pe>10)
   //return true;
   //if(n_pe>40)
@@ -417,4 +469,20 @@ bool anaPCA::cuts(){
   //if(ycore>-10 && ycore<10)
   //return true;
   return false; 
+}
+
+void anaPCA::load_S_Vh_data(TString name_S, TString name_Vh){
+  //
+  ifstream file_cvs_S(name_S);
+  ifstream file_cvs_Vh(name_Vh);
+  if(file_cvs_S.is_open())
+    for(Int_t i = 0; i <_dd_im; i++)
+      file_cvs_S>>_data_S[i];
+  file_cvs_S.close();
+  //
+  if(file_cvs_Vh.is_open())
+    for(Int_t i = 0; i <_dd_im; i++)
+      for(Int_t j = 0; j <_dd_im; j++)
+	file_cvs_Vh>>_data_Vh[i][j];
+  file_cvs_Vh.close();
 }

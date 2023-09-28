@@ -94,7 +94,6 @@ gamma/
 gamma_diffuse/
 proton/
 screenlog.0
-<<<<<<< Updated upstream
 y_core_vs_xcore_electron_1_20_stat.pdf
 y_core_vs_xcore_electron_more10_less40pe_1_20_stat.pdf
 y_core_vs_xcore_full_stat.pdf
@@ -122,9 +121,28 @@ camera_mercedes_gamma.pdf
 camera_mercedes_gamma_diff.pdf
 camera_rotation_gamma.pdf
 digi_sum.pdf
-=======
 ID_to_rm.gamma
 ID_to_rm.electron
 ID_to_rm.proton
 ID_to_rm.gamma_diffuse
->>>>>>> Stashed changes
+.ipynb_checkpoints/svd-checkpoint.ipynb
+S.cvs
+Vh.cvs
+camera_im_1000pe_2000pe.pdf
+camera_im_1000pe_2000pe_hmax10km.pdf
+camera_im_1000pe_2000pe_hmax13km.pdf
+camera_im_1000pe_2000pe_hmax14km.pdf
+camera_im_1000pe_2000pe_hmax15km.pdf
+camera_im_1000pe_2000pe_hmax5km.pdf
+data_non_normalized.csv
+data_non_normalized_36575ev_887ch.csv
+data_non_normalized_887ch.csv
+ev_1000pe.pdf
+hist_gamma_on_nsb_1x.root
+principle_1000pe.pdf
+principle_hightorder_1000pe.pdf
+sipmCameraHistCropped_pix.map
+sipmCameraHistCropped_test.pdf
+sipmCameraHistCropped_test01.pdf
+sipmCameraHistCropped_test02.pdf
+sipmCameraHist_formSimpHist_test.pdf

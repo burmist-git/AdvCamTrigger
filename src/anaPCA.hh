@@ -32,6 +32,11 @@ public:
   Double_t _theta_core;
 
   anaConf _anaConf;
+
+  void load_S_Vh_data(TString name_S, TString name_Vh);
+  static const Int_t _dd_im = 887;
+  Double_t _data_S[_dd_im];
+  Double_t _data_Vh[_dd_im][_dd_im];
   
 };
 

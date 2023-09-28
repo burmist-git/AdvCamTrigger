@@ -87,6 +87,20 @@ sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* 
 {
 }
 
+const bool sipmCameraHist::check_ch_ID(const unsigned int chIDval) const {
+  if(chIDval>=0 && chIDval<_n_pixels)
+    return true;
+  return false;
+}
+
+const bool sipmCameraHist::check_ch_ID(const Int_t chIDval) const {
+  return check_ch_ID((unsigned int )chIDval);
+}
+
+const bool sipmCameraHist::check_ch_ID() const {
+  return true;
+}
+
 void sipmCameraHist::load_mapping(const char* mapping_csv_file){
   //
   ifstream fFile(mapping_csv_file);
