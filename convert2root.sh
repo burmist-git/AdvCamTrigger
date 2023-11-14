@@ -5,17 +5,18 @@
 
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] --convert_gm_test  : convert gammas         (test)"
-    echo " [0] --convert_gd_test  : convert gammas diffuse (test)"
-    echo " [0] --convert_el_test  : convert electrons      (test)"
-    echo " [0] --convert_pr_test  : convert protons        (test)"
-    echo " [0] --load_modules     : load_modules"
-    echo " [0] --convert_gm       : convert gammas"
-    echo " [0] --convert_gd       : convert gammas diffuse"
-    echo " [0] --convert_el       : convert electrons"
-    echo " [0] --convert_pr       : convert protons"
-    echo " [0] --inc_reduce_stack : increase reduce stack memory"
-    echo " [0] -h                 : print help"
+    echo " [0] --convert_gm_test   : convert gammas         (test)"
+    echo " [0] --convert_gd_test   : convert gammas diffuse (test)"
+    echo " [0] --convert_el_test   : convert electrons      (test)"
+    echo " [0] --convert_pr_test   : convert protons        (test)"
+    echo " [0] --load_modules      : load_modules"
+    echo " [0] --convert_gm        : convert gammas"
+    echo " [0] --convert_gd        : convert gammas diffuse"
+    echo " [0] --convert_el        : convert electrons"
+    echo " [0] --convert_pr        : convert protons"
+    echo " [0] --inc_reduce_stack  : increase reduce stack memory"
+    echo " [0] --set_unlimited_mem : set unlimited memory"
+    echo " [0] -h                  : print help"
 }
 
 function creat_csv2toot_list {
@@ -198,6 +199,8 @@ else
 	echo " ulimit -s           : current limit"
 	echo " ulimit -s unlimited : set stack unlimited"
 	echo " sudo swapoff -a; sudo swapon -a : clean swap"
+    elif [ "$1" = "--set_unlimited_mem" ]; then	
+	ulimit -s unlimited
     elif [ "$1" = "-h" ]; then
         printHelp
     else

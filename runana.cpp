@@ -2,6 +2,7 @@
 #include "src/ana.hh"
 #include "src/anashort.hh"
 #include "src/anaPCA.hh"
+#include "src/anaFast.hh"
 #include "src/sipmCameraHist.hh"
 #include "src/sipmCameraHistCropped.hh"
 
@@ -72,7 +73,8 @@ int main(int argc, char *argv[]){
 	<<"outRootFileF       : "<<outRootFileF<<endl
       	<<"evID               : "<<evID<<endl
 	<<"particle_type_name : "<<particle_type_name<<endl;
-    ana a(inRootFiles, 1);
+    //ana a(inRootFiles, 1);
+    ana a(inRootFiles);
     a.set_particle_type_name(particle_type_name);
     a.save_wf_for_event(outRootFileF, evID);
   }
@@ -150,6 +152,17 @@ int main(int argc, char *argv[]){
     anaPCA a(rootFilesList,"anaPCA.conf");
     a.Loop(outRootFileF);
   }
+  else if(argc == 5 && atoi(argv[1])==7){
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    TString conf_file = argv[4];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"rootFilesList : "<<rootFilesList<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl
+    	<<"conf_file     : "<<conf_file<<endl;
+    anaFast a(rootFilesList, conf_file.Data());
+    a.Loop(outRootFileF);
+  }
   else{
     cout<<" --> ERROR in input arguments "<<endl
 	<<" runID [1] = 0 (execution ID number)"<<endl
@@ -170,6 +183,9 @@ int main(int argc, char *argv[]){
     	<<"       [4] - evID"<<endl;
     cout<<" runID [1] = 5 (execution ID number) test of camera hist."<<endl;
     cout<<" runID [1] = 6 (execution ID number) short file format"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 7 (execution ID number) short file format: fast"<<endl
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
   }

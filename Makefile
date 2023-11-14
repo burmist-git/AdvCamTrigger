@@ -15,7 +15,7 @@ CXXFLAGS  = -g -Wall -fPIC -Wno-deprecated
 CXXFLAGS += $(ROOTCFLAGS)
 CXXFLAGS += $(ROOTLIBS)
 CXXFLAGS += $(ROOTGLIBS)
-CXXFLAGS += -std=c++14
+#CXXFLAGS += -std=c++14
 CXXFLAGS += -fconcepts
 
 OUTLIB = ./obj/

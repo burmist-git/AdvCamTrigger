@@ -17,6 +17,10 @@ struct anaConf {
   Int_t n_ev_cuts_max;
   Bool_t wf_trg_sim;
   Bool_t disable_all_cuts;
+  Bool_t cuts_set_to_false;
+  //
+  Double_t ellipse_A;
+  Double_t ellipse_B;
   anaConf(){
     confFileName="NONE";
     nentries_max = -1;
@@ -24,14 +28,20 @@ struct anaConf {
     n_ev_cuts_max = -1;
     wf_trg_sim = false;
     disable_all_cuts = true;
+    cuts_set_to_false = false;
+    ellipse_A = 851.3;
+    ellipse_B = 800.0;
   }
   void printInfo(){
-    std::cout<<"confFileName     "<<confFileName<<std::endl
-	     <<"nentries_max     "<<nentries_max<<std::endl
-      	     <<"jentry_modulo    "<<jentry_modulo<<std::endl
-	     <<"n_ev_cuts_max    "<<n_ev_cuts_max<<std::endl
-	     <<"wf_trg_sim       "<<wf_trg_sim<<std::endl
-    	     <<"disable_all_cuts "<<disable_all_cuts<<std::endl;
+    std::cout<<"confFileName      "<<confFileName<<std::endl
+	     <<"nentries_max      "<<nentries_max<<std::endl
+      	     <<"jentry_modulo     "<<jentry_modulo<<std::endl
+	     <<"n_ev_cuts_max     "<<n_ev_cuts_max<<std::endl
+	     <<"wf_trg_sim        "<<wf_trg_sim<<std::endl
+    	     <<"disable_all_cuts  "<<disable_all_cuts<<std::endl
+	     <<"cuts_set_to_false "<<cuts_set_to_false<<std::endl
+    	     <<"ellipse_A         "<<ellipse_A<<std::endl
+	     <<"ellipse_B         "<<ellipse_B<<std::endl;
   }  
   void readFromFile(TString name){
     std::ifstream confFile(name.Data());
@@ -49,6 +59,12 @@ struct anaConf {
 	  confFile>>wf_trg_sim;
 	if(mot == "disable_all_cuts:")
 	  confFile>>disable_all_cuts;
+	if(mot == "cuts_set_to_false:")
+	  confFile>>cuts_set_to_false;
+	if(mot == "ellipse_A:")
+	  confFile>>ellipse_A;
+	if(mot == "ellipse_B:")
+	  confFile>>ellipse_B;
       }
       confFile.close();
     }

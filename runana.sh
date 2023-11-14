@@ -6,8 +6,14 @@
 #inRootFile="../compressed_data/no_nsb_cut/proton/corsika_run307.compressed.root"
 #outHistF="./hist_corsika_run307_proton_no_nsb_cut.root"
 #'nightsky_background=all:0.386'
-inRootFile="../compressed_data/gamma/corsika_run307.compressed.root"
-outHistF="./hist_corsika_run307.root"
+##
+##inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
+##outHistF="./hist_gamma_on_corsika_0000ID.root"
+##
+#inRootFile="gamma_on_nsb_1x.list"
+#outHistF="./hist_gamma_on_tw.root"
+inRootFile="proton_nsb_1x.list"
+outHistF="./hist_proton_nsb_1x_tw.root"
 
 #short
 #'nightsky_background=all:0.001'
@@ -18,19 +24,25 @@ outHistF="./hist_corsika_run307.root"
 #outHistF="./hist_corsika_run307.root"
 
 #make -f Makefileana clean; make -f Makefileana runana;
-make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j
+#make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j
 
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] -d   : single root file"
-    echo " [0] -ds  : single root file (short format)"
-    echo " [0] -tw  : test waveforms"
-    echo " [0] -th  : test cam sipmCameraHist"
-    echo " [0] -sg  : gamma"
-    echo " [0] -sgd : gamma diffuse"
-    echo " [0] -se  : electron"
-    echo " [0] -sp  : proton"
-    echo " [0] -h   : print help"
+    echo " [0] -d    : single root file"
+    echo " [0] -ds   : single root file (short format)"
+    echo " [0] -tw   : test waveforms"
+    echo " [0] -th   : test cam sipmCameraHist"
+    echo " [0] -sg   : gamma"
+    echo " [0] -sgd  : gamma diffuse"
+    echo " [0] -se   : electron"
+    echo " [0] -sp   : proton"
+    echo " [0] -fg   : fast gamma"
+    echo " [0] -fgd  : fast gamma diffuse"
+    echo " [0] -fe   : fast electron"
+    echo " [0] -fp   : fast proton"
+    echo " [0] -fall : fast all"
+    echo " [0] -c    : recompile"
+    echo " [0] -h    : print help"
 }
 
 if [ $# -eq 0 ] 
@@ -46,10 +58,52 @@ else
 	#./runana 4 $inRootFile $outHistF 929 gamma    # 220 pe
 	#./runana 4 $inRootFile $outHistF 3140 gamma   # 180 pe
 	#./runana 4 $inRootFile $outHistF 3139 gamma   # 210 pe
-	./runana 4 $inRootFile $outHistF 1642 gamma   # 102 pe
-	./runana 4 $inRootFile $outHistF 1673 gamma   # 98 pe
-	./runana 4 $inRootFile $outHistF 1699 gamma   # 100 pe
-	./runana 4 $inRootFile $outHistF 1708 gamma   # 101 pe
+	#
+	#./runana 4 $inRootFile $outHistF 663307 proton
+	#./runana 4 $inRootFile $outHistF 66724 proton
+	#./runana 4 $inRootFile $outHistF 71559 proton
+	#./runana 4 $inRootFile $outHistF 124790 proton
+	#./runana 4 $inRootFile $outHistF 143047 proton
+	#./runana 4 $inRootFile $outHistF 145282 proton
+	#./runana 4 $inRootFile $outHistF 154835 proton
+	#./runana 4 $inRootFile $outHistF 338715 proton
+	#./runana 4 $inRootFile $outHistF 380672 proton
+	#./runana 4 $inRootFile $outHistF 499225 proton
+	#./runana 4 $inRootFile $outHistF 628655 proton
+	#./runana 4 $inRootFile $outHistF 663307 proton
+	#./runana 4 $inRootFile $outHistF 714851 proton
+	#./runana 4 $inRootFile $outHistF 736295 proton
+	#./runana 4 $inRootFile $outHistF 762120 proton
+	#./runana 4 $inRootFile $outHistF 809713 proton
+	#./runana 4 $inRootFile $outHistF 890894 proton
+	./runana 4 $inRootFile $outHistF 179699 proton
+	./runana 4 $inRootFile $outHistF 184478 proton
+	./runana 4 $inRootFile $outHistF 184579 proton
+	./runana 4 $inRootFile $outHistF 185077 proton
+	./runana 4 $inRootFile $outHistF 187373 proton
+	./runana 4 $inRootFile $outHistF 193092 proton
+	./runana 4 $inRootFile $outHistF 198048 proton
+	./runana 4 $inRootFile $outHistF 204414 proton
+	./runana 4 $inRootFile $outHistF 206725 proton
+	./runana 4 $inRootFile $outHistF 208503 proton
+	./runana 4 $inRootFile $outHistF 211130 proton
+	./runana 4 $inRootFile $outHistF 212463 proton
+	./runana 4 $inRootFile $outHistF 212589 proton
+	./runana 4 $inRootFile $outHistF 216551 proton
+	./runana 4 $inRootFile $outHistF 219463 proton
+	./runana 4 $inRootFile $outHistF 222736 proton
+	./runana 4 $inRootFile $outHistF 231021 proton
+	./runana 4 $inRootFile $outHistF 232611 proton
+	./runana 4 $inRootFile $outHistF 238618 proton
+	./runana 4 $inRootFile $outHistF 240388 proton
+	./runana 4 $inRootFile $outHistF 242426 proton
+	./runana 4 $inRootFile $outHistF 249587 proton
+	./runana 4 $inRootFile $outHistF 250125 proton
+	./runana 4 $inRootFile $outHistF 252482 proton
+	#
+	#./runana 4 $inRootFile $outHistF 1673 gamma   # 98 pe
+	#./runana 4 $inRootFile $outHistF 1699 gamma   # 100 pe
+	#./runana 4 $inRootFile $outHistF 1708 gamma   # 101 pe
 	#./runana 4 $inRootFile $outHistF 375 gamma   # 43 pe
 	#./runana 4 $inRootFile $outHistF 397 gamma   # 43 pe
 	#./runana 4 $inRootFile $outHistF 3058 gamma  # 43 pe
@@ -81,13 +135,30 @@ else
 	#./runana 6 gamma_on_nsb_1x_short.list hist_gamma_on_nsb_1x.root
     elif [ "$1" = "-sgd" ]; then
 	#./runana 6 gamma_diffuse_nsb_1x.list hist_gamma_diffuse_nsb_1x.root
-	./runana 6 gamma_diffuse_nsb_1x_short.list hist_gamma_diffuse_nsb_1x.root
+	./runana 6 gamma_diffuse_nsb_1x.list hist_gamma_diffuse_nsb_1x.root
     elif [ "$1" = "-se" ]; then
 	#./runana 6 electron_nsb_1x.list hist_electron_nsb_1x.root
-	./runana 6 electron_nsb_1x_short.list hist_electron_nsb_1x.root
+	./runana 6 electron_nsb_1x.list hist_electron_nsb_1x.root
     elif [ "$1" = "-sp" ]; then
 	#./runana 6 proton_nsb_1x.list hist_proton_nsb_1x.root
-	./runana 6 proton_nsb_1x_short.list hist_proton_nsb_1x.root
+	./runana 6 proton_nsb_1x.list hist_proton_nsb_1x.root
+    elif [ "$1" = "-fg" ]; then
+	#./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x.log
+	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut.log
+    elif [ "$1" = "-fgd" ]; then
+	#./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x.log
+	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x_cut.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x_cut.log
+    elif [ "$1" = "-fe" ]; then
+	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x.log
+    elif [ "$1" = "-fp" ]; then
+	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
+    elif [ "$1" = "-fall" ]; then	
+	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x.log
+	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x.log
+	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x.log
+	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
+    elif [ "$1" = "-c" ]; then
+	make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j		
     elif [ "$1" = "-h" ]; then
         printHelp
     else
@@ -95,4 +166,4 @@ else
     fi
 fi
 
-#espeak "I have done"
+#espeak    "I have done"

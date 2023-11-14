@@ -310,7 +310,7 @@ void sipmCameraHistCropped::Draw_cam(TString settings,
 }
 
 void sipmCameraHistCropped::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Float_t *pix_pe_time,
-				    const Double_t ev_time, const Double_t time_offset, const Double_t alpha, TPrincipal *principal, bool if_centrate){
+				    const Double_t ev_time, const Double_t time_offset, const Double_t alpha, TPrincipal *principal, bool if_centrate, Double_t rnd_x, Double_t rnd_y){
   //
   Double_t *xn = new Double_t[npixels_n];
   Double_t *yn = new Double_t[npixels_n];
@@ -339,10 +339,15 @@ void sipmCameraHistCropped::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, 
   //
   for(Int_t i = 0;i<npixels_n;i++){
     if(_sipm_cam->check_ch_ID(pix_id[i])){
-      if(if_centrate)
+      if(if_centrate){
 	Fill((xn[i] - x_mean),(yn[i] - y_mean));
-      else
-	Fill(xn[i],yn[i]);
+      }
+      else{
+	Fill(xn[i], yn[i]);
+	//for(Int_t ii = 0; ii < 100; ii++){
+	//Fill( rnd_x, rnd_y);
+	//}
+      }
     }
   }
   //
@@ -395,7 +400,7 @@ void sipmCameraHistCropped::Save_to_csv(TString csvname, const std::vector<sipmC
   cout<<"simp_hist_crop_v.size() = "<<simp_hist_crop_v.size()<<endl
       <<"_n_pixels               = "<<_n_pixels<<endl;
   //
-  csvfile.open(csvname.Data(),std::ios_base::app);
+  csvfile.open(csvname.Data(), std::ios_base::app);
   for(unsigned int i = 0; i <simp_hist_crop_v.size() ; i++){
     for(unsigned int j = 0; j < _n_pixels; j++){
       if(j == (_n_pixels-1))
@@ -417,7 +422,7 @@ void sipmCameraHistCropped::draw_crop_vector( Int_t nx, Int_t ny, const std::vec
   gStyle->SetOptStat(kFALSE);
   c1->Divide(nx,ny,0.0001,0.0001,0);
   Int_t padID = 1;
-  Int_t faceID = 200;
+  Int_t faceID = 0;
   for( Int_t i = 0; i<nx; i++){
     for( Int_t j = 0; j<ny; j++){
       c1->cd(padID);

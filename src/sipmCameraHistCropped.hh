@@ -45,7 +45,7 @@ public:
   TString _title;
   //  
   void Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Float_t *pix_pe_time,
-	       const Double_t ev_time, const Double_t time_offset, const Double_t alpha, TPrincipal *principal = NULL, bool if_centrate = false);
+	       const Double_t ev_time, const Double_t time_offset, const Double_t alpha, TPrincipal *principal = NULL, bool if_centrate = false, Double_t rnd_x = 0.0, Double_t rnd_y = 0.0);
   //  
   inline const unsigned int get_n_pixels() const {return _n_pixels;}
   inline const std::vector<unsigned int> &get_pixel_map() const {return _pixel_map;}

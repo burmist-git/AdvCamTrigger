@@ -6,7 +6,8 @@ import time
 import subprocess
 import sys
 #
-df = pd.read_csv('data_non_normalized_36575ev_887ch.csv', sep=' ', header=None)
+#df = pd.read_csv('data_non_normalized_36575ev_887ch.csv', sep=' ', header=None)
+df = pd.read_csv('data_non_normalized.csv', sep=' ', header=None)
 U, S, Vh = np.linalg.svd(df.values, full_matrices=True)
 print(U.shape)
 print(S.shape)

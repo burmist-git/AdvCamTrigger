@@ -44,6 +44,10 @@ void anaPCA::Loop(TString histOut){
   _anaConf.printInfo();
   //assert(0);
   //
+  TGraph *gr_evID_npe = new TGraph();
+  gr_evID_npe->SetNameTitle("gr_evID_npe","gr_evID_npe");
+  //
+  //
   const unsigned int nn_fadc_point = 75;
   const unsigned int nn_PMT_channels = 7987;
   //
@@ -90,13 +94,19 @@ void anaPCA::Loop(TString histOut){
   //
   TH1D *h1_nphotons = new TH1D("h1_nphotons","h1_nphotons",1000,0.0,10000);
   TH1D *h1_n_pe = new TH1D("h1_n_pe","h1_n_pe",1001,-0.5,1000.5);
+  TH1D *h1_n_pe_notcuts = new TH1D("h1_n_pe_notcuts","h1_n_pe_notcuts",1001,-0.5,1000.5);
   TH1D *h1_n_pixels = new TH1D("h1_n_pixels","h1_n_pixels",1000,0.0,10000);
   //
   TH1D *h1_azimuth = new TH1D("h1_azimuth","azimuth",400,-4,4);
   TH1D *h1_altitude = new TH1D("h1_altitude","h1_altitude",400,4,4);
+  //
+  TH1D *h1_azimuth_notcuts = new TH1D("h1_azimuth_notcuts","azimuth notcuts",400,-4,4);
+  TH1D *h1_altitude_notcuts = new TH1D("h1_altitude_notcuts","altitude notcuts",400,-4,4);
+  //
   TH1D *h1_h_first_int = new TH1D("h1_h_first_int","h1_h_first_int",4000,0.0,100000);
   TH1D *h1_xmax = new TH1D("h1_xmax","h1_xmax",400,0.0,1000);
   TH1D *h1_hmax = new TH1D("h1_hmax","h1_hmax",400,0.0,100000);
+  TH1D *h1_hmax_notcuts = new TH1D("h1_hmax_notcuts","h1_hmax_notcuts",400,0.0,100000);
   TH1D *h1_emax = new TH1D("h1_emax","h1_emax",400,0.0,1000);
   TH1D *h1_cmax = new TH1D("h1_cmax","h1_cmax",400,0.0,1000);
   //
@@ -191,8 +201,18 @@ void anaPCA::Loop(TString histOut){
     getCore_rel_R_theta( x0_LST01, y0_LST01, xcore, ycore, r_core, theta_core);
     _r_core = r_core;
     _theta_core = theta_core;
+    //
+    h1_azimuth_notcuts->Fill(azimuth);
+    h1_altitude_notcuts->Fill(altitude);
+    //
+    h1_n_pe_notcuts->Fill(n_pe);
+    h1_hmax_notcuts->Fill(hmax);
+    //
     if(cuts()){
       n_ev_cuts++;
+      //
+      gr_evID_npe->SetPoint( gr_evID_npe->GetN(), (Int_t)jentry, n_pe);
+      //
       if(n_ev_cuts>_anaConf.n_ev_cuts_max && _anaConf.n_ev_cuts_max>0)
 	break;
       if(cuts()){
@@ -296,7 +316,8 @@ void anaPCA::Loop(TString histOut){
 									    sipm_hist_crop_name.Data(),
 									    sipm_cam,
 									    tmp_cam_hist->get_pixel_map());
-      simp_hist_crop_tmp->Fill_pe(n_pe, pe_chID, pe_time, ev_time, time_offset, -theta_core, principal);
+      //simp_hist_crop_tmp->Fill_pe(n_pe, pe_chID, pe_time, ev_time, time_offset, -theta_core, principal, rnd->Gaus(0.0,0.5), rnd->Uniform(-2.5,-0.5));
+      simp_hist_crop_tmp->Fill_pe(n_pe, pe_chID, pe_time, ev_time, time_offset, -theta_core, principal, 0.0, 0.0);
       simp_hist_crop_v.push_back(simp_hist_crop_tmp);
       if(simp_hist_crop_v.size() == 1000){
 	tmp_cam_hist->Save_to_csv("data_non_normalized.csv",simp_hist_crop_v);
@@ -373,8 +394,8 @@ void anaPCA::Loop(TString histOut){
   TCanvas *c2 = NULL;
   c1 = new TCanvas("c1","c1",10,10,1500,1000);
   tmp_cam_hist->draw_crop_vector( 11, 3, sipm_cam_principal_hist_v, c1);
-  //c2 = new TCanvas("c2","c2",10,10,1500,1000);
-  //tmp_cam_hist->draw_crop_vector( 11, 3, simp_hist_crop_v, c2);
+  c2 = new TCanvas("c2","c2",10,10,1500,1000);
+  tmp_cam_hist->draw_crop_vector( 11, 3, simp_hist_crop_v, c2);
   //
   //
   //cout<<"sipm_cam_principal_hist_v.size() = "<<sipm_cam_principal_hist_v.size()<<endl;
@@ -396,13 +417,19 @@ void anaPCA::Loop(TString histOut){
   //
   h1_nphotons->Write();
   h1_n_pe->Write();
+  h1_n_pe_notcuts->Write();
   h1_n_pixels->Write();
   //
   h1_azimuth->Write();
   h1_altitude->Write();
+  //
+  h1_azimuth_notcuts->Write();
+  h1_altitude_notcuts->Write();
+  //
   h1_h_first_int->Write();
   h1_xmax->Write();
   h1_hmax->Write();
+  h1_hmax_notcuts->Write();
   h1_emax->Write();
   h1_cmax->Write();
   //
@@ -434,6 +461,8 @@ void anaPCA::Loop(TString histOut){
   if(c2 != NULL)
     c2->Write();
   //
+  gr_evID_npe->Write();
+  //
   rootFile->Close();
   //
   //
@@ -444,6 +473,9 @@ bool anaPCA::cuts(){
   //
   if(_anaConf.disable_all_cuts)
     return true;
+  //
+  if(_anaConf.cuts_set_to_false)
+    return false;
   //if((_theta_core*180/TMath::Pi()<10.0) ||
   //  ((_theta_core*180/TMath::Pi()>125.0) && (_theta_core*180/TMath::Pi()<135.0)) ||
   //  ((_theta_core*180/TMath::Pi()>245.0) && (_theta_core*180/TMath::Pi()<255.0)))
@@ -454,9 +486,21 @@ bool anaPCA::cuts(){
   //if(hmax > 10000 && hmax < 11000)
   //if(n_pe>1000 && n_pe<1100)
   //return true;
-  if(hmax > 10000 && hmax < 11000)
-    if(n_pe>1000 && n_pe<2000)
-      return true;
+  //if(hmax > 10000 && hmax < 11000)
+  //if(n_pe>3000 && n_pe<5000)
+  //return true;
+  Double_t azimuth_min = (180.0 - 0.4)/180.0*TMath::Pi();
+  Double_t azimuth_max = (180.0 + 0.4)/180.0*TMath::Pi();
+  Double_t altitude_min = (90.0 - 20.0 - 0.4)/180.0*TMath::Pi();
+  Double_t altitude_max = (90.0 - 20.0 + 0.4)/180.0*TMath::Pi();
+  if(n_pe>10000)
+    return true;
+  //if(hmax > 9000 && hmax < 12000)
+  //if(n_pe>1000 && n_pe<2000)
+  //if(azimuth>azimuth_min && azimuth<azimuth_max)
+  //if(altitude>altitude_min && altitude<altitude_max)
+  //return true;
+  //return true;
   //if(n_pe>10)
   //return true;
   //if(n_pe>40)
