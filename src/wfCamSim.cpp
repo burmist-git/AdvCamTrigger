@@ -1,6 +1,7 @@
 //my
 #include "wfCamSim.hh"
 #include "sipmCameraHist.hh"
+#include "anabase.hh"
 
 //root
 #include "TRandom3.h"
@@ -464,7 +465,8 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id, const st
 void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
 				      const std::vector<std::vector<Int_t>> &wf,
 				      const std::vector<std::vector<Int_t>> &wf_ref,
-				      const std::vector<std::vector<unsigned int>> &trg_vector){
+				      const std::vector<std::vector<unsigned int>> &trg_vector,
+				      const anabase *ab){
   //
   //gStyle->SetPalette(kCherry);
   //TColor::InvertPalette();
@@ -522,22 +524,25 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
     //
     //sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),"gamma",i,event_id,energy,xcore,ycore,ev_time,nphotons,n_pe,n_pixels);
     //sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),"proton",i,event_id,energy,xcore,ycore,ev_time,nphotons,n_pe,n_pixels);
+    sipm_cam->set_wf_time_id(i);
+    sipm_cam->set_anabase(ab);
     if(trg_vector.size()>0){
       if(trg_vector.at(i).size()>0){
-	sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector.at(i));
+	//std::cout<<"rr"<<std::endl;
+	sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector.at(i), ab);
 	if(pdf_out)
-	  sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(),sipm_cam_ref,trg_vector.at(i));
+	  sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(),sipm_cam_ref,trg_vector.at(i), ab);
       }
       else{
-	sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref);
+	sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(), sipm_cam_ref, ab);
 	if(pdf_out)
-	  sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(),sipm_cam_ref);
+	  sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(), sipm_cam_ref, ab);
       }
     }
     else{
-      sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref);
+      sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(), sipm_cam_ref, ab);
       if(pdf_out)
-	sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(),sipm_cam_ref);
+	sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(), sipm_cam_ref, ab);
     }
     //
     //delete sipm_cam;

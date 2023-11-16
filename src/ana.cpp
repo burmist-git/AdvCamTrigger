@@ -650,7 +650,7 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   TString gif_sim_name_pref = "./ev_synthetic_";
   gif_sim_name_pref += (Int_t)evID;
   gif_sim_name_pref += "_";
-  wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam_real, wfcam, trg_vec);
+  wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam_real, wfcam, trg_vec, this);
   //TString particle_type,
   //Int_t wf_time_id,
   //Int_t   event_id,

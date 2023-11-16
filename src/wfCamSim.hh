@@ -13,6 +13,7 @@ class TString;
 class TRandom3;
 class TGraph;
 class TH1D;
+class anabase;
 
 class wfCamSim {
 
@@ -69,11 +70,13 @@ public :
   Int_t get_charge(const std::vector<int>& wf);
   
   void test_calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc);
-  void generate_gif_for_event(TString pathPref, Int_t event_id, const std::vector<std::vector<Int_t>> &wf);
+  void generate_gif_for_event(TString pathPref, Int_t event_id,
+			      const std::vector<std::vector<Int_t>> &wf);
   void generate_gif_for_event(TString pathPref, Int_t event_id,
 			      const std::vector<std::vector<Int_t>> &wf,
 			      const std::vector<std::vector<Int_t>> &wf_ref,
-			      const std::vector<std::vector<unsigned int>> &trg_vector);
+			      const std::vector<std::vector<unsigned int>> &trg_vector,
+			      const anabase *ab = NULL);
   
 private:
   //

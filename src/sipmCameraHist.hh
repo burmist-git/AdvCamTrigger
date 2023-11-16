@@ -1,5 +1,8 @@
 #pragma once
 
+//my 
+#include "anabase.hh"
+
 //root
 #include <TObject.h>
 #include <TH2Poly.h>
@@ -513,8 +516,8 @@ public:
   void Clean();
   void count_signal(Double_t th_val, Int_t &nch, Int_t &npe);
   void Draw_cam(TString settings, TString pdf_out_file);
-  void Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist);
-  void Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const std::vector<unsigned int> &pixel_line_flower_vec);
+  void Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const anabase *ab = NULL);
+  void Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const std::vector<unsigned int> &pixel_line_flower_vec, const anabase *ab = NULL);
   void Draw_cam(TString settings, TString pdf_out_file, const std::vector<unsigned int> &pixel_line_flower_vec);
   void Draw_cam(TString settings,
 		TString pdf_out_file,
@@ -555,6 +558,9 @@ public:
 		Int_t n_pe,
 		Int_t n_pixels,
 		const std::vector<unsigned int> &pixel_line_flower_vec);
+  //
+  inline void set_wf_time_id(Int_t wf_time_id){_wf_time_id = wf_time_id;}
+  inline void set_anabase(const anabase *ab){_ab = ab;}
   //  
   TString _name;
   TString _title;
@@ -599,5 +605,6 @@ public:
   std::vector<pixel_info> _pixel_vec;
   void load_mapping(const char* mapping_csv_file);
   Double_t _rot_alpha_deg;
-  
+  Int_t _wf_time_id;
+  const anabase *_ab;
 };

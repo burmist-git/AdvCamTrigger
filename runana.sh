@@ -12,8 +12,10 @@
 ##
 #inRootFile="gamma_on_nsb_1x.list"
 #outHistF="./hist_gamma_on_tw.root"
-inRootFile="proton_nsb_1x.list"
-outHistF="./hist_proton_nsb_1x_tw.root"
+inRootFile="gamma_diffuse_nsb_1x.list"
+outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
+#inRootFile="proton_nsb_1x.list"
+#outHistF="./hist_proton_nsb_1x_tw.root"
 
 #short
 #'nightsky_background=all:0.001'
@@ -54,6 +56,73 @@ else
     elif [ "$1" = "-ds" ]; then
 	./runana 3 $inRootFile $outHistF
     elif [ "$1" = "-tw" ]; then
+
+	## azimuth  = 180 +/- 0.1
+        ## altitude = 70  +/- 0.1
+	#./runana 4 $inRootFile $outHistF 3192050  gamma # 4580
+	#./runana 4 $inRootFile $outHistF 6792462  gamma # 3594
+	#./runana 4 $inRootFile $outHistF 12118108 gamma # 5648 
+
+	## azimuth  = 181 +/- 0.1
+        ## altitude = 70  +/- 0.1
+	#./runana 4 $inRootFile $outHistF 1724488  gamma # 5166
+	#./runana 4 $inRootFile $outHistF 16219735 gamma # 3390 
+	#./runana 4 $inRootFile $outHistF 27869493 gamma # 3522
+
+	## azimuth  = 179 +/- 0.1
+        ## altitude = 70  +/- 0.1
+	#./runana 4 $inRootFile $outHistF 1979525 gamma  # 7011
+	#./runana 4 $inRootFile $outHistF 5389323 gamma  # 5048
+	#./runana 4 $inRootFile $outHistF 17040599 gamma # 4762
+
+	## azimuth  = 177 +/- 0.1
+        ## altitude = 70  +/- 0.1
+	#./runana 4 $inRootFile $outHistF 2023749  gamma  # 3093
+	#./runana 4 $inRootFile $outHistF 17269715 gamma  # 4986
+	#./runana 4 $inRootFile $outHistF 35291254 gamma  # 4131
+
+	## azimuth  = 170 +/- 0.1
+        ## altitude = 70  +/- 0.1
+	#./runana 4 $inRootFile $outHistF 524445 gamma    # 4104
+	#./runana 4 $inRootFile $outHistF 20449567 gamma  # 4046
+	#./runana 4 $inRootFile $outHistF 31214745 gamma  # 3717
+
+	## azimuth  = 180 +/- 0.2
+        ## altitude = 70  +/- 0.2
+	#./runana 4 $inRootFile $outHistF 576379 gamma_diff        
+	#./runana 4 $inRootFile $outHistF 783671 gamma_diff
+	#./runana 4 $inRootFile $outHistF 1218953 gamma_diff	
+
+	## azimuth  = 177 +/- 0.2
+        ## altitude = 70  +/- 0.2
+	#./runana 4 $inRootFile $outHistF 2301553 gamma_diff        
+	#./runana 4 $inRootFile $outHistF 646949 gamma_diff
+	#./runana 4 $inRootFile $outHistF 5712136 gamma_diff	
+
+	## azimuth  = 174 +/- 0.2
+        ## altitude = 70  +/- 0.2
+	#./runana 4 $inRootFile $outHistF 474353 gamma_diff        
+	#./runana 4 $inRootFile $outHistF 4529997 gamma_diff
+	#./runana 4 $inRootFile $outHistF 7611489 gamma_diff	
+
+	## azimuth  = 180 +/- 0.2
+        ## altitude = 72  +/- 0.2
+	#./runana 4 $inRootFile $outHistF 439530 gamma_diff        
+	#./runana 4 $inRootFile $outHistF 2069890 gamma_diff
+	#./runana 4 $inRootFile $outHistF 2481499 gamma_diff	
+
+	## azimuth  = 180 +/- 0.2
+        ## altitude = 68  +/- 0.2
+	#./runana 4 $inRootFile $outHistF 1768962 gamma_diff        
+	#./runana 4 $inRootFile $outHistF 2362795 gamma_diff
+	#./runana 4 $inRootFile $outHistF 9353299 gamma_diff
+
+	## azimuth  = 180 +/- 0.2
+        ## altitude = 69  +/- 0.2
+	./runana 4 $inRootFile $outHistF 135723 gamma_diff        
+	./runana 4 $inRootFile $outHistF 845310 gamma_diff
+	./runana 4 $inRootFile $outHistF 2378773 gamma_diff
+   
 	#./runana 4 $inRootFile $outHistF 896 gamma    # 162 pe
 	#./runana 4 $inRootFile $outHistF 929 gamma    # 220 pe
 	#./runana 4 $inRootFile $outHistF 3140 gamma   # 180 pe
@@ -76,30 +145,31 @@ else
 	#./runana 4 $inRootFile $outHistF 762120 proton
 	#./runana 4 $inRootFile $outHistF 809713 proton
 	#./runana 4 $inRootFile $outHistF 890894 proton
-	./runana 4 $inRootFile $outHistF 179699 proton
-	./runana 4 $inRootFile $outHistF 184478 proton
-	./runana 4 $inRootFile $outHistF 184579 proton
-	./runana 4 $inRootFile $outHistF 185077 proton
-	./runana 4 $inRootFile $outHistF 187373 proton
-	./runana 4 $inRootFile $outHistF 193092 proton
-	./runana 4 $inRootFile $outHistF 198048 proton
-	./runana 4 $inRootFile $outHistF 204414 proton
-	./runana 4 $inRootFile $outHistF 206725 proton
-	./runana 4 $inRootFile $outHistF 208503 proton
-	./runana 4 $inRootFile $outHistF 211130 proton
-	./runana 4 $inRootFile $outHistF 212463 proton
-	./runana 4 $inRootFile $outHistF 212589 proton
-	./runana 4 $inRootFile $outHistF 216551 proton
-	./runana 4 $inRootFile $outHistF 219463 proton
-	./runana 4 $inRootFile $outHistF 222736 proton
-	./runana 4 $inRootFile $outHistF 231021 proton
-	./runana 4 $inRootFile $outHistF 232611 proton
-	./runana 4 $inRootFile $outHistF 238618 proton
-	./runana 4 $inRootFile $outHistF 240388 proton
-	./runana 4 $inRootFile $outHistF 242426 proton
-	./runana 4 $inRootFile $outHistF 249587 proton
-	./runana 4 $inRootFile $outHistF 250125 proton
-	./runana 4 $inRootFile $outHistF 252482 proton
+	#
+	#./runana 4 $inRootFile $outHistF 179699 proton
+	#./runana 4 $inRootFile $outHistF 184478 proton
+	#./runana 4 $inRootFile $outHistF 184579 proton
+	#./runana 4 $inRootFile $outHistF 185077 proton
+	#./runana 4 $inRootFile $outHistF 187373 proton
+	#./runana 4 $inRootFile $outHistF 193092 proton
+	#./runana 4 $inRootFile $outHistF 198048 proton
+	#./runana 4 $inRootFile $outHistF 204414 proton
+	#./runana 4 $inRootFile $outHistF 206725 proton
+	#./runana 4 $inRootFile $outHistF 208503 proton
+	#./runana 4 $inRootFile $outHistF 211130 proton
+	#./runana 4 $inRootFile $outHistF 212463 proton
+	#./runana 4 $inRootFile $outHistF 212589 proton
+	#./runana 4 $inRootFile $outHistF 216551 proton
+	#./runana 4 $inRootFile $outHistF 219463 proton
+	#./runana 4 $inRootFile $outHistF 222736 proton
+	#./runana 4 $inRootFile $outHistF 231021 proton
+	#./runana 4 $inRootFile $outHistF 232611 proton
+	#./runana 4 $inRootFile $outHistF 238618 proton
+	#./runana 4 $inRootFile $outHistF 240388 proton
+	#./runana 4 $inRootFile $outHistF 242426 proton
+	#./runana 4 $inRootFile $outHistF 249587 proton
+	#./runana 4 $inRootFile $outHistF 250125 proton
+	#./runana 4 $inRootFile $outHistF 252482 proton
 	#
 	#./runana 4 $inRootFile $outHistF 1673 gamma   # 98 pe
 	#./runana 4 $inRootFile $outHistF 1699 gamma   # 100 pe
@@ -147,7 +217,7 @@ else
 	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut.log
     elif [ "$1" = "-fgd" ]; then
 	#./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x.log
-	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x_cut.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x_cut.log
+	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x_cut.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x_cut_3000pe.log
     elif [ "$1" = "-fe" ]; then
 	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x.log
     elif [ "$1" = "-fp" ]; then

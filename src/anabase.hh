@@ -28,11 +28,11 @@ public :
   void printEv();  
   void getCore_rel_R_theta(const Double_t x0, const Double_t y0, const Double_t xx, const Double_t yy, Double_t &rr, Double_t &theta);
   
-protected :
+public :
   void Loop(TString histOut);
   Long64_t LoadTree(Long64_t entry);
   
-private :
+public :
   Bool_t _short_format_flag;
   Int_t GetEntry(Long64_t entry);
   void Init(TTree *tree);
@@ -40,7 +40,7 @@ private :
   void Show(Long64_t entry = -1);
   Int_t Cut(Long64_t entry);
   
-protected :
+public :
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
   Int_t           fCurrent; //!current Tree number in a TChain
   //Int_t           evt;

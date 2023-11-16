@@ -38,7 +38,7 @@
 
 using namespace std;
 
-sipmCameraHist::sipmCameraHist(const char* name, const char* title, sipmCameraHist *sipmHist) : TH2Poly()
+sipmCameraHist::sipmCameraHist(const char* name, const char* title, sipmCameraHist *sipmHist) : TH2Poly(), _ab(NULL)
 {
   //
   
@@ -55,7 +55,7 @@ sipmCameraHist::sipmCameraHist(const char* name, const char* title, sipmCameraHi
 	   sipmHist->get_pixel_vec().at(i).yp);
 }
 
-sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg, TH1D *h1_distance_between_pixels) : TH2Poly(), _rot_alpha_deg(rot_alpha_deg)
+sipmCameraHist::sipmCameraHist(const char* name, const char* title, const char* mapping_csv_file, Double_t rot_alpha_deg, TH1D *h1_distance_between_pixels) : TH2Poly(), _rot_alpha_deg(rot_alpha_deg), _ab(NULL)
 {
   //
   //
@@ -321,6 +321,19 @@ void sipmCameraHist::Draw_cam( TString settings,
   TString n_pe_str     = "n_pe     : "; n_pe_str += n_pe;
   TString n_pixels_str = "n_pixels : "; n_pixels_str += n_pixels;
   //
+  TString azimuth_str;
+  TString altitude_str;
+  TString h_first_int_str;
+  TString hmax_str;
+  //
+  if(_ab != NULL){
+    azimuth_str     = "azimuth     : "; azimuth_str += (Int_t)(_ab->azimuth*180.0/TMath::Pi()*10); azimuth_str += "/10 deg";
+    //azimuth_str     = "azimuth     : "; azimuth_str += _ab->event_id;
+    altitude_str    = "altitude    : "; altitude_str += (Int_t)(_ab->altitude*180.0/TMath::Pi()*10); altitude_str += "/10 deg";
+    h_first_int_str = "h_first_int : "; h_first_int_str += (Int_t)_ab->h_first_int; h_first_int_str += " km";
+    hmax_str        = "hmax        : "; hmax_str += (Int_t)_ab->hmax; hmax_str += " km";
+  }
+  //
   TText *t0 = new TText(0.5,0.95,wf_time_str.Data());
   t0->SetTextAlign(22);
   t0->SetTextFont(43);
@@ -373,6 +386,30 @@ void sipmCameraHist::Draw_cam( TString settings,
   t9->Draw("same");
   //
   //
+  if(_ab != NULL){
+    TText *t10 = new TText(0.5,0.45,azimuth_str.Data());
+    t10->SetTextAlign(22);
+    t10->SetTextFont(43);
+    t10->SetTextSize(40);
+    t10->Draw("same");
+    TText *t11 = new TText(0.5,0.40,altitude_str.Data());
+    t11->SetTextAlign(22);
+    t11->SetTextFont(43);
+    t11->SetTextSize(40);
+    t11->Draw("same");
+    TText *t12 = new TText(0.5,0.35,h_first_int_str.Data());
+    t12->SetTextAlign(22);
+    t12->SetTextFont(43);
+    t12->SetTextSize(40);
+    t12->Draw("same");
+    TText *t13 = new TText(0.5,0.30,hmax_str.Data());
+    t13->SetTextAlign(22);
+    t13->SetTextFont(43);
+    t13->SetTextSize(40);
+    t13->Draw("same");
+  }
+  //
+  //
   if(pdf_out_file != "")
     c1->SaveAs(pdf_out_file.Data());
 }
@@ -384,13 +421,20 @@ void sipmCameraHist::Draw_cam( TString settings,
 
 void sipmCameraHist::Draw_cam( TString settings,
 			       TString pdf_out_file,
-			       sipmCameraHist *simp_ref_hist){
+			       sipmCameraHist *simp_ref_hist,
+			       const anabase *ab){
   std::vector<unsigned int> pixel_line_flower_vec;
-  Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, simp_ref_hist);
+  if(ab == NULL)
+    Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, simp_ref_hist);
+  else
+    Draw_cam( settings, pdf_out_file, ab->_particle_type_name.Data(), _wf_time_id, ab->event_id, ab->energy, ab->xcore, ab->ycore, ab->ev_time, ab->nphotons, ab->n_pe, ab->n_pixels, pixel_line_flower_vec, simp_ref_hist);
 }
 
-void sipmCameraHist::Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const std::vector<unsigned int> &pixel_line_flower_vec){
-  Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, simp_ref_hist);
+void sipmCameraHist::Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const std::vector<unsigned int> &pixel_line_flower_vec, const anabase *ab){
+  if(ab == NULL)
+    Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, simp_ref_hist);
+  else
+    Draw_cam( settings, pdf_out_file, ab->_particle_type_name.Data(), _wf_time_id, ab->event_id, ab->energy, ab->xcore, ab->ycore, ab->ev_time, ab->nphotons, ab->n_pe, ab->n_pixels, pixel_line_flower_vec, simp_ref_hist);
 }
 
 void sipmCameraHist::Draw_cam( TString settings,
@@ -577,7 +621,7 @@ void sipmCameraHist::test_pixel_super_flower(Int_t pix_id){
   SetMaximum(20.0);
   std::vector<unsigned int> pixel_line_flower_vec;
   pixel_line_flower_vec.push_back(pix_id);
-  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_super_flower_id.pdf",pixel_line_flower_vec);
+  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_super_flower_id.pdf", pixel_line_flower_vec);
 }
 
 void sipmCameraHist::test_pixel_super_flower(Int_t npixels_n,Int_t *pix_id){
