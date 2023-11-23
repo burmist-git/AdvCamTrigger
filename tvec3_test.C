@@ -1,15 +1,42 @@
-Double_t get_angle_between_optical_axis_particle( Double_t tel_theta, Double_t tel_phi, Double_t part_theta, Double_t part_phi);
-void get_theta_phi_in_telescope_frame( Double_t tel_alpha, Double_t tel_betta, Double_t tel_gamma,
-				       Double_t part_theta, Double_t part_phi, Double_t &part_theta_tel, Double_t &part_phi_tel);
-Bool_t get_Euler_alpha_betta_gamma( Double_t theta, Double_t phi, Double_t &alpha, Double_t &betta, Double_t &gamma);
-void get_part_coordinates_in_tel_frame( Double_t theta, Double_t phi, Double_t &theta_in_tel, Double_t &phi_in_tel);
-void test( Double_t theta, Double_t phi);
-
-Int_t angle_between_optical_axis_particle(){
+Int_t tvec3_test(){
   //
   Double_t tel_theta = 20.0/180.0*TMath::Pi();
   Double_t tel_phi   = 180.0/180.0*TMath::Pi();
   //
+  Double_t part_theta = 20.0/180.0*TMath::Pi();
+  Double_t part_phi   = 180.0/180.0*TMath::Pi();
+  //
+  TVector3 vx_tel(1.0,0.0,0.0);
+  TVector3 vy_tel(0.0,1.0,0.0);
+  TVector3 vz_tel(0.0,0.0,1.0);
+  //////////////////////////
+  vx_tel.RotateZ(tel_phi);
+  vx_tel.RotateY(-tel_theta);
+  cout<<"vx_tel.x() "<<vx_tel.x()<<endl
+      <<"vx_tel.y() "<<vx_tel.y()<<endl
+      <<"vx_tel.z() "<<vx_tel.z()<<endl;    
+  //
+  vy_tel.RotateZ(tel_phi);
+  vy_tel.RotateY(-tel_theta);
+  cout<<"vy_tel.x() "<<vy_tel.x()<<endl
+      <<"vy_tel.y() "<<vy_tel.y()<<endl
+      <<"vy_tel.z() "<<vy_tel.z()<<endl;
+  //
+  vz_tel.RotateZ(tel_phi);
+  vz_tel.RotateY(-tel_theta);
+  cout<<"vz_tel.x() "<<vz_tel.x()<<endl
+      <<"vz_tel.y() "<<vz_tel.y()<<endl
+      <<"vz_tel.z() "<<vz_tel.z()<<endl;    
+  //
+  TVector3 part;
+  part.SetMagThetaPhi(1.0,part_theta,part_phi);
+  cout<<"part.x() "<<part.x()<<endl
+      <<"part.y() "<<part.y()<<endl
+      <<"part.z() "<<part.z()<<endl;    
+  //
+  TVector3 v_in_tel( vx_tel.Dot(part), vy_tel.Dot(part), vz_tel.Dot(part));
+  //
+  /*
   Double_t part_theta = 20.0/180.0*TMath::Pi();
   Double_t part_phi   = 175.0/180.0*TMath::Pi();
   Double_t part_theta_max = tel_theta + 5.0/180.0*TMath::Pi();
@@ -80,7 +107,7 @@ Int_t angle_between_optical_axis_particle(){
   Double_t part_phi_tel;
   //
   //
-  tel_theta = 20.0/180.0*TMath::Pi();
+  tel_theta = 10.0/180.0*TMath::Pi();
   tel_phi   = 180.0/180.0*TMath::Pi();
   //
   //
@@ -104,7 +131,7 @@ Int_t angle_between_optical_axis_particle(){
   //
   Double_t theta_in_tel;
   Double_t phi_in_tel;
-  part_theta = 20.1/180.0*TMath::Pi();
+  part_theta = 90.0/180.0*TMath::Pi();
   part_phi   = 180.0/180.0*TMath::Pi();
   get_part_coordinates_in_tel_frame( part_theta, part_phi, theta_in_tel, phi_in_tel);
   //
@@ -115,9 +142,13 @@ Int_t angle_between_optical_axis_particle(){
   part_phi   = 0.0/180.0*TMath::Pi();
   test( part_theta, part_phi);
   //
+
+  */
+
   return 0;
 }
 
+/*
 Double_t get_angle_between_optical_axis_particle( Double_t tel_theta, Double_t tel_phi, Double_t part_theta, Double_t part_phi){
   TVector3 tel;
   TVector3 part;  
@@ -191,15 +222,15 @@ void get_part_coordinates_in_tel_frame( Double_t theta, Double_t phi, Double_t &
   TVector3 vz_tel(0.0,0.0,1.0);
   //////////////////////////
   vx_tel.RotateZ(tel_phi);
-  vx_tel.RotateY(-tel_theta);
+  vx_tel.RotateY(tel_theta);
   cout<<"vx_tel.x() "<<vx_tel.x()<<endl
       <<"vx_tel.y() "<<vx_tel.y()<<endl
       <<"vx_tel.z() "<<vx_tel.z()<<endl;    
   //
   vy_tel.RotateZ(tel_phi);
-  vy_tel.RotateY(-tel_theta);
+  vy_tel.RotateY(tel_theta);
   vz_tel.RotateZ(tel_phi);
-  vz_tel.RotateY(-tel_theta);
+  vz_tel.RotateY(tel_theta);
   //////////////////////////
   TVector3 part;
   part.SetMagThetaPhi(1.0,theta,phi);
@@ -216,3 +247,4 @@ void test( Double_t theta, Double_t phi){
 	<<"part.y() "<<part.y()<<endl
 	<<"part.z() "<<part.z()<<endl;
 }
+*/

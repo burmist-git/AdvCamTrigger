@@ -310,8 +310,10 @@ void sipmCameraHistCropped::Draw_cam(TString settings,
 }
 
 void sipmCameraHistCropped::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Float_t *pix_pe_time,
-				    const Double_t ev_time, const Double_t time_offset, const Double_t alpha, TPrincipal *principal, bool if_centrate, Double_t rnd_x, Double_t rnd_y){
-  //
+				    const Double_t ev_time, const Double_t time_offset, const Double_t alpha,
+				    TPrincipal *principal, bool if_centrate,
+				    const Double_t x_shift, const Double_t y_shift){
+  
   Double_t *xn = new Double_t[npixels_n];
   Double_t *yn = new Double_t[npixels_n];
   //
@@ -322,8 +324,8 @@ void sipmCameraHistCropped::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, 
   for(Int_t i = 0;i<npixels_n;i++){
     if(_sipm_cam->check_ch_ID(pix_id[i])){
       _sipm_cam->rotatePix(alpha,
-			   (Double_t)_sipm_cam->get_pixel_vec().at((unsigned int)pix_id[i]).x,
-			   (Double_t)_sipm_cam->get_pixel_vec().at((unsigned int)pix_id[i]).y,
+			   ((Double_t)_sipm_cam->get_pixel_vec().at((unsigned int)pix_id[i]).x + x_shift),
+			   ((Double_t)_sipm_cam->get_pixel_vec().at((unsigned int)pix_id[i]).y + y_shift),
 			   xn[i], yn[i]);
       x_mean += xn[i];
       y_mean += yn[i];

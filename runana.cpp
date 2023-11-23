@@ -2,6 +2,7 @@
 #include "src/ana.hh"
 #include "src/anashort.hh"
 #include "src/anaPCA.hh"
+#include "src/anaPCAp.hh"
 #include "src/anaFast.hh"
 #include "src/sipmCameraHist.hh"
 #include "src/sipmCameraHistCropped.hh"
@@ -152,6 +153,26 @@ int main(int argc, char *argv[]){
     anaPCA a(rootFilesList,"anaPCA.conf");
     a.Loop(outRootFileF);
   }
+  else if(argc == 4 && atoi(argv[1])==61){
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"rootFilesList : "<<rootFilesList<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+      //<<"phi0_shift    : "<<atof(argv[4])<<endl;
+    anaPCAp a(rootFilesList,"anaPCA.conf");
+    //a._phi0_shift=atof(argv[4]);
+    a.Loop(outRootFileF);
+  }
+  else if(argc == 4 && atoi(argv[1])==62){
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"rootFilesList : "<<rootFilesList<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+    anaPCAp a(rootFilesList,"anaPCA.conf");
+    a.draw_principal(outRootFileF);
+  }
   else if(argc == 5 && atoi(argv[1])==7){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
@@ -183,6 +204,12 @@ int main(int argc, char *argv[]){
     	<<"       [4] - evID"<<endl;
     cout<<" runID [1] = 5 (execution ID number) test of camera hist."<<endl;
     cout<<" runID [1] = 6 (execution ID number) short file format"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 61 (execution ID number) short file format"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 62 (execution ID number) draw principal"<<endl
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 7 (execution ID number) short file format: fast"<<endl

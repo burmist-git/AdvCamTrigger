@@ -30,21 +30,27 @@ outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
 
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] -d    : single root file"
-    echo " [0] -ds   : single root file (short format)"
-    echo " [0] -tw   : test waveforms"
-    echo " [0] -th   : test cam sipmCameraHist"
-    echo " [0] -sg   : gamma"
-    echo " [0] -sgd  : gamma diffuse"
-    echo " [0] -se   : electron"
-    echo " [0] -sp   : proton"
-    echo " [0] -fg   : fast gamma"
-    echo " [0] -fgd  : fast gamma diffuse"
-    echo " [0] -fe   : fast electron"
-    echo " [0] -fp   : fast proton"
-    echo " [0] -fall : fast all"
-    echo " [0] -c    : recompile"
-    echo " [0] -h    : print help"
+    echo " [0] -d     : single root file"
+    echo " [0] -ds    : single root file (short format)"
+    echo " [0] -tw    : test waveforms"
+    echo " [0] -th    : test cam sipmCameraHist"
+    echo " [0] -sg    : gamma"
+    echo " [0] -sgd   : gamma diffuse"
+    echo " [0] -se    : electron"
+    echo " [0] -sp    : proton"
+    echo " [0] -fg    : fast gamma"
+    echo " [0] -fgd   : fast gamma diffuse"
+    echo " [0] -fe    : fast electron"
+    echo " [0] -fp    : fast proton"
+    echo " [0] -fall  : fast all"
+    echo " [0] -pg    : PCA gamma"
+    echo " [0] -pg_d  : Draw PCA gamma"
+    echo " [0] -pgd   : PCA gamma diffuse"
+    echo " [0] -pgd_d : Draw PCA gamma diffuse"
+    echo " [0] -pp    : PCA proton"
+    echo " [0] -pp_d  : Draw PCA proton"
+    echo " [0] -c     : recompile"
+    echo " [0] -h     : print help"
 }
 
 if [ $# -eq 0 ] 
@@ -212,6 +218,18 @@ else
     elif [ "$1" = "-sp" ]; then
 	#./runana 6 proton_nsb_1x.list hist_proton_nsb_1x.root
 	./runana 6 proton_nsb_1x.list hist_proton_nsb_1x.root
+    elif [ "$1" = "-pg" ]; then
+	./runana 61 gamma_on_nsb_1x.list hist_gamma_on_nsb_1x_PCAp.root
+    elif [ "$1" = "-pgd" ]; then
+	./runana 61 gamma_diffuse_nsb_1x.list hist_gamma_diffuse_nsb_1x_PCAp.root
+    elif [ "$1" = "-pp" ]; then
+	./runana 61 proton_nsb_1x.list hist_proton_nsb_1x_PCAp.root
+    elif [ "$1" = "-pg_d" ]; then
+	./runana 62 gamma_on_nsb_1x.list hist_gamma_on_nsb_1x_PCAp_component.root
+    elif [ "$1" = "-pgd_d" ]; then
+	./runana 62 gamma_diffuse_nsb_1x.list hist_gamma_diffuse_nsb_1x_PCAp_component.root
+    elif [ "$1" = "-pp_d" ]; then
+	./runana 62 proton_nsb_1x.list hist_proton_nsb_1x_PCAp_component.root
     elif [ "$1" = "-fg" ]; then
 	#./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x.log
 	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut.log

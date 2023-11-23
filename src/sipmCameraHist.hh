@@ -20,6 +20,7 @@
 #include <fstream>
 #include <iomanip>
 
+class TVector3;
 
 namespace line_info{
   struct line_flower_info {
@@ -572,6 +573,7 @@ public:
   void Fill_wf(const std::vector<std::vector<Int_t>> &wf);
   void Fill_wf(const std::vector<Int_t> &wf);
   void Fill_pe(const Int_t npixels_n, const Int_t *pix_id);
+  void Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha, const Double_t x_shift, const Double_t y_shift);
   void Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha, TH1D *h1_theta = NULL, TH1D *h1_theta_deg = NULL, TH1D *h1_r = NULL);
   void Fill_pe_center(const Int_t npixels_n, const Int_t *pix_id);
   void get_pix_mean( const Int_t npixels_n, const Int_t *pix_id, Double_t &x_mean, Double_t &y_mean);
@@ -598,6 +600,14 @@ public:
   const bool check_ch_ID(const unsigned int chIDval) const;
   const bool check_ch_ID() const;
   
+  static void get_part_coordinates_in_tel_frame( const TVector3 &vx_tel, const TVector3 &vy_tel, const TVector3 &vz_tel,
+						 Double_t theta, Double_t phi, Double_t &theta_in_tel, Double_t &phi_in_tel);
+  static void get_tel_frame( Double_t tel_theta, Double_t tel_phi, TVector3 &vx_tel, TVector3 &vy_tel, TVector3 &vz_tel);
+  static void get_x_y_shift(const TVector3 &vx_tel, const TVector3 &vy_tel, const TVector3 &vz_tel,
+			    Double_t azimuth, Double_t altitude, Double_t &x_shift, Double_t &y_shift, Double_t phi0_shift = 90.0);
+  static Double_t angle_between_optical_axis_and_particle( Double_t tel_theta, Double_t tel_phi, Double_t azimuth, Double_t altitude);
+  static Double_t get_theta_p_t_anaFast(Double_t azimuth, Double_t altitude);
+  
   private:
 
   double _pixel_size;
@@ -606,5 +616,6 @@ public:
   void load_mapping(const char* mapping_csv_file);
   Double_t _rot_alpha_deg;
   Int_t _wf_time_id;
+  
   const anabase *_ab;
 };

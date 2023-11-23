@@ -15,6 +15,7 @@
 
 //root
 #include <TVector2.h>
+#include <TVector3.h>
 #include <TPolyLine.h>
 #include <TLine.h>
 #include <TCanvas.h>
@@ -668,6 +669,89 @@ void sipmCameraHist::Fill_pe(const Int_t npixels_n, const Int_t *pix_id){
 	   (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y);
 }
 
+Double_t sipmCameraHist::angle_between_optical_axis_and_particle( Double_t tel_theta, Double_t tel_phi,
+								  Double_t azimuth, Double_t altitude){
+  //
+  Double_t part_theta = TMath::Pi()-altitude;
+  Double_t part_phi = azimuth;
+  //
+  TVector3 tel;
+  TVector3 part;
+  tel.SetMagThetaPhi(1.0,tel_theta,tel_phi);
+  part.SetMagThetaPhi(1.0,part_theta,part_phi);
+  return TMath::ACos(tel.Dot(part));
+}
+
+void sipmCameraHist::get_tel_frame( Double_t tel_theta, Double_t tel_phi, TVector3 &vx_tel, TVector3 &vy_tel, TVector3 &vz_tel){
+  vx_tel.RotateZ(tel_phi);
+  vx_tel.RotateY(-tel_theta);
+  vy_tel.RotateZ(tel_phi);
+  vy_tel.RotateY(-tel_theta);
+  vz_tel.RotateZ(tel_phi);
+  vz_tel.RotateY(-tel_theta);
+}
+
+void sipmCameraHist::get_part_coordinates_in_tel_frame( const TVector3 &vx_tel, const TVector3 &vy_tel, const TVector3 &vz_tel,
+							Double_t theta, Double_t phi, Double_t &theta_in_tel, Double_t &phi_in_tel){
+  TVector3 part;
+  part.SetMagThetaPhi(1.0,theta,phi);
+  TVector3 v_in_tel(vx_tel.Dot(part),vy_tel.Dot(part),vz_tel.Dot(part));
+  theta_in_tel = v_in_tel.Theta();
+  phi_in_tel = v_in_tel.Phi();
+}
+
+Double_t sipmCameraHist::get_theta_p_t_anaFast(Double_t azimuth, Double_t altitude){
+  TVector3 v_det(1.0*TMath::Sin(20.0/180.0*TMath::Pi()),0,1.0*TMath::Cos(20.0/180.0*TMath::Pi()));
+  TVector3 v_prot;
+  v_prot.SetMagThetaPhi(1.0,TMath::Pi()/2.0-altitude,TMath::Pi() - azimuth);
+  TVector3 v_prot_inv(v_prot.x(),v_prot.y(),v_prot.z());
+  return TMath::ACos(v_prot_inv.Dot(v_det)/v_prot_inv.Mag()/v_det.Mag());
+}
+
+void sipmCameraHist::get_x_y_shift(const TVector3 &vx_tel, const TVector3 &vy_tel, const TVector3 &vz_tel,
+				   Double_t azimuth, Double_t altitude, Double_t &x_shift, Double_t &y_shift,
+				   Double_t phi0_shift){
+  Double_t R_m_LST = 56.4;        //m
+  Double_t F_m_LST = R_m_LST/2.0; //m
+  Double_t theta = TMath::Pi()/2.0-altitude;
+  Double_t phi = azimuth;
+  Double_t theta_in_tel;
+  Double_t phi_in_tel;
+  sipmCameraHist::get_part_coordinates_in_tel_frame(vx_tel, vy_tel, vz_tel,
+						    theta, phi,
+						    theta_in_tel, phi_in_tel);
+  Double_t phi0 = phi0_shift/180.0*TMath::Pi();
+  Double_t r_shift = TMath::Tan(theta_in_tel)*F_m_LST;
+  TVector2 v_shift;
+  v_shift.SetMagPhi( r_shift, phi_in_tel + phi0);
+  x_shift = -v_shift.X();
+  y_shift = v_shift.Y();
+  //cout<<"theta    "<<theta*180.0/TMath::Pi()<<endl
+  //<<"phi          "<<phi*180.0/TMath::Pi()<<endl
+  //<<"theta_in_tel "<<theta_in_tel*180.0/TMath::Pi()<<endl
+  //<<"phi_in_tel   "<<phi_in_tel*180.0/TMath::Pi()<<endl;
+}
+
+void sipmCameraHist::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha, const Double_t x_shift, const Double_t y_shift){
+  for(Int_t i = 0;i<npixels_n;i++){
+    if(pix_id[i]>=0 && pix_id[i]<(Int_t)_n_pixels){
+      Double_t xn;
+      Double_t yn;
+      if(alpha != 0.0){
+	rotatePix(alpha,
+		  ((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x + x_shift),
+		  ((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y + y_shift),
+		  xn, yn);
+      }
+      else{
+	xn = (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x + x_shift;
+	yn = (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y + y_shift;
+      }
+      Fill(xn,yn);
+    }
+  }
+}
+
 void sipmCameraHist::Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha, TH1D *h1_theta, TH1D *h1_theta_deg, TH1D *h1_r){
   for(Int_t i = 0;i<npixels_n;i++){
     if(pix_id[i]>=0 && pix_id[i]<(Int_t)_n_pixels){
@@ -860,6 +944,10 @@ void sipmCameraHist::rotatePix(Double_t alpha, const Double_t xo, const Double_t
     TVector2 v( xo, yo);
     xn = v.Rotate(alpha).X();
     yn = v.Rotate(alpha).Y();
+  }
+  else{
+    xn = xo;
+    yn = yo;
   }
 }
 
