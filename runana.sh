@@ -12,10 +12,10 @@
 ##
 #inRootFile="gamma_on_nsb_1x.list"
 #outHistF="./hist_gamma_on_tw.root"
-inRootFile="gamma_diffuse_nsb_1x.list"
-outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
-#inRootFile="proton_nsb_1x.list"
-#outHistF="./hist_proton_nsb_1x_tw.root"
+#inRootFile="gamma_diffuse_nsb_1x.list"
+#outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
+inRootFile="proton_nsb_1x.list"
+outHistF="./hist_proton_nsb_1x_tw.root"
 
 #short
 #'nightsky_background=all:0.001'
@@ -125,16 +125,16 @@ else
 
 	## azimuth  = 180 +/- 0.2
         ## altitude = 69  +/- 0.2
-	./runana 4 $inRootFile $outHistF 135723 gamma_diff        
-	./runana 4 $inRootFile $outHistF 845310 gamma_diff
-	./runana 4 $inRootFile $outHistF 2378773 gamma_diff
+	#./runana 4 $inRootFile $outHistF 135723 gamma_diff        
+	#./runana 4 $inRootFile $outHistF 845310 gamma_diff
+	#./runana 4 $inRootFile $outHistF 2378773 gamma_diff
    
 	#./runana 4 $inRootFile $outHistF 896 gamma    # 162 pe
 	#./runana 4 $inRootFile $outHistF 929 gamma    # 220 pe
 	#./runana 4 $inRootFile $outHistF 3140 gamma   # 180 pe
 	#./runana 4 $inRootFile $outHistF 3139 gamma   # 210 pe
 	#
-	#./runana 4 $inRootFile $outHistF 663307 proton
+	./runana 4 $inRootFile $outHistF 663307 proton
 	#./runana 4 $inRootFile $outHistF 66724 proton
 	#./runana 4 $inRootFile $outHistF 71559 proton
 	#./runana 4 $inRootFile $outHistF 124790 proton
