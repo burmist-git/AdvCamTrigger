@@ -115,7 +115,6 @@ evstHist::evstHist(const char* name, const char* title,
   Double_t* y;
   x = new Double_t [n];
   y = new Double_t [n];
-  //
   for(Int_t i_E = 0;i_E<_N_bins_E;i_E++){
     for(Int_t i_t = 0;i_t<_N_bins_t;i_t++){
       //
@@ -137,10 +136,46 @@ evstHist::evstHist(const char* name, const char* title,
       //
       AddBin(n,x,y);
     }
-  }  
+  }
+  //
+  TString h1_r_name_title;
+  for(Int_t i_E = 0;i_E<_N_bins_E;i_E++){
+    for(Int_t i_t = 0;i_t<_N_bins_t;i_t++){
+      TH1D *h1 = new TH1D();
+      h1_r_name_title = "h1_r_";
+      h1_r_name_title += namehist;
+      h1_r_name_title += "_i_E_"; h1_r_name_title += i_E;
+      h1_r_name_title += "_i_t_"; h1_r_name_title += i_t;
+      h1->SetNameTitle(h1_r_name_title.Data(),h1_r_name_title.Data());
+      set_r_core_bins(h1);
+      _v_r.push_back(h1);
+    }
+  }
 }
 
 evstHist::~evstHist(){
+}
+
+void evstHist::Fill_rcore( Double_t th, Double_t E, Double_t r_core){
+  _v_r.at(get_bin_ID(E,th)-1)->Fill(r_core);
+}
+
+void evstHist::set_r_core_bins(TH1D *h1, Double_t r_core_max){
+  const Int_t nn = 11;
+  Double_t* rBins = new Double_t[nn];
+  //
+  rBins[0] = 0;
+  rBins[1] = 150;
+  rBins[2] = 250;
+  rBins[3] = 350;
+  rBins[4] = 500;
+  rBins[5] = 650;
+  rBins[6] = 800;
+  rBins[7] = 1000;
+  rBins[8] = 1300;
+  rBins[9] = 1600;
+  rBins[10] = r_core_max;
+  h1->SetBins(nn-1,rBins);
 }
 
 void evstHist::test(){
@@ -148,7 +183,18 @@ void evstHist::test(){
     SetBinContent(i+1,i+1);
 };
 
-TCanvas* evstHist::Draw_hist(TString fileName){
+
+void evstHist::test_get_bin(Double_t E, Double_t th, Double_t val){
+  SetBinContent(get_bin_ID(E,th),val);
+};
+
+Int_t evstHist::get_bin_ID( Double_t E, Double_t th){
+  Int_t E_bin = _h1_E->FindBin(E);
+  Int_t th_bin = _h1_theta->FindBin(th);
+  return _N_bins_t*(E_bin-1) + th_bin;
+}
+
+TCanvas* evstHist::Draw_hist(TString fileName, TString frame_title){
 
   //kDeepSea=51,          kGreyScale=52,    kDarkBodyRadiator=53,
   //kBlueYellow= 54,      kRainBow=55,      kInvertedDarkBodyRadiator=56,
@@ -190,7 +236,8 @@ TCanvas* evstHist::Draw_hist(TString fileName){
   
   TH2F *frame = new TH2F("h2","h2", 40, _Thetamin, _Thetamax, 40, _Emin, _Emax);
   //frame->SetTitle("Proton rate, Hz");
-  frame->SetTitle(_title.Data());
+  //frame->SetTitle(_title.Data());
+  frame->SetTitle(frame_title.Data());
   frame->GetXaxis()->SetTitle("Theta, deg");
   frame->GetYaxis()->SetTitle("Energy, GeV");
   //frame->GetXaxis()->CenterTitle();
@@ -267,4 +314,41 @@ const void evstHist::PrintBinsInfo(const TH1D *h1){
     bin_r = h1->GetBinLowEdge(i) + h1->GetBinWidth(i);
     std::cout<<bin_l<<"   "<<bin_r<<std::endl;
   }
+}
+
+Double_t evstHist::GetTotIntegral(){
+  Double_t integral_v = 0.0;
+  for(Int_t ii = 1;ii<=(_N_bins_E*_N_bins_t);ii++)
+    integral_v+=GetBinContent(ii);
+  return integral_v;
+}
+
+Double_t evstHist::GetIntegral(Double_t e_min, Double_t e_max, Double_t theta_min, Double_t theta_max) const {
+  Double_t integral_v = 0.0;
+  Int_t i_cell;
+  //
+  Double_t e_min_bin;
+  Double_t e_max_bin;
+  Double_t theta_min_bin;
+  Double_t theta_max_bin;
+  //
+  for(Int_t i_theta = 0;i_theta<_N_bins_t;i_theta++){
+    for(Int_t i_E = 0;i_E<_N_bins_E;i_E++){
+      i_cell = (i_E)*_N_bins_t+(i_theta+1);
+      //
+      e_min_bin = _h1_E->GetBinLowEdge(i_E+1);
+      e_max_bin = _h1_E->GetBinLowEdge(i_E+1) + _h1_E->GetBinWidth(i_E+1);
+      //
+      theta_min_bin = _h1_theta->GetBinLowEdge(i_theta+1);
+      theta_max_bin = _h1_theta->GetBinLowEdge(i_theta+1) + _h1_theta->GetBinWidth(i_theta+1);
+      //
+      if(e_min_bin>=e_min && e_max_bin<=e_max){
+	if(theta_min_bin>=theta_min && theta_max_bin<=theta_max){
+	  //cout<<"i_cell = "<<i_cell<<endl;
+	  integral_v+=GetBinContent(i_cell);
+	}
+      }
+    }
+  }
+  return integral_v;
 }

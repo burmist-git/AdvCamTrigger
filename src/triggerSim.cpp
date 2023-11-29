@@ -106,10 +106,10 @@ void triggerSim::print_trigger_vec(const std::vector<std::vector<unsigned int>> 
 }
   
 std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector<std::vector<int>> &wf,
-							       TH1D *h1_digital_sum = NULL,
-							       TH1D *h1_digital_sum_3ns = NULL,
-							       TH1D *h1_digital_sum_5ns = NULL,
-							       TH1D *h1_fadc_val = NULL){
+							       TH1D *h1_digital_sum,
+							       TH1D *h1_digital_sum_3ns,
+							       TH1D *h1_digital_sum_5ns,
+							       TH1D *h1_fadc_val){
   std::vector<std::vector<unsigned int>> trg_vector;
   std::vector<unsigned int> trg_chID;
   int digital_sum;
@@ -122,9 +122,9 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
       //digital_sum = get_flower_digital_sum(ch_i,wf_j,wf,0,0,true);
       //digital_sum_3ns = get_flower_digital_sum(ch_i,wf_j,wf,-1,1,true);
       //digital_sum_5ns = get_flower_digital_sum(ch_i,wf_j,wf,-2,2,true);
-      digital_sum = get_digital_sum(ch_i,wf_j,wf,0,0,true,0);
-      digital_sum_3ns = get_digital_sum(ch_i,wf_j,wf,-1,1,true,0);
-      digital_sum_5ns = get_digital_sum(ch_i,wf_j,wf,-2,2,true,0);
+      digital_sum     = get_digital_sum( ch_i, wf_j, wf,  0, 0, true, 0);
+      digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 0);
+      digital_sum_5ns = get_digital_sum( ch_i, wf_j, wf, -2, 2, true, 0);
       fadc_val = wf.at(ch_i).at(wf_j);
       if(h1_digital_sum != NULL)
 	h1_digital_sum->Fill(digital_sum);

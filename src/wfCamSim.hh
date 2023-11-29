@@ -108,6 +108,7 @@ private:
   void generate_wf(std::vector<int> &wf, Float_t pe_time);
   void generate_wf_from_gr(std::vector<int> &wf, Float_t pe_time);
   void generate_electronic_noise(std::vector<int> &wf);
+  void generate_electronic_noise_pedestal_removal(std::vector<int> &wf);
   //
   void calculate_pedestal();
   void calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc);

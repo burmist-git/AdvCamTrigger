@@ -212,6 +212,11 @@ void wfCamSim::generate_electronic_noise(std::vector<int> &wf){
     wf.at(i) += (Int_t)_rnd->Gaus(0.0,_fadc_electronic_noise_RMS);
 }
 
+void wfCamSim::generate_electronic_noise_pedestal_removal(std::vector<int> &wf){
+  for( unsigned int i = 0; i < wf.size(); i++)
+    wf.at(i) += ((Int_t)_rnd->Gaus(0.0,_fadc_electronic_noise_RMS) + (Int_t)_rnd->Uniform(0,3)-1);
+}
+
 void wfCamSim::calculate_pedestal(){
   calculate_pedestal(NULL, NULL);
 }
@@ -290,7 +295,8 @@ void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
     generate_zero_wf(wf.at(i),(_fadc_offset-_NGB_pedestal_mean));
     //generate_zero_wf(wf.at(i),_fadc_offset);
     generateNGB(wf.at(i));
-    generate_electronic_noise(wf.at(i));
+    //generate_electronic_noise(wf.at(i));
+    generate_electronic_noise_pedestal_removal(wf.at(i));
   }
 }
 

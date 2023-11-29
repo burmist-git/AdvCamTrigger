@@ -22,10 +22,10 @@ public :
   std::vector<std::vector<int>> get_trigger_test(const std::vector<std::vector<int>> &wf);
   std::vector<std::vector<int>> get_trigger_test();
   std::vector<std::vector<unsigned int>> get_trigger(const std::vector<std::vector<int>> &wf,
-						     TH1D *h1_digital_sum,
-						     TH1D *h1_digital_sum_3ns,
-						     TH1D *h1_digital_sum_5ns,
-						     TH1D *h1_fadc_val);
+						     TH1D *h1_digital_sum = NULL,
+						     TH1D *h1_digital_sum_3ns = NULL,
+						     TH1D *h1_digital_sum_5ns = NULL,
+						     TH1D *h1_fadc_val = NULL);
   static void print_trigger_vec(const std::vector<std::array<int, 2>> &trg_vector);
   static void print_trigger_vec(const std::vector<std::vector<unsigned int>> &trg_vector);
 

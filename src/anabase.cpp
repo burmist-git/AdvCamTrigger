@@ -62,8 +62,8 @@ anabase::anabase(TString inFileName, Int_t keyID, Bool_t short_format_flag) : _p
     assert(0);
 }
 
-anabase::anabase(TString fileList) : anabase(fileList, false) {}
-anabase::anabase(TString inFileName, Int_t keyID) : anabase( inFileName, keyID, false) {}
+anabase::anabase(TString fileList) : anabase(fileList, true) {}
+anabase::anabase(TString inFileName, Int_t keyID) : anabase( inFileName, keyID, true) {}
 
 void anabase::tGraphInit(TGraph *gr[nChannels], TString grName, TString grTitle){
   Int_t i;
@@ -235,6 +235,7 @@ void anabase::Init(TTree *tree){
   fChain->SetBranchAddress("pe_time", pe_time, &b_pe_time);
   if(!_short_format_flag){
     std::cout<<"_short_format_flag "<<_short_format_flag<<std::endl;
+    std::cout<<"                   fChain->SetBranchAddress(wf, wf, &b_wf) "<<std::endl;
     fChain->SetBranchAddress("wf", wf, &b_wf);
   }
   else{

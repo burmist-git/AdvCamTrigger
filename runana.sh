@@ -49,6 +49,7 @@ function printHelp {
     echo " [0] -pgd_d : Draw PCA gamma diffuse"
     echo " [0] -pp    : PCA proton"
     echo " [0] -pp_d  : Draw PCA proton"
+    echo " [0] -trgp  : Trg proton"
     echo " [0] -c     : recompile"
     echo " [0] -h     : print help"
 }
@@ -58,9 +59,15 @@ then
     printHelp
 else
     if [ "$1" = "-d" ]; then
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_corsika_0000ID.root"
 	./runana 1 $inRootFile $outHistF
     elif [ "$1" = "-ds" ]; then
 	./runana 3 $inRootFile $outHistF
+    elif [ "$1" = "-trgp" ]; then
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_trg_proton_nsb_1x_corsika_0000ID.root"
+	./runana 11 $inRootFile $outHistF
     elif [ "$1" = "-tw" ]; then
 
 	## azimuth  = 180 +/- 0.1
@@ -134,7 +141,7 @@ else
 	#./runana 4 $inRootFile $outHistF 3140 gamma   # 180 pe
 	#./runana 4 $inRootFile $outHistF 3139 gamma   # 210 pe
 	#
-	./runana 4 $inRootFile $outHistF 663307 proton
+	./runana 4 $inRootFile $outHistF 39807 proton
 	#./runana 4 $inRootFile $outHistF 66724 proton
 	#./runana 4 $inRootFile $outHistF 71559 proton
 	#./runana 4 $inRootFile $outHistF 124790 proton

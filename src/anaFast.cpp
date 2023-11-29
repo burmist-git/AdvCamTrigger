@@ -174,15 +174,15 @@ void anaFast::Loop(TString histOut){
   TH1D *h1_ycore = new TH1D("h1_ycore","h1_ycore",800,-2000,2000);
   TH1D *h1_xcore_km = new TH1D("h1_xcore_km","h1_xcore_km",200,-1.8,1.8);
   TH1D *h1_ycore_km = new TH1D("h1_ycore_km","h1_ycore_km",200,-1.8,1.8);
-  TH1D *h1_r_core = new TH1D("h1_r_core","h1_r_core",400, 0,1100);
+  TH1D *h1_r_core = new TH1D("h1_r_core","h1_r_core",400, 0,_anaConf.ellipse_A*1.2);
   TH1D *h1_theta_core = new TH1D("h1_theta_core","h1_theta_core",400,-0.1,2*TMath::Pi()+0.1);
   //
   TH2D *h2_ycore_vs_xcore = new TH2D("h2_ycore_vs_xcore","h2_ycore_vs_xcore",400,-2000,2000, 400,-2000,2000);  
   //
   TH2D *h2_ycore_vs_xcore_ring = new TH2D("h2_ycore_vs_xcore_ring","h2_ycore_vs_xcore_ring",400,-2000,2000, 400,-2000,2000);  
   //
-  //Double_t x0_LST01 = -70.93;
-  //Double_t y0_LST01 = -52.07;
+  Double_t x0_LST01 = -70.93;
+  Double_t y0_LST01 = -52.07;
   //
   Double_t r_core = 0.0;
   Double_t theta_core = 0.0;
@@ -211,9 +211,11 @@ void anaFast::Loop(TString histOut){
     //if (ientry > 10) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     //
-    //getCore_rel_R_theta( x0_LST01, y0_LST01, xcore, ycore, r_core, theta_core);
+    //
+    getCore_rel_R_theta( x0_LST01, y0_LST01, xcore, ycore, r_core, theta_core);
     _r_core = r_core;
     _theta_core = theta_core;
+    //
     //
     h1_azimuth_notcuts->Fill(azimuth);
     h1_altitude_notcuts->Fill(altitude);
@@ -228,8 +230,9 @@ void anaFast::Loop(TString histOut){
     theta_p_t_deg = theta_p_t*180/TMath::Pi();
     //
     h1_theta_p_t_deg->Fill(theta_p_t_deg);
-    if(theta_p_t_deg<6.0){
+    if(theta_p_t_deg<10.0){
       evH_all->Fill(theta_p_t_deg,energy*1000.0);
+      evH_all->Fill_rcore(theta_p_t_deg,energy*1000.0,_r_core);
       //
       evH_E_all->get_E_hist()->Fill(energy*1000.0);
       //
@@ -240,7 +243,7 @@ void anaFast::Loop(TString histOut){
 	  break;
 	//
 	//
-	cout<<"jentry = "<<jentry<<"   "<<n_pe<<endl;
+	//cout<<"jentry = "<<jentry<<"   "<<n_pe<<endl;
 	//
 	evH_E_cut->get_E_hist()->Fill(energy*1000.0);
 	//
@@ -281,6 +284,7 @@ void anaFast::Loop(TString histOut){
 	h1_theta_core->Fill(theta_core);
 	//
 	evH_cut->Fill(theta_p_t_deg,energy*1000.0);
+	evH_cut->Fill_rcore(theta_p_t_deg,energy*1000.0,_r_core);
 	evH_pe_cut->Fill(theta_p_t_deg,energy*1000.0,n_pe);
       }
     }
@@ -313,7 +317,6 @@ void anaFast::Loop(TString histOut){
   evH_flux_one_final->SetMaximum(2.5*1.0e+4);
   //
   //
-  //
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
   if (rootFile->IsZombie()){
@@ -322,6 +325,13 @@ void anaFast::Loop(TString histOut){
   }
   else
     cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
+  //
+  //
+  for(unsigned int ii = 0;ii<evH_all->get_v_r().size();ii++)
+    evH_all->get_v_r().at(ii)->Write();
+  for(unsigned int ii = 0;ii<evH_cut->get_v_r().size();ii++)
+    evH_cut->get_v_r().at(ii)->Write();
+  //
   //
   h1_energy->Write();
   h1_nphotons->Write();
@@ -411,14 +421,16 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   Double_t y0_LST01 = -52.07;
   Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //
-  if(n_pe>=500){
-    if(azimuth>=azimuth_min && azimuth<=azimuth_max){
-      if(altitude>=altitude_min && altitude<=altitude_max){
-	if(r<=100)
-	  return true;
-      }
-    }
-  }
+  if(n_pe>=100)
+    return true;
+  //if(n_pe>=500){
+  //if(azimuth>=azimuth_min && azimuth<=azimuth_max){
+  //if(altitude>=altitude_min && altitude<=altitude_max){
+  //if(r<=100)
+  //return true;
+  //}
+  //}
+  //}
   //
   //Double_t x0_LST01 = -70.93;
   //Double_t y0_LST01 = -52.07;

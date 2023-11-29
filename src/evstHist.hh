@@ -22,11 +22,13 @@ class evstHist: public TH2Poly {
 	   Double_t val_Thetamin = 0.0, Double_t val_Thetamax = 10.0, Int_t val_N_bins_t = 10);
   ~evstHist();
   void test();
-  TCanvas* Draw_hist(TString fileName);
+  void test_get_bin(Double_t E, Double_t th, Double_t val);
+  TCanvas* Draw_hist(TString fileName, TString frame_title="");
 
   inline TH1D* get_theta_hist() {return _h1_theta;}
   inline TH1D* get_E_hist() {return _h1_E;}
-
+  inline std::vector<TH1D*> get_v_r() {return _v_r;};
+  
   TString _hist_name;
   TString _hist_title;
 
@@ -37,7 +39,16 @@ class evstHist: public TH2Poly {
   void DumpBinContent(TString data_out);
   void LoadBinContent(TString data_in);
 
+  Double_t GetTotIntegral();
+  Double_t GetIntegral(Double_t e_min, Double_t e_max, Double_t theta_min, Double_t theta_max) const;
+  
   static const void PrintBinsInfo(const TH1D *h1);
+
+  static void set_r_core_bins(TH1D *h1, Double_t r_core_max = 2000);
+
+  Int_t get_bin_ID( Double_t E, Double_t th);
+
+  void Fill_rcore( Double_t th, Double_t E, Double_t r_core);
   
  private:
 
@@ -61,5 +72,7 @@ class evstHist: public TH2Poly {
 
   TH1D* _h1_theta;
   TH1D* _h1_E;
+  
+  std::vector<TH1D*> _v_r;
   
 };

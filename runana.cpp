@@ -1,5 +1,6 @@
 //my
 #include "src/ana.hh"
+#include "src/anaTrg.hh"
 #include "src/anashort.hh"
 #include "src/anaPCA.hh"
 #include "src/anaPCAp.hh"
@@ -44,6 +45,15 @@ int main(int argc, char *argv[]){
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     ana a( inRootFiles, atoi(argv[1]));
+    a.Loop(outRootFileF);
+  }
+  else if(argc == 4 && atoi(argv[1])==11){
+    TString inRootFiles = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"inRootFiles   : "<<inRootFiles<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+    anaTrg a( inRootFiles, 1);
     a.Loop(outRootFileF);
   }
   else if(argc == 4 && atoi(argv[1])==2){
