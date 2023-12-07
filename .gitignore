@@ -327,3 +327,13 @@ e_fit_electrons_cut.pdf
 e_fit_proton_cut.pdf
 fit_E_gmma.pdf
 npe_cut_controll_sample_g_gd_e_p.pdf
+hist_fast_scan_electron_nsb_1x.log
+hist_fast_scan_electron_nsb_1x.root
+hist_fast_scan_gamma_diffuse_nsb_1x.log
+hist_fast_scan_gamma_diffuse_nsb_1x.root
+hist_fast_scan_gamma_diffuse_nsb_1x_cut.root
+hist_fast_scan_gamma_on_nsb_1x.log
+hist_fast_scan_gamma_on_nsb_1x.root
+hist_fast_scan_gamma_on_nsb_1x_cut.root
+hist_fast_scan_proton_nsb_1x.log
+hist_fast_scan_proton_nsb_1x.root

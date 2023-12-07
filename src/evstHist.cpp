@@ -162,10 +162,10 @@ evstHist::~evstHist(){
 
 void evstHist::Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID){
   if(cellID>=0)
-    if((unsigned int)cellID>_v_cellID_th_bin_ID.size())
+    if((unsigned int)cellID<_v_cellID_th_bin_ID.size())
       th_bin_ID = _v_cellID_th_bin_ID.at((unsigned int)cellID);
   if(cellID>=0)
-    if((unsigned int)cellID>_v_cellID_e_bin_ID.size())
+    if((unsigned int)cellID<_v_cellID_e_bin_ID.size())
       e_bin_ID = _v_cellID_e_bin_ID.at((unsigned int)cellID);
 }
 
@@ -276,7 +276,81 @@ TCanvas* evstHist::Draw_hist(TString fileName, TString frame_title){
   return c1;
 }
 
-void evstHist::Divide(evstHist *evH_cut, evstHist *evH_all){
+TCanvas* evstHist::Draw_hist_core(Int_t e_bin_i, TString fileName, TString frame_title){
+  //
+  TString c1_name = "c1_";
+  c1_name += _hist_name;
+  c1_name += "_";
+  c1_name += e_bin_i;
+  TString c1_title = "c1_";
+  c1_title += _hist_title;
+  c1_title += "_";
+  c1_title += e_bin_i;
+  //
+  TCanvas *c1 = new TCanvas(c1_name.Data(),c1_title.Data(),1500,1000);
+  c1->SetRightMargin(0.12);
+  c1->SetLeftMargin(0.12);
+  c1->SetTopMargin(0.1);
+  c1->SetBottomMargin(0.15);
+  //
+  gStyle->SetPalette(1);
+  gStyle->SetFrameBorderMode(0);
+  gROOT->ForceStyle();
+  gStyle->SetStatColor(kWhite);
+  gStyle->SetOptStat(kFALSE);
+  //
+  Int_t th_bin_ID;
+  Int_t e_bin_ID;
+  //
+  Int_t n_plots = 0;
+  //
+  vector<Int_t> color_id;
+  color_id.push_back(kBlack);     //0
+  color_id.push_back(kBlue);      //1
+  color_id.push_back(kRed);       //2
+  color_id.push_back(kGreen);     //3
+  color_id.push_back(kMagenta);   //4
+  color_id.push_back(kYellow+2);  //5
+  color_id.push_back(kBlue+2);    //6
+  color_id.push_back(kRed+2);     //7
+  color_id.push_back(kGreen+2);   //8
+  color_id.push_back(kMagenta+2); //9
+  //
+  TLegend *leg = new TLegend(0.7,0.7,0.99,0.99,"","brNDC");
+  //
+  TString n_plots_str = " ";
+  //
+  for(Int_t i = 0;i<_N_bins_E*_N_bins_t;i++){
+    Get_th_bin_ID_and_e_bin_ID( i, th_bin_ID, e_bin_ID);
+    if(e_bin_i == e_bin_ID){
+      if(n_plots == 0){
+	_v_r.at(i)->SetMaximum(1.1);
+	_v_r.at(i)->Draw();
+      }
+      else{
+	_v_r.at(i)->Draw("same");
+      }
+      if(n_plots<color_id.size())
+	_v_r.at(i)->SetLineColor(color_id.at((unsigned int)n_plots));
+      _v_r.at(i)->SetLineWidth(2.0);
+      n_plots_str = " ";
+      n_plots_str += n_plots;
+      leg->AddEntry(_v_r.at(i), n_plots_str.Data(), "apl");
+      n_plots++;
+    }
+  }
+  leg->Draw("same");
+  //SetMarkerSize(0.8);
+  //Draw("same ZCOLOR TEXT");
+  //Draw("same TEXT");
+  //Draw("same ZCOLOR");
+  //c1->SaveAs("Draw_map_test.pdf");
+  if(fileName != "")
+  c1->SaveAs(fileName.Data());
+  return c1;
+}
+
+void evstHist::Divide(evstHist *evH_cut, evstHist *evH_all, bool with_r_core){
   Double_t nev;
   Double_t nev_norm;
   for(Int_t i = 1;i<=GetNcells();i++){
@@ -287,9 +361,55 @@ void evstHist::Divide(evstHist *evH_cut, evstHist *evH_all){
     else
       SetBinContent(i,0.0);
   }
+  if(with_r_core){
+    if(evH_cut->get_v_r().size() == evH_all->get_v_r().size()){
+      if(check_bin_compatibility(evH_cut, with_r_core)){
+	if(check_bin_compatibility(evH_all, with_r_core)){
+	  for(unsigned int ii = 0;ii<get_v_r().size();ii++){
+	    for(Int_t i = 1;i<=evH_cut->get_v_r().at(ii)->GetNbinsX();i++){
+	      nev=evH_cut->get_v_r().at(ii)->GetBinContent(i);
+	      nev_norm=evH_all->get_v_r().at(ii)->GetBinContent(i);
+	      if(nev_norm != 0.0)
+		get_v_r().at(ii)->SetBinContent(i,nev/nev_norm);
+	      else
+		get_v_r().at(ii)->SetBinContent(i,0.0);	      
+	    }
+	  }
+	}
+      }
+    }
+    else{
+      cout<<"evH_cut->get_v_r().size() == evH_all->get_v_r().size()"<<endl
+	  <<"evH_cut->get_v_r().size() == "<<evH_cut->get_v_r().size()<<endl
+	  <<"evH_all->get_v_r().size() == "<<evH_all->get_v_r().size()<<endl;
+    }
+  }
 }
 
-void evstHist::Multiply(evstHist *evH_eff, evstHist *evH_flux){
+bool evstHist::check_bin_compatibility(const evstHist *evH, bool with_r_core){
+  if(evH->get_Emin() != get_Emin())
+    return false;
+  if(evH->get_Emax() != get_Emax())
+    return false;
+  if(evH->get_N_bins_E() !=get_N_bins_E())
+    return false;
+  if(evH->get_Thetamin() != get_Thetamin())
+    return false;
+  if(evH->get_Thetamax() != get_Thetamax())
+    return false;
+  if(evH->get_N_bins_t() != get_N_bins_t())
+    return false;
+  if(with_r_core)
+    if(!check_r_core_bin_compatibility(evH))
+      return false;
+  return true;
+}
+
+bool evstHist::check_r_core_bin_compatibility(const evstHist *evH){
+  return true;
+}
+
+void evstHist::Multiply(evstHist *evH_eff, evstHist *evH_flux, bool with_r_core){
   Double_t nev;
   Double_t nev_norm;
   for(Int_t i = 1;i<=GetNcells();i++){

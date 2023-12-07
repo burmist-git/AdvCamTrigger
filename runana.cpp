@@ -194,6 +194,19 @@ int main(int argc, char *argv[]){
     anaFast a(rootFilesList, conf_file.Data());
     a.Loop(outRootFileF);
   }
+  else if(argc == 6 && atoi(argv[1])==8){
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    TString conf_file = argv[4];
+    TString simtel_all_dat = argv[5];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"rootFilesList  : "<<rootFilesList<<endl
+	<<"outRootFileF   : "<<outRootFileF<<endl
+    	<<"conf_file      : "<<conf_file<<endl
+	<<"simtel_all_dat : "<<simtel_all_dat<<endl;
+    anaFast a(rootFilesList, conf_file.Data());
+    a.Loop_scan(outRootFileF, simtel_all_dat);
+  }
   else{
     cout<<" --> ERROR in input arguments "<<endl
 	<<" runID [1] = 0 (execution ID number)"<<endl
@@ -223,6 +236,9 @@ int main(int argc, char *argv[]){
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 7 (execution ID number) short file format: fast"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 8 (execution ID number) short file format: fast npe scan"<<endl
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
   }

@@ -50,6 +50,10 @@ function printHelp {
     echo " [0] -pp    : PCA proton"
     echo " [0] -pp_d  : Draw PCA proton"
     echo " [0] -trgp  : Trg proton"
+    echo " [0] -fscang  : fast scan gamma"
+    echo " [0] -fscangd : fast scan gamma diffuse"
+    echo " [0] -fscane  : fast scan electron"
+    echo " [0] -fscanp  : fast scan proton"
     echo " [0] -c     : recompile"
     echo " [0] -h     : print help"
 }
@@ -252,6 +256,14 @@ else
 	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x.log
 	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x.log
 	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
+    elif [ "$1" = "-fscang" ]; then
+	time ./runana 8 gamma_on_nsb_1x.list hist_fast_scan_gamma_on_nsb_1x.root anaFast_g.conf ../cosmique_gamma_hadron_generator/gamma_on_axis_simtel.dat | tee hist_fast_scan_gamma_on_nsb_1x.log
+    elif [ "$1" = "-fscangd" ]; then
+	time ./runana 8 gamma_diffuse_nsb_1x.list hist_fast_scan_gamma_diffuse_nsb_1x.root anaFast_gd.conf ../cosmique_gamma_hadron_generator/gamma_diff_galactic_simtel.dat | tee hist_fast_scan_gamma_diffuse_nsb_1x.log
+    elif [ "$1" = "-fscane" ]; then
+	time ./runana 8 electron_nsb_1x.list hist_fast_scan_electron_nsb_1x.root anaFast_e.conf ../cosmique_gamma_hadron_generator/electron_simtel.dat | tee hist_fast_scan_electron_nsb_1x.log
+    elif [ "$1" = "-fscanp" ]; then
+	time ./runana 8 proton_nsb_1x.list hist_fast_scan_proton_nsb_1x.root anaFast_p.conf ../cosmique_gamma_hadron_generator/proton_diff_simtel.dat | tee hist_fast_scan_proton_nsb_1x.log
     elif [ "$1" = "-c" ]; then
 	make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j		
     elif [ "$1" = "-h" ]; then

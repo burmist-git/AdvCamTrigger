@@ -24,7 +24,8 @@ class evstHist: public TH2Poly {
   void test();
   void test_get_bin(Double_t E, Double_t th, Double_t val);
   TCanvas* Draw_hist(TString fileName, TString frame_title="");
-
+  TCanvas* Draw_hist_core(Int_t e_bin_i, TString fileName, TString frame_title);
+  
   inline TH1D* get_theta_hist() {return _h1_theta;}
   inline TH1D* get_E_hist() {return _h1_E;}
   inline std::vector<TH1D*> get_v_r() {return _v_r;};
@@ -34,8 +35,8 @@ class evstHist: public TH2Poly {
 
   TString _title;
   
-  void Divide(evstHist *evH_cut, evstHist *evH_all);
-  void Multiply(evstHist *evH_eff, evstHist *evH_flux);
+  void Divide(evstHist *evH_cut, evstHist *evH_all, bool with_r_core = false);
+  void Multiply(evstHist *evH_eff, evstHist *evH_flux, bool with_r_core = false);
   void DumpBinContent(TString data_out, bool with_r_core = false);
   void LoadBinContent(TString data_in, bool with_r_core = false);
 
@@ -52,6 +53,16 @@ class evstHist: public TH2Poly {
   void Fill_rcore( Double_t th, Double_t E, Double_t r_core);
 
   void Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID);
+
+  inline Double_t get_Emin() const {return _Emin;};
+  inline Double_t get_Emax() const {return _Emax;};
+  inline Int_t get_N_bins_E() const {return _N_bins_E;};
+  inline Double_t get_Thetamin() const {return _Thetamin;};
+  inline Double_t get_Thetamax() const {return _Thetamax;};
+  inline Int_t get_N_bins_t() const {return _N_bins_t;};
+
+  bool check_bin_compatibility(const evstHist *evH, bool with_r_core = false);
+  bool check_r_core_bin_compatibility(const evstHist *evH);
   
  private:
 

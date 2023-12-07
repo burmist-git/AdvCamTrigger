@@ -41,7 +41,101 @@ anaFast::anaFast(TString fileList, TString anaConfFile) : anashort(fileList)
   _anaConf.readFromFile(anaConfFile);
   _v_det.SetXYZ(1.0*TMath::Sin(20.0/180.0*TMath::Pi()),0,1.0*TMath::Cos(20.0/180.0*TMath::Pi()));
 }
-							
+
+void anaFast::Loop_scan( TString histOut, TString simtel_all_dat){
+  //
+  cout<<"Loop_scan"<<endl;  
+  _anaConf.printInfo();
+  //
+  Double_t val_Emin = 1.0;    // GeV
+  Double_t val_Emax = 100000; // GeV
+  Int_t val_N_bins_E = 25;
+  //
+  Double_t val_Thetamin = 0.0;  //deg
+  Double_t val_Thetamax = 10.0; //deg
+  Int_t val_N_bins_t = 10;
+  //
+  Int_t n_ev_cuts = 0;
+  //
+  evstHist *evH = new evstHist("evH","evH",
+			       val_Emin, val_Emax, val_N_bins_E,
+			       val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_simtel = new evstHist("evH_simtel","evH_simtel",
+				      val_Emin, val_Emax, val_N_bins_E,
+				      val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff = new evstHist("evH_eff","evH_eff",
+				   val_Emin, val_Emax, val_N_bins_E,
+				   val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
+  evH_simtel->LoadBinContent( simtel_all_dat.Data(), true);
+  //
+  evstHist::PrintBinsInfo(evH->get_E_hist());
+  //
+  Double_t theta_p_t;
+  Double_t theta_p_t_deg;
+  TH1D *h1_n_pe = new TH1D("h1_n_pe","h1_n_pe",1001,-0.5,10000.5);
+  //
+  Double_t x0_LST01 = -70.93;
+  Double_t y0_LST01 = -52.07;
+  Double_t r_core;
+  Double_t theta_core;
+  //
+  Long64_t nentries = fChain->GetEntriesFast();
+  Long64_t nbytes = 0, nb = 0;
+  if(_anaConf.nentries_max>0)
+    nentries = _anaConf.nentries_max;
+  cout<<"nentries = "<<nentries<<endl;
+  //
+  for (Long64_t jentry=0; jentry<nentries;jentry++) {
+    if(jentry%_anaConf.jentry_modulo == 0)
+      cout<<jentry<<endl;
+    Long64_t ientry = LoadTree(jentry);
+    if (ientry < 0) break;
+    nb = fChain->GetEntry(jentry);   nbytes += nb;
+    //
+    theta_p_t = get_theta_p_t();
+    theta_p_t_deg = theta_p_t*180/TMath::Pi();
+    getCore_rel_R_theta( x0_LST01, y0_LST01, xcore, ycore, r_core, theta_core);
+    evH->Fill(theta_p_t_deg,energy*1000.0);
+    evH->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    n_ev_cuts++;
+    if(n_ev_cuts>_anaConf.n_ev_cuts_max && _anaConf.n_ev_cuts_max>0)
+      break;
+  }
+  //
+  evH_eff->Divide( evH, evH_simtel, true);
+  //
+  TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
+  rootFile->cd();
+  if (rootFile->IsZombie()){
+    cout<<"  ERROR ---> file "<<histOut.Data()<<" is zombi"<<endl;
+    assert(0);
+  }
+  else
+    cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
+  //
+  //
+  for(unsigned int ii = 0;ii<evH->get_v_r().size();ii++)
+    evH->get_v_r().at(ii)->Write();
+  for(unsigned int ii = 0;ii<evH_simtel->get_v_r().size();ii++)
+    evH_simtel->get_v_r().at(ii)->Write();
+  for(unsigned int ii = 0;ii<evH_eff->get_v_r().size();ii++)
+    evH_eff->get_v_r().at(ii)->Write();
+  //
+  for( Int_t ii = 0; ii<evH_eff->get_N_bins_E(); ii++)
+    evH_eff->Draw_hist_core(ii,"","")->Write();
+  //
+  //
+  evH->Draw_hist("")->Write();
+  evH_simtel->Draw_hist("")->Write();
+  evH_eff->Draw_hist("")->Write();
+  //
+  //
+  rootFile->Close();
+  //
+  cout<<"n_ev_cuts = "<<n_ev_cuts<<endl;  
+}
+
 void anaFast::Loop(TString histOut){
   //
   _anaConf.printInfo();
