@@ -135,6 +135,9 @@ evstHist::evstHist(const char* name, const char* title,
       y[4] = y[0];
       //
       AddBin(n,x,y);
+      //
+      _v_cellID_th_bin_ID.push_back(i_t);
+      _v_cellID_e_bin_ID.push_back(i_E);
     }
   }
   //
@@ -148,12 +151,22 @@ evstHist::evstHist(const char* name, const char* title,
       h1_r_name_title += "_i_t_"; h1_r_name_title += i_t;
       h1->SetNameTitle(h1_r_name_title.Data(),h1_r_name_title.Data());
       set_r_core_bins(h1);
+      init_core_hist(h1);
       _v_r.push_back(h1);
     }
   }
 }
 
 evstHist::~evstHist(){
+}
+
+void evstHist::Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID){
+  if(cellID>=0)
+    if((unsigned int)cellID>_v_cellID_th_bin_ID.size())
+      th_bin_ID = _v_cellID_th_bin_ID.at((unsigned int)cellID);
+  if(cellID>=0)
+    if((unsigned int)cellID>_v_cellID_e_bin_ID.size())
+      e_bin_ID = _v_cellID_e_bin_ID.at((unsigned int)cellID);
 }
 
 void evstHist::Fill_rcore( Double_t th, Double_t E, Double_t r_core){
@@ -178,15 +191,19 @@ void evstHist::set_r_core_bins(TH1D *h1, Double_t r_core_max){
   h1->SetBins(nn-1,rBins);
 }
 
+void evstHist::init_core_hist(TH1D *h1){
+  for(Int_t i = 1;i<=h1->GetNbinsX();i++)
+    h1->SetBinContent(i,0.0);
+}
+
 void evstHist::test(){
   for(Int_t i = 0;i<GetNcells();i++)
     SetBinContent(i+1,i+1);
-};
-
+}
 
 void evstHist::test_get_bin(Double_t E, Double_t th, Double_t val){
   SetBinContent(get_bin_ID(E,th),val);
-};
+}
 
 Int_t evstHist::get_bin_ID( Double_t E, Double_t th){
   Int_t E_bin = _h1_E->FindBin(E);
@@ -282,25 +299,52 @@ void evstHist::Multiply(evstHist *evH_eff, evstHist *evH_flux){
   }
 }
 
-void evstHist::DumpBinContent(TString data_out){
+void evstHist::DumpBinContent(TString data_out, bool with_r_core){
   ofstream myfile;
   myfile.open (data_out.Data());
-  for(Int_t i = 1;i<=GetNcells();i++){
-    myfile<<setprecision(20)<<GetBinContent(i)<<endl;
+  if(!with_r_core){
+    for(Int_t i = 1;i<=GetNcells();i++){
+      myfile<<setprecision(20)<<GetBinContent(i)<<endl;
+    }
+  }
+  //
+  if(with_r_core){
+    for(Int_t i = 1;i<=GetNcells();i++){
+      myfile<<setprecision(20)<<GetBinContent(i)<<" ";
+      if(i<=_N_bins_E*_N_bins_t){
+	for(Int_t j = 1;j<=_v_r.at((unsigned int)(i-1))->GetNbinsX();j++)
+	  myfile<<setprecision(20)<<_v_r.at((unsigned int)(i-1))->GetBinContent(j)<<" ";
+      }
+      myfile<<endl;
+    }
   }
   myfile.close();
 }
-
-void evstHist::LoadBinContent(TString data_in){
+  
+void evstHist::LoadBinContent(TString data_in, bool with_r_core){
   ifstream myfile(data_in.Data());
   Double_t val;
   Int_t i = 1;
   if (myfile.is_open()) {
-    while (myfile>>val){
-      SetBinContent(i,val);
-      i++;
+    if(!with_r_core){
+      while (myfile>>val){
+	SetBinContent(i,val);
+	i++;
+      }
     }
-    myfile.close();
+    if(with_r_core){
+      while (myfile>>val){
+	SetBinContent(i,val);
+	if(i<=_N_bins_E*_N_bins_t){
+	  for(Int_t j = 1;j<=_v_r.at((unsigned int)(i-1))->GetNbinsX();j++){
+	    myfile>>val;
+	    _v_r.at((unsigned int)(i-1))->SetBinContent(j,val);
+	  }
+	  i++;
+	}
+      }
+      myfile.close();
+    }
   }
 }
 

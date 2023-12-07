@@ -71,11 +71,11 @@ void anaTrg::Loop(TString histOut){
   Int_t fadc_offset = 300;
   Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
   Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
-  //Float_t NGB_rate_in_MHz = 386.0;
-  Float_t NGB_rate_in_MHz = 0.0;
+  Float_t NGB_rate_in_MHz = 386.0;
+  //Float_t NGB_rate_in_MHz = 0.0;
   //Float_t fadc_electronic_noise_RMS = 3.94;
-  Float_t fadc_electronic_noise_RMS = 0.01;
-  //Float_t fadc_electronic_noise_RMS = 3.8436441; //takes into account 3.0/sqrt(12)
+  //Float_t fadc_electronic_noise_RMS = 0.01;
+  Float_t fadc_electronic_noise_RMS = 3.8436441; //takes into account 3.0/sqrt(12)
   //
   TRandom3 *rnd = new TRandom3(123123);
   //
@@ -129,8 +129,8 @@ void anaTrg::Loop(TString histOut){
     //
     Double_t rcore = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
     if(cut(h1_n_pe_bins)){
-      if(nevsim<1 && n_pe == 499){
-	cout<<jentry<<endl;
+      if(nevsim<1000 && n_pe == 1){
+	//cout<<jentry<<endl;
 	h1_n_pe->Fill(n_pe);
 	h1_n_pe_zoom->Fill(n_pe);
 	h1_n_pe_9bin->Fill(n_pe);

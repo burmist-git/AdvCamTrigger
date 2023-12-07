@@ -20,9 +20,15 @@ Double_t e_pdf(Double_t *x, Double_t *par){
 Int_t fit_E(){
   //
   TString fileN01;
+  //fileN01 = "./hist_fast_gamma_on_nsb_1x_cut_15918ev.root";
+  //fileN01 = "./hist_fast_gamma_diffuse_nsb_1x_cut_12674ev.root";
+  //fileN01 = "./hist_fast_electron_nsb_1x_cut_5704ev.root";  
+  fileN01 = "./hist_fast_proton_nsb_1x_cut_10172_ev.root";
+  //
   //fileN01 = "./hist_fast_proton_nsb_1x.root";
   //fileN01 = "./hist_fast_gamma_diffuse_nsb_1x_cut.root";
-  fileN01 = "./hist_fast_gamma_on_nsb_1x_cut_12130ev.root";
+  //fileN01 = "./hist_fast_gamma_on_nsb_1x_cut_12130ev.root";
+  //fileN01 = "./hist_fast_electron_nsb_1x.root";
   TFile *f01 = new TFile(fileN01.Data());
   TH1D *h1_E_proton = (TH1D*)f01->Get("h1_energy");
   //
@@ -38,8 +44,11 @@ Int_t fit_E(){
   Double_t I[n];
   Double_t etot[n];
   //
-  Double_t etot_min = 0.3; //in TeV
-  Double_t etot_max = 50; //in TeV
+  //Double_t etot_min = 0.3;  //in TeV
+  //Double_t etot_max = 5;    //in TeV
+  Double_t etot_min = 4;    //in TeV
+  //Double_t etot_max = 50; //in TeV
+  Double_t etot_max = 100; //in TeV
   ///////////////////////////
   //Fit
   const Int_t npar = 3;
@@ -63,7 +72,7 @@ Int_t fit_E(){
   gStyle->SetFrameBorderMode(0);
   gROOT->ForceStyle();
   gStyle->SetStatColor(kWhite);
-  gStyle->SetOptStat(kFALSE);
+  //gStyle->SetOptStat(kFALSE);
   //
   gPad->SetGridx();
   gPad->SetGridy();

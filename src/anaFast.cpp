@@ -123,8 +123,8 @@ void anaFast::Loop(TString histOut){
   evstHist *evH_all_simtel = new evstHist("evH_all_simtel","evH_all_simtel",
 					  val_Emin, val_Emax, val_N_bins_E,
 					  val_Thetamin, val_Thetamax, val_N_bins_t);
-  //evH_all_simtel->LoadBinContent("../cosmique_gamma_hadron_generator/flux_simtel_all.dat");
-  evH_all_simtel->LoadBinContent("../cosmique_gamma_hadron_generator/flux_simtel_all_gamma_diff.dat");
+  evH_all_simtel->LoadBinContent("../cosmique_gamma_hadron_generator/flux_simtel_all.dat");
+  //evH_all_simtel->LoadBinContent("../cosmique_gamma_hadron_generator/flux_simtel_all_gamma_diff.dat");
   //
   evstHist *evH_flux_one_final = new evstHist("evH_flux_one_final","evH_flux_one_final",
 					val_Emin, val_Emax, val_N_bins_E,
@@ -417,12 +417,12 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   Double_t altitude_min = (90.0 - 20.0 - 1.0 - 0.2)/180.0*TMath::Pi();
   Double_t altitude_max = (90.0 - 20.0 - 1.0 + 0.2)/180.0*TMath::Pi();
   //
-  Double_t x0_LST01 = -70.93;
-  Double_t y0_LST01 = -52.07;
-  Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
+  //Double_t x0_LST01 = -70.93;
+  //Double_t y0_LST01 = -52.07;
+  //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //
-  if(n_pe>=100)
-    return true;
+  //if(n_pe>=0)
+  //return true;
   //if(n_pe>=500){
   //if(azimuth>=azimuth_min && azimuth<=azimuth_max){
   //if(altitude>=altitude_min && altitude<=altitude_max){
@@ -432,15 +432,15 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //}
   //}
   //
-  //Double_t x0_LST01 = -70.93;
-  //Double_t y0_LST01 = -52.07;
-  //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
+  Double_t x0_LST01 = -70.93;
+  Double_t y0_LST01 = -52.07;
+  Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //proton
-  //if(theta_p_t_deg<3.0)
-  //if(energy>=3.98107)
-  //if(r<=150)
-  //return true;     
-  //gamma diff
+  if(theta_p_t_deg<3.0)
+    if(energy>=3.98107)
+      if(r<=150)
+	return true;     
+  //gamma diff, gamma, electron
   //if(theta_p_t_deg<2.0)
   //if(energy>=0.20)
   //if(r<=70)

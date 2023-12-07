@@ -36,8 +36,8 @@ class evstHist: public TH2Poly {
   
   void Divide(evstHist *evH_cut, evstHist *evH_all);
   void Multiply(evstHist *evH_eff, evstHist *evH_flux);
-  void DumpBinContent(TString data_out);
-  void LoadBinContent(TString data_in);
+  void DumpBinContent(TString data_out, bool with_r_core = false);
+  void LoadBinContent(TString data_in, bool with_r_core = false);
 
   Double_t GetTotIntegral();
   Double_t GetIntegral(Double_t e_min, Double_t e_max, Double_t theta_min, Double_t theta_max) const;
@@ -45,10 +45,13 @@ class evstHist: public TH2Poly {
   static const void PrintBinsInfo(const TH1D *h1);
 
   static void set_r_core_bins(TH1D *h1, Double_t r_core_max = 2000);
-
+  static void init_core_hist(TH1D *h1);
+  
   Int_t get_bin_ID( Double_t E, Double_t th);
 
   void Fill_rcore( Double_t th, Double_t E, Double_t r_core);
+
+  void Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID);
   
  private:
 
@@ -74,5 +77,8 @@ class evstHist: public TH2Poly {
   TH1D* _h1_E;
   
   std::vector<TH1D*> _v_r;
+
+  std::vector<Int_t> _v_cellID_th_bin_ID;
+  std::vector<Int_t> _v_cellID_e_bin_ID;
   
 };
