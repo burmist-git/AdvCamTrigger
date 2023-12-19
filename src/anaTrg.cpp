@@ -128,8 +128,10 @@ void anaTrg::Loop(TString histOut){
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     //
     Double_t rcore = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
-    if(cut(h1_n_pe_bins)){
-      if(nevsim<1000 && n_pe == 1){
+    //if(cut(h1_n_pe_bins)){
+    if(cut()){
+      //if(nevsim<10 && n_pe == 1){
+      if(nevsim<10){
 	//cout<<jentry<<endl;
 	h1_n_pe->Fill(n_pe);
 	h1_n_pe_zoom->Fill(n_pe);
@@ -146,7 +148,15 @@ void anaTrg::Loop(TString histOut){
 				pe_time);
 	finish_sim = clock();
 	start_trg = clock();
-	trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
+	//
+	TString trg_vector_out_file = "ev_synthetic_trg_v_";
+	trg_vector_out_file += (Int_t)jentry;
+	trg_vector_out_file += "ev.csv";
+	triggerSim::print_trigger_vec_to_csv(trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val),
+					     sipm_cam,
+					     trg_vector_out_file);
+
+	//
 	//std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger(wfcam);
 	//triggerSim::print_trigger_vec(trg_vec);
 	finish_trg = clock();
@@ -155,15 +165,15 @@ void anaTrg::Loop(TString histOut){
 	    <<" "<<((finish_trg - start_trg)/(CLOCKS_PER_SEC/1000))<<" (msec)"<<endl;
 	//
 	//
-	for(Int_t i = 0;i<n_pe;i++)
-	  h1_n_pe_vs_chID->Fill(pe_chID[i]);
+	//for(Int_t i = 0;i<n_pe;i++)
+	//h1_n_pe_vs_chID->Fill(pe_chID[i]);
 	//
 	//
-	for(Int_t i = 0;i<nn_PMT_channels;i++){
-	  for(Int_t j = 0;j<nn_fadc_point;j++){
-	    v_gr.at(i)->SetPoint(j,j*fadc_sample_in_ns,wfcam[i][j]);
-	  }
-	}
+	//for(Int_t i = 0;i<nn_PMT_channels;i++){
+	//for(Int_t j = 0;j<nn_fadc_point;j++){
+	// v_gr.at(i)->SetPoint(j,j*fadc_sample_in_ns,wfcam[i][j]);
+	//}
+	//}
 	nevsim++;
       }
     }
@@ -230,12 +240,17 @@ void anaTrg::dump_n_pe_bins(TH1D *h1){
 }
 
 Bool_t anaTrg::cut(TH1D *h1){
-  if(n_pe<=_npe_max && n_pe>=_npe_min){
-    if(h1 != NULL){
-      if(h1->GetBinContent(h1->FindBin(n_pe))<1000)
+  //if(n_pe<=_npe_max && n_pe>=_npe_min){
+  //if(h1 != NULL){
+  //if(h1->GetBinContent(h1->FindBin(n_pe))<1000)
+  //return true;
+  //}
+  //return false;
+  //}
+  //
+  if(TMath::Abs(xcore)<300)
+    if(TMath::Abs(ycore)<300)
+      if(n_pe==50)
 	return true;
-    }
-    return false;
-  }
   return false;
 }

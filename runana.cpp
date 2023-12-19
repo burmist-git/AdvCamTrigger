@@ -194,18 +194,20 @@ int main(int argc, char *argv[]){
     anaFast a(rootFilesList, conf_file.Data());
     a.Loop(outRootFileF);
   }
-  else if(argc == 6 && atoi(argv[1])==8){
+  else if(argc == 7 && atoi(argv[1])==8){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
     TString conf_file = argv[4];
     TString simtel_all_dat = argv[5];
+    TString flux_dat = argv[6];
     cout<<"--> Parameter calculation from the WF <--"<<endl
 	<<"rootFilesList  : "<<rootFilesList<<endl
 	<<"outRootFileF   : "<<outRootFileF<<endl
     	<<"conf_file      : "<<conf_file<<endl
-	<<"simtel_all_dat : "<<simtel_all_dat<<endl;
+	<<"simtel_all_dat : "<<simtel_all_dat<<endl
+	<<"flux_dat       : "<<flux_dat<<endl;
     anaFast a(rootFilesList, conf_file.Data());
-    a.Loop_scan(outRootFileF, simtel_all_dat);
+    a.Loop_scan(outRootFileF, simtel_all_dat, flux_dat);
   }
   else{
     cout<<" --> ERROR in input arguments "<<endl

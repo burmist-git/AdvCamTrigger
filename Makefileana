@@ -15,10 +15,16 @@ OUTLIB = ./obj/
 
 #----------------------------------------------------#
 
-all: runana	
+all: runana run_dbscan
 
-runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaFast.o obj/anabase.o obj/triggerSim.o
+runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+run_dbscan: run_dbscan.cpp obj/dbscan.o
+	$(CXX) -o run_dbscan run_dbscan.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+obj/dbscan.o: src/dbscan.cpp src/dbscan.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)/dbscan.o $<
 
 obj/ana.o: src/ana.cpp src/ana.hh obj/anabase.o obj/sipmCameraHist.o obj/wfCamSim.o obj/triggerSim.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)ana.o $<
@@ -50,7 +56,7 @@ obj/sipmCameraHistCropped.o: src/sipmCameraHistCropped.cpp src/sipmCameraHistCro
 obj/wfCamSim.o: src/wfCamSim.cpp src/wfCamSim.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
 
-obj/triggerSim.o: src/triggerSim.cpp src/triggerSim.hh
+obj/triggerSim.o: src/triggerSim.cpp src/triggerSim.hh obj/dbscan.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
 
 obj/evstHist.o: src/evstHist.cpp src/evstHist.hh
@@ -58,6 +64,7 @@ obj/evstHist.o: src/evstHist.cpp src/evstHist.hh
 
 clean:
 	rm -f runana
+	rm -f run_dbscan
 	rm -f *~
 	rm -f src/*~
 	rm -f $(OUTLIB)*.o

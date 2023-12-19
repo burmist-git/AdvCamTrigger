@@ -651,6 +651,10 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   gif_sim_name_pref += (Int_t)evID;
   gif_sim_name_pref += "_";
   wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam_real, wfcam, trg_vec, this);
+  TString trg_vector_out_file = "ev_synthetic_trg_v_";
+  trg_vector_out_file += (Int_t)evID;
+  trg_vector_out_file += "ev.csv";
+  triggerSim::print_trigger_vec_to_csv(trg_vec, sipm_cam, trg_vector_out_file);
   //TString particle_type,
   //Int_t wf_time_id,
   //Int_t   event_id,

@@ -28,7 +28,7 @@ public:
   }
 
   void Loop(TString histOut);
-  void Loop_scan(TString histOut, TString simtel_all_dat);
+  void Loop_scan(TString histOut, TString simtel_all_dat, TString flux_dat);
   bool cuts(Double_t theta_p_t_deg = 10000);
   
   Double_t _r_core;

@@ -409,6 +409,19 @@ bool evstHist::check_r_core_bin_compatibility(const evstHist *evH){
   return true;
 }
 
+void evstHist::Multiply_core(evstHist *evH){
+  Double_t nev;
+  Double_t nev_norm;
+  for(unsigned int ii = 0;ii<get_v_r().size();ii++){
+    nev_norm=evH->GetBinContent(ii+1);
+    SetBinContent(ii+1,nev_norm);
+    for(Int_t i = 1;i<=get_v_r().at(ii)->GetNbinsX();i++){
+      nev=get_v_r().at(ii)->GetBinContent(i);
+      get_v_r().at(ii)->SetBinContent(i,nev*nev_norm);
+    }
+  }
+}
+
 void evstHist::Multiply(evstHist *evH_eff, evstHist *evH_flux, bool with_r_core){
   Double_t nev;
   Double_t nev_norm;
@@ -416,6 +429,49 @@ void evstHist::Multiply(evstHist *evH_eff, evstHist *evH_flux, bool with_r_core)
     nev=evH_eff->GetBinContent(i);
     nev_norm=evH_flux->GetBinContent(i);
     SetBinContent(i,nev*nev_norm);
+  }
+  if(with_r_core){
+    if(evH_eff->get_v_r().size() == evH_flux->get_v_r().size()){
+      if(check_bin_compatibility(evH_eff, with_r_core)){
+	if(check_bin_compatibility(evH_flux, with_r_core)){
+	  for(unsigned int ii = 0;ii<get_v_r().size();ii++){
+	    for(Int_t i = 1;i<=evH_eff->get_v_r().at(ii)->GetNbinsX();i++){
+	      nev=evH_eff->get_v_r().at(ii)->GetBinContent(i);
+	      nev_norm=evH_flux->get_v_r().at(ii)->GetBinContent(i);
+	      get_v_r().at(ii)->SetBinContent(i,nev*nev_norm);
+	    }
+	  }
+	}
+      }
+    }
+    else{
+      cout<<"evH_eff->get_v_r().size()  == evH_flux->get_v_r().size()"<<endl
+	  <<"evH_eff->get_v_r().size()  == "<<evH_eff->get_v_r().size()<<endl
+	  <<"evH_flux->get_v_r().size() == "<<evH_flux->get_v_r().size()<<endl;
+    }
+  }
+}
+
+void evstHist::selfNorm(){
+  Double_t nev;
+  Double_t nev_norm;
+  for(unsigned int ii = 0;ii<get_v_r().size();ii++){
+    nev_norm=get_v_r().at(ii)->Integral();
+    for(Int_t i = 1;i<=get_v_r().at(ii)->GetNbinsX();i++){
+      nev=get_v_r().at(ii)->GetBinContent(i);
+      if(nev_norm != 0.0)
+	get_v_r().at(ii)->SetBinContent(i,nev/nev_norm);
+      else
+	get_v_r().at(ii)->SetBinContent(i,0.0);	      
+    }
+  }
+  for(Int_t i = 1;i<=GetNcells();i++){
+    nev=GetBinContent(i);
+    nev_norm=GetBinContent(i);
+    if(nev_norm != 0.0)
+      SetBinContent(i,nev/nev_norm);
+    else
+      SetBinContent(i,0.0);
   }
 }
 

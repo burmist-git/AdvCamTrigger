@@ -18,6 +18,7 @@ struct anaConf {
   Bool_t wf_trg_sim;
   Bool_t disable_all_cuts;
   Bool_t cuts_set_to_false;
+  Bool_t if_cout_jentry;
   //
   Double_t ellipse_A;
   Double_t ellipse_B;
@@ -29,6 +30,7 @@ struct anaConf {
     wf_trg_sim = false;
     disable_all_cuts = true;
     cuts_set_to_false = false;
+    if_cout_jentry = false;
     ellipse_A = 851.3;
     ellipse_B = 800.0;
   }
@@ -40,6 +42,7 @@ struct anaConf {
 	     <<"wf_trg_sim        "<<wf_trg_sim<<std::endl
     	     <<"disable_all_cuts  "<<disable_all_cuts<<std::endl
 	     <<"cuts_set_to_false "<<cuts_set_to_false<<std::endl
+      	     <<"if_cout_jentry    "<<if_cout_jentry<<std::endl
     	     <<"ellipse_A         "<<ellipse_A<<std::endl
 	     <<"ellipse_B         "<<ellipse_B<<std::endl;
   }  
@@ -61,6 +64,8 @@ struct anaConf {
 	  confFile>>disable_all_cuts;
 	if(mot == "cuts_set_to_false:")
 	  confFile>>cuts_set_to_false;
+	if(mot == "if_cout_jentry:")
+	  confFile>>if_cout_jentry;
 	if(mot == "ellipse_A:")
 	  confFile>>ellipse_A;
 	if(mot == "ellipse_B:")

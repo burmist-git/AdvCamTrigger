@@ -42,7 +42,7 @@ anaFast::anaFast(TString fileList, TString anaConfFile) : anashort(fileList)
   _v_det.SetXYZ(1.0*TMath::Sin(20.0/180.0*TMath::Pi()),0,1.0*TMath::Cos(20.0/180.0*TMath::Pi()));
 }
 
-void anaFast::Loop_scan( TString histOut, TString simtel_all_dat){
+void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_dat){
   //
   cout<<"Loop_scan"<<endl;  
   _anaConf.printInfo();
@@ -60,14 +60,121 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat){
   evstHist *evH = new evstHist("evH","evH",
 			       val_Emin, val_Emax, val_N_bins_E,
 			       val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
+  evstHist *evH_10npe = new evstHist("evH_10npe","evH_10npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_20npe = new evstHist("evH_20npe","evH_20npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_30npe = new evstHist("evH_30npe","evH_30npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_40npe = new evstHist("evH_40npe","evH_40npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_50npe = new evstHist("evH_50npe","evH_50npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_60npe = new evstHist("evH_60npe","evH_60npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_70npe = new evstHist("evH_70npe","evH_70npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_80npe = new evstHist("evH_80npe","evH_80npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_90npe = new evstHist("evH_90npe","evH_90npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_100npe = new evstHist("evH_100npe","evH_100npe",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
   evstHist *evH_simtel = new evstHist("evH_simtel","evH_simtel",
 				      val_Emin, val_Emax, val_N_bins_E,
 				      val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_tot_flux_nocore = new evstHist("evH_tot_flux_nocore","evH_tot_flux_nocore",
+					       val_Emin, val_Emax, val_N_bins_E,
+					       val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_tot_flux = new evstHist("evH_tot_flux","evH_tot_flux",
+					val_Emin, val_Emax, val_N_bins_E,
+					val_Thetamin, val_Thetamax, val_N_bins_t);
   evstHist *evH_eff = new evstHist("evH_eff","evH_eff",
 				   val_Emin, val_Emax, val_N_bins_E,
 				   val_Thetamin, val_Thetamax, val_N_bins_t);
   //
-  evH_simtel->LoadBinContent( simtel_all_dat.Data(), true);
+  evstHist *evH_eff_10npe = new evstHist("evH_eff_10npe","evH_eff_10npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_20npe = new evstHist("evH_eff_20npe","evH_eff_20npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_30npe = new evstHist("evH_eff_30npe","evH_eff_30npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_40npe = new evstHist("evH_eff_40npe","evH_eff_40npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_50npe = new evstHist("evH_eff_50npe","evH_eff_50npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_60npe = new evstHist("evH_eff_60npe","evH_eff_60npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_70npe = new evstHist("evH_eff_70npe","evH_eff_70npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_80npe = new evstHist("evH_eff_80npe","evH_eff_80npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_90npe = new evstHist("evH_eff_90npe","evH_eff_90npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_100npe = new evstHist("evH_eff_100npe","evH_eff_100npe",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
+  evstHist *evH_flux = new evstHist("evH_flux","evH_flux",
+				    val_Emin, val_Emax, val_N_bins_E,
+				    val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_10npe = new evstHist("evH_flux_10npe","evH_flux_10npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_20npe = new evstHist("evH_flux_20npe","evH_flux_20npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_30npe = new evstHist("evH_flux_30npe","evH_flux_30npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_40npe = new evstHist("evH_flux_40npe","evH_flux_40npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_50npe = new evstHist("evH_flux_50npe","evH_flux_50npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_60npe = new evstHist("evH_flux_60npe","evH_flux_60npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_70npe = new evstHist("evH_flux_70npe","evH_flux_70npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_80npe = new evstHist("evH_flux_80npe","evH_flux_80npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_90npe = new evstHist("evH_flux_90npe","evH_flux_90npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_100npe = new evstHist("evH_flux_100npe","evH_flux_100npe",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
+  evH_simtel->LoadBinContent(simtel_all_dat.Data(), true);
+  evH_tot_flux->LoadBinContent(simtel_all_dat.Data(), true);
+  evH_tot_flux->selfNorm();
+  evH_tot_flux_nocore->LoadBinContent(flux_dat.Data());
+  evH_tot_flux->Multiply_core(evH_tot_flux_nocore);
   //
   evstHist::PrintBinsInfo(evH->get_E_hist());
   //
@@ -96,14 +203,79 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat){
     theta_p_t = get_theta_p_t();
     theta_p_t_deg = theta_p_t*180/TMath::Pi();
     getCore_rel_R_theta( x0_LST01, y0_LST01, xcore, ycore, r_core, theta_core);
+    //
     evH->Fill(theta_p_t_deg,energy*1000.0);
     evH->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    //
+    if(n_pe>9){
+      evH_10npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_10npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>19){
+      evH_20npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_20npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>29){
+      evH_30npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_30npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>39){
+      evH_40npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_40npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>49){
+      evH_50npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_50npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>59){
+      evH_60npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_60npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>69){
+      evH_70npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_70npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>79){
+      evH_80npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_80npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>89){
+      evH_90npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_90npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    if(n_pe>99){
+      evH_100npe->Fill(theta_p_t_deg,energy*1000.0);
+      evH_100npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    }
+    //
     n_ev_cuts++;
     if(n_ev_cuts>_anaConf.n_ev_cuts_max && _anaConf.n_ev_cuts_max>0)
       break;
   }
   //
   evH_eff->Divide( evH, evH_simtel, true);
+  evH_eff_10npe->Divide( evH_10npe, evH_simtel, true);
+  evH_eff_20npe->Divide( evH_20npe, evH_simtel, true);
+  evH_eff_30npe->Divide( evH_30npe, evH_simtel, true);
+  evH_eff_40npe->Divide( evH_40npe, evH_simtel, true);
+  evH_eff_50npe->Divide( evH_50npe, evH_simtel, true);
+  evH_eff_60npe->Divide( evH_60npe, evH_simtel, true);
+  evH_eff_70npe->Divide( evH_70npe, evH_simtel, true);
+  evH_eff_80npe->Divide( evH_80npe, evH_simtel, true);
+  evH_eff_90npe->Divide( evH_90npe, evH_simtel, true);
+  evH_eff_100npe->Divide( evH_100npe, evH_simtel, true);
+  //
+  evH_flux->Multiply(evH_tot_flux, evH_eff, true);
+  evH_flux_10npe->Multiply(evH_tot_flux, evH_eff_10npe, true);
+  evH_flux_20npe->Multiply(evH_tot_flux, evH_eff_20npe, true);
+  evH_flux_30npe->Multiply(evH_tot_flux, evH_eff_30npe, true);
+  evH_flux_40npe->Multiply(evH_tot_flux, evH_eff_40npe, true);
+  evH_flux_50npe->Multiply(evH_tot_flux, evH_eff_50npe, true);
+  evH_flux_60npe->Multiply(evH_tot_flux, evH_eff_60npe, true);
+  evH_flux_70npe->Multiply(evH_tot_flux, evH_eff_70npe, true);
+  evH_flux_80npe->Multiply(evH_tot_flux, evH_eff_80npe, true);
+  evH_flux_90npe->Multiply(evH_tot_flux, evH_eff_90npe, true);
+  evH_flux_100npe->Multiply(evH_tot_flux, evH_eff_100npe, true);
   //
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
@@ -115,20 +287,43 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat){
     cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
   //
   //
-  for(unsigned int ii = 0;ii<evH->get_v_r().size();ii++)
-    evH->get_v_r().at(ii)->Write();
-  for(unsigned int ii = 0;ii<evH_simtel->get_v_r().size();ii++)
-    evH_simtel->get_v_r().at(ii)->Write();
   for(unsigned int ii = 0;ii<evH_eff->get_v_r().size();ii++)
     evH_eff->get_v_r().at(ii)->Write();
+  for(unsigned int ii = 0;ii<evH_flux->get_v_r().size();ii++)
+    evH_flux->get_v_r().at(ii)->Write();
   //
-  for( Int_t ii = 0; ii<evH_eff->get_N_bins_E(); ii++)
-    evH_eff->Draw_hist_core(ii,"","")->Write();
   //
+  evH->Write();
+  evH_simtel->Write();
+  evH_tot_flux->Write();
+  evH_eff->Write();
+  evH_flux->Write();
+  evH_flux_10npe->Write();
+  evH_flux_20npe->Write();
+  evH_flux_30npe->Write();
+  evH_flux_40npe->Write();
+  evH_flux_50npe->Write();
+  evH_flux_60npe->Write();
+  evH_flux_70npe->Write();
+  evH_flux_80npe->Write();
+  evH_flux_90npe->Write();
+  evH_flux_100npe->Write();
   //
   evH->Draw_hist("")->Write();
   evH_simtel->Draw_hist("")->Write();
+  evH_tot_flux->Draw_hist("")->Write();
   evH_eff->Draw_hist("")->Write();
+  evH_flux->Draw_hist("")->Write();
+  evH_flux_10npe->Draw_hist("")->Write();
+  evH_flux_20npe->Draw_hist("")->Write();
+  evH_flux_30npe->Draw_hist("")->Write();
+  evH_flux_40npe->Draw_hist("")->Write();
+  evH_flux_50npe->Draw_hist("")->Write();
+  evH_flux_60npe->Draw_hist("")->Write();
+  evH_flux_70npe->Draw_hist("")->Write();
+  evH_flux_80npe->Draw_hist("")->Write();
+  evH_flux_90npe->Draw_hist("")->Write();
+  evH_flux_100npe->Draw_hist("")->Write();
   //
   //
   rootFile->Close();
@@ -337,7 +532,11 @@ void anaFast::Loop(TString histOut){
 	  break;
 	//
 	//
-	//cout<<"jentry = "<<jentry<<"   "<<n_pe<<endl;
+	if(_anaConf.if_cout_jentry){
+	  //cout<<"jentry = "<<jentry<<"   "<<n_pe<<energy<<endl;
+	  //./runana 4 $inRootFile $outHistF  588 gamma  #   68
+	  cout<<"./runana 4 $inRootFile $outHistF "<<jentry<<" gamma # n_pe "<<n_pe<<"  energy "<<energy*1000.0<<" GeV"<<endl;
+	}
 	//
 	evH_E_cut->get_E_hist()->Fill(energy*1000.0);
 	//
@@ -515,6 +714,8 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //Double_t y0_LST01 = -52.07;
   //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //
+  //if(n_pe>=50)
+  //return true;
   //if(n_pe>=0)
   //return true;
   //if(n_pe>=500){
@@ -529,11 +730,15 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   Double_t x0_LST01 = -70.93;
   Double_t y0_LST01 = -52.07;
   Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
+  if(energy>=0.010 && energy<0.02)
+    if(n_pe>=40)
+      if(r<=300)
+	return true;
   //proton
-  if(theta_p_t_deg<3.0)
-    if(energy>=3.98107)
-      if(r<=150)
-	return true;     
+  //if(theta_p_t_deg<3.0)
+  //if(energy>=3.98107)
+  //if(r<=150)
+  //return true;     
   //gamma diff, gamma, electron
   //if(theta_p_t_deg<2.0)
   //if(energy>=0.20)
