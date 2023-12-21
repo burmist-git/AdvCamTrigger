@@ -22,16 +22,19 @@ typedef struct Point_
 {
   Int_t pixel_id;
   float x, y, z;   // X, Y, Z position
+  int ii;          // time bin
   int clusterID;   // clustered ID
 }Point;
 
 class DBSCAN {
 public:    
 
+  DBSCAN();
   DBSCAN(unsigned int minPts, float eps, vector<Point> points);
   ~DBSCAN();
   
   int run();
+  int run(unsigned int minPts, float eps, vector<Point> points);
   vector<int> calculateCluster(Point point);
   int expandCluster(Point point, int clusterID);
   inline double calculateDistance(const Point& pointCore, const Point& pointTarget);
@@ -42,7 +45,8 @@ public:
   
 public:
   vector<Point> m_points;
-  const void print_points_info();
+  const void print_points_info() const;
+  const Int_t get_nclusters() const;
   
 private:    
   unsigned int m_pointSize;

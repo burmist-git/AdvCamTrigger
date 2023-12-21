@@ -289,6 +289,10 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   //
   for(unsigned int ii = 0;ii<evH_eff->get_v_r().size();ii++)
     evH_eff->get_v_r().at(ii)->Write();
+  for(unsigned int ii = 0;ii<evH_eff_50npe->get_v_r().size();ii++)
+    evH_eff_50npe->get_v_r().at(ii)->Write();
+  for(unsigned int ii = 0;ii<evH_eff_50npe->get_v_r().size();ii++)
+    evH_eff_100npe->get_v_r().at(ii)->Write();
   for(unsigned int ii = 0;ii<evH_flux->get_v_r().size();ii++)
     evH_flux->get_v_r().at(ii)->Write();
   //
@@ -297,6 +301,16 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   evH_simtel->Write();
   evH_tot_flux->Write();
   evH_eff->Write();
+  evH_eff_10npe->Write();
+  evH_eff_20npe->Write();
+  evH_eff_30npe->Write();
+  evH_eff_40npe->Write();
+  evH_eff_50npe->Write();
+  evH_eff_60npe->Write();
+  evH_eff_70npe->Write();
+  evH_eff_80npe->Write();
+  evH_eff_90npe->Write();
+  evH_eff_100npe->Write();
   evH_flux->Write();
   evH_flux_10npe->Write();
   evH_flux_20npe->Write();
@@ -309,10 +323,21 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   evH_flux_90npe->Write();
   evH_flux_100npe->Write();
   //
+  //
   evH->Draw_hist("")->Write();
   evH_simtel->Draw_hist("")->Write();
   evH_tot_flux->Draw_hist("")->Write();
   evH_eff->Draw_hist("")->Write();
+  evH_eff_10npe->Draw_hist("")->Write();
+  evH_eff_20npe->Draw_hist("")->Write();
+  evH_eff_30npe->Draw_hist("")->Write();
+  evH_eff_40npe->Draw_hist("")->Write();
+  evH_eff_50npe->Draw_hist("")->Write();
+  evH_eff_60npe->Draw_hist("")->Write();
+  evH_eff_70npe->Draw_hist("")->Write();
+  evH_eff_80npe->Draw_hist("")->Write();
+  evH_eff_90npe->Draw_hist("")->Write();
+  evH_eff_100npe->Draw_hist("")->Write();
   evH_flux->Draw_hist("")->Write();
   evH_flux_10npe->Draw_hist("")->Write();
   evH_flux_20npe->Draw_hist("")->Write();
@@ -714,8 +739,8 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //Double_t y0_LST01 = -52.07;
   //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //
-  //if(n_pe>=50)
-  //return true;
+  if(n_pe>=100)
+    return true;
   //if(n_pe>=0)
   //return true;
   //if(n_pe>=500){
@@ -727,13 +752,13 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //}
   //}
   //
-  Double_t x0_LST01 = -70.93;
-  Double_t y0_LST01 = -52.07;
-  Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
-  if(energy>=0.010 && energy<0.02)
-    if(n_pe>=40)
-      if(r<=300)
-	return true;
+  //Double_t x0_LST01 = -70.93;
+  //Double_t y0_LST01 = -52.07;
+  //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
+  //if(energy>=0.010 && energy<0.02)
+  //if(n_pe>=40)
+  //if(r<=300)
+  //return true;
   //proton
   //if(theta_p_t_deg<3.0)
   //if(energy>=3.98107)

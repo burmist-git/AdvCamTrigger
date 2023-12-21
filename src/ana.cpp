@@ -3,6 +3,7 @@
 #include "sipmCameraHist.hh"
 #include "wfCamSim.hh"
 #include "triggerSim.hh"
+#include "src/dbscan.hh"
 
 //root
 #include <TH2.h>
@@ -560,8 +561,10 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   //
   //NGB_rate_in_MHz = 386.0;
   NGB_rate_in_MHz = 268.0;
+  //NGB_rate_in_MHz = 0.0;
   //fadc_electronic_noise_RMS = 1.5;
   fadc_electronic_noise_RMS = 3.94;
+  //fadc_electronic_noise_RMS = 0.1;
   wfCamSim *wfc_real = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
 				    nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz, fadc_electronic_noise_RMS);
   //
@@ -615,6 +618,8 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val",1000,0.0,1000);
   std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger( wfcam_real, h1_digital_sum, h1_digital_sum_3ns, h1_digital_sum_5ns, h1_fadc_val);
   triggerSim::print_trigger_vec(trg_vec);
+  //std::cout<<"trg_sim->get_DBSCAN()->print_points_info()"<<std::endl;
+  //trg_sim->get_DBSCAN()->print_points_info();
   ////////////////////////////
   vector<TGraph*> v_gr;
   vector<TGraph*> v_gr_sim;
@@ -632,7 +637,7 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
     gr_sim->SetNameTitle(gr_sim_name_title.Data());
     //
     for(Int_t i = 0;i<nn_fadc_point;i++){
-      gr->SetPoint(i,i,wf[j][i]);
+      gr->SetPoint(i,i,wfcam_real.at(j).at(i));
       gr_sim->SetPoint(i,i,wfcam.at(j).at(i));
     }
     v_gr.push_back(gr);
@@ -650,7 +655,7 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   TString gif_sim_name_pref = "./ev_synthetic_";
   gif_sim_name_pref += (Int_t)evID;
   gif_sim_name_pref += "_";
-  wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam_real, wfcam, trg_vec, this);
+  //wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam_real, wfcam, trg_vec, this);
   TString trg_vector_out_file = "ev_synthetic_trg_v_";
   trg_vector_out_file += (Int_t)evID;
   trg_vector_out_file += "ev.csv";

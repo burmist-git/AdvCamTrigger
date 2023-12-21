@@ -11,6 +11,9 @@
 #include <iomanip>
 #include <stdlib.h>
 
+DBSCAN::DBSCAN(){
+}
+
 DBSCAN::DBSCAN(unsigned int minPts, float eps, vector<Point> points){
   m_minPoints = minPts;
   m_epsilon = eps;
@@ -19,6 +22,23 @@ DBSCAN::DBSCAN(unsigned int minPts, float eps, vector<Point> points){
 }
 
 DBSCAN::~DBSCAN(){;}
+
+const Int_t DBSCAN::get_nclusters() const {
+  Int_t nclus = 0;
+  for(unsigned int k = 0; k<m_points.size(); k++){
+    if(m_points.at(k).clusterID > 0)
+      nclus++;
+  }
+  return nclus;
+}
+
+int DBSCAN::run(unsigned int minPts, float eps, vector<Point> points){
+  m_minPoints = minPts;
+  m_epsilon = eps;
+  m_points = points;
+  m_pointSize = points.size();
+  return run();
+}
 
 int DBSCAN::run(){
   int clusterID = 1;
@@ -86,11 +106,13 @@ inline double DBSCAN::calculateDistance(const Point& pointCore, const Point& poi
   return TMath::Sqrt(pow(pointCore.x - pointTarget.x,2)+pow(pointCore.y - pointTarget.y,2)+pow(pointCore.z - pointTarget.z,2));
 }
 
-const void DBSCAN::print_points_info(){
+const void DBSCAN::print_points_info() const {
+  std::cout<<" nclusters : "<<get_nclusters()<<std::endl;
   for(unsigned int k = 0;k<m_points.size();k++)
     std::cout<<setw(10)<<m_points.at(k).x
 	     <<setw(10)<<m_points.at(k).y
 	     <<setw(10)<<m_points.at(k).z
+      	     <<setw(10)<<m_points.at(k).ii
       	     <<setw(10)<<m_points.at(k).pixel_id
 	     <<setw(10)<<m_points.at(k).clusterID<<std::endl;
 }

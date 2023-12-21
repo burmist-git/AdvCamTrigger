@@ -13,6 +13,7 @@
 inRootFile="gamma_on_nsb_1x.list"
 outHistF="./hist_gamma_on_tw.root"
 #inRootFile="gamma_diffuse_nsb_1x.list"
+#inRootFile="gamma_diffuse_nsb_1x.listshort"
 #outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
 #inRootFile="proton_nsb_1x.list"
 #outHistF="./hist_proton_nsb_1x_tw.root"
@@ -51,6 +52,7 @@ function printHelp {
     echo " [0] -pp_d  : Draw PCA proton"
     echo " [0] -trgp  : Trg proton"
     echo " [0] -trgg  : Trg gamma"
+    echo " [0] -trggd : Trg gamma diffuse"
     echo " [0] -fscang  : fast scan gamma"
     echo " [0] -fscangd : fast scan gamma diffuse"
     echo " [0] -fscane  : fast scan electron"
@@ -76,6 +78,10 @@ else
     elif [ "$1" = "-trgg" ]; then
 	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
 	outHistF="./hist_trg_gamma_on_nsb_1x_corsika_0000ID.root"
+	./runana 11 $inRootFile $outHistF
+    elif [ "$1" = "-trggd" ]; then
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_trg_gamma_diffuse_nsb_1x_corsika_0000ID.root"
 	./runana 11 $inRootFile $outHistF
     elif [ "$1" = "-tw" ]; then
 
@@ -270,17 +276,57 @@ else
 	#./runana 4 $inRootFile $outHistF 949715 gamma # n_pe 87  energy 12.5351 GeV
 	#./runana 4 $inRootFile $outHistF 950077 gamma # n_pe 44  energy 11.9362 GeV
 
-	./runana 4 $inRootFile $outHistF 1430 gamma   # n_pe 50 energy  GeV
-
-	#./runana 4 $inRootFile $outHistF 4027 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 4727 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 6332 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 7347 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 7478 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 8142 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 9855 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 12409 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 1430 gamma   # n_pe 50 energy  GeV
+	#
+	#./runana 4 $inRootFile $outHistF 6 gamma_diff
+	#./runana 4 $inRootFile $outHistF 17 gamma_diff
+	#./runana 4 $inRootFile $outHistF 19 gamma_diff
+	#./runana 4 $inRootFile $outHistF 21 gamma_diff
+	#./runana 4 $inRootFile $outHistF 29 gamma_diff
+	#./runana 4 $inRootFile $outHistF 46 gamma_diff
+	#./runana 4 $inRootFile $outHistF 48 gamma_diff
+	#./runana 4 $inRootFile $outHistF 52 gamma_diff
+	#./runana 4 $inRootFile $outHistF 53 gamma_diff
+	#./runana 4 $inRootFile $outHistF 55 gamma_diff
+	#./runana 4 $inRootFile $outHistF 58 gamma_diff
+	#./runana 4 $inRootFile $outHistF 63 gamma_diff
+	#./runana 4 $inRootFile $outHistF 66 gamma_diff
+	#./runana 4 $inRootFile $outHistF 67 gamma_diff
+	#./runana 4 $inRootFile $outHistF 68 gamma_diff
+	#
+	#./runana 4 $inRootFile $outHistF 201  gamma_diff
+	#./runana 4 $inRootFile $outHistF 7617  gamma_diff
+	#./runana 4 $inRootFile $outHistF 7830  gamma_diff
+	#./runana 4 $inRootFile $outHistF 22248 gamma_diff
+	#./runana 4 $inRootFile $outHistF 22461 gamma_diff
+	#./runana 4 $inRootFile $outHistF 23475 gamma_diff
+	#./runana 4 $inRootFile $outHistF 26666 gamma_diff
+	#./runana 4 $inRootFile $outHistF 27676 gamma_diff
+	#./runana 4 $inRootFile $outHistF 36010 gamma_diff
+	#./runana 4 $inRootFile $outHistF 36176 gamma_diff
+	#./runana 4 $inRootFile $outHistF 43005 gamma_diff
+	#./runana 4 $inRootFile $outHistF 48574 gamma_diff
+	#./runana 4 $inRootFile $outHistF 51743 gamma_diff
+	#./runana 4 $inRootFile $outHistF 51744 gamma_diff
+	#./runana 4 $inRootFile $outHistF 61300 gamma_diff
+	#./runana 4 $inRootFile $outHistF 70822 gamma_diff
+	#./runana 4 $inRootFile $outHistF 79945 gamma_diff
+	#./runana 4 $inRootFile $outHistF 79963 gamma_diff
+	#./runana 4 $inRootFile $outHistF 83105 gamma_diff
+	#./runana 4 $inRootFile $outHistF 85595 gamma_diff
+	#./runana 4 $inRootFile $outHistF 86650 gamma_diff
+	#./runana 4 $inRootFile $outHistF 93711 gamma_diff
+	#./runana 4 $inRootFile $outHistF 100131 gamma_diff
+	
+	./runana 4 $inRootFile $outHistF 4027 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 4727 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 6332 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 7347 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 7478 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 8142 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 9855 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 12409 gamma   # n_pe 50 energy  GeV
 	
     elif [ "$1" = "-th" ]; then
 	./runana 5
@@ -314,7 +360,7 @@ else
 	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut_faint.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut_faint.log
     elif [ "$1" = "-fgd" ]; then
 	#./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x.log
-	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x_cut.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x_cut_3000pe.log
+	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x_cut.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x_cut.log
     elif [ "$1" = "-fe" ]; then
 	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x.log
     elif [ "$1" = "-fp" ]; then

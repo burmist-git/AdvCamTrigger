@@ -11,6 +11,7 @@
 
 class sipmCameraHist;
 class TH1D;
+class DBSCAN;
 
 class triggerSim {
 
@@ -30,7 +31,7 @@ public :
   static void print_trigger_vec(const std::vector<std::array<int, 2>> &trg_vector);
   static void print_trigger_vec(const std::vector<std::vector<unsigned int>> &trg_vector);
   static void print_trigger_vec_to_csv(const std::vector<std::vector<unsigned int>> &trg_vector, const sipmCameraHist *sipm_cam, TString out_file_name, bool if_short_format = true);
-  
+    
 private:
 
   int get_flower_digital_sum(const unsigned int ch_i, const unsigned int wf_j, const std::vector<std::vector<int>> &wf, Int_t w_l, Int_t w_r, Bool_t norm_yes);
@@ -41,7 +42,7 @@ private:
   std::vector<std::vector<unsigned int>> build_spatial_time_cluster_dbscan(const std::vector<std::vector<unsigned int>> &trg_vector);
   
   const sipmCameraHist* _simphist;
-
+  
 };
 
 #endif

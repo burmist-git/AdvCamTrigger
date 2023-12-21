@@ -6,12 +6,14 @@
 
 //root
 #include <TROOT.h>
+#include <TVector3.h>
 
 class TChain;
 class TFile;
 class TTree;
 class TString;
 class TBranch;
+
 
 class anaTrg: public anabase {
 public:
@@ -33,6 +35,10 @@ private:
   Bool_t cut(TH1D *h1 = NULL);
   Int_t _npe_max;
   Int_t _npe_min;
+
+  Double_t get_theta_p_t();
+
+  TVector3 _v_det;
   
 };
 
