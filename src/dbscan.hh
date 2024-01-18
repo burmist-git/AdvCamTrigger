@@ -64,6 +64,28 @@ struct point {
   }
 };
 
+struct point_kdis {
+  point p;
+  vector<Double_t> dists;
+  static void bubbleSort(vector<Double_t> &a){
+    bool swapp = true;
+    while(swapp){
+      swapp = false;
+      for( unsigned int i = 0; i < a.size()-1; i++){
+	if( a.at(i)>a.at(i+1)){
+	  //
+	  Double_t tmp;
+	  tmp = a.at(i);
+	  //
+	  a.at(i) = a.at(i+1);
+	  a.at(i+1) = tmp;
+	  swapp = true;
+	}
+      }
+    }
+  }
+};
+  
 class dbscan {
 public:    
 
@@ -89,11 +111,14 @@ public:
   inline const vector<point>& get_points_v() const {return _points_v;};
 
   void clear();
+
+  vector<Double_t> build_k_dist_graph(Int_t kk);
   
 private:
 
   vector<point> _points_v;
   vector<cluster_info> _clusters_v;
+  vector<point_kdis> _points_kdis_v;
   
   unsigned int _minPts;
   Double_t _eps;

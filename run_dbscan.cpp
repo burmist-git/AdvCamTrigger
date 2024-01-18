@@ -13,7 +13,7 @@ using namespace std;
 
 void genData(vector<point>& points_v, TString filename);
 void genData(vector<point>& points_v);
-void plot_and_save(dbscan &ds, TString outrootFile);
+void plot_and_save(dbscan &ds, TString outrootFile, vector<Double_t> &k_dist_graph);
 
 void genData_spiral(vector<point>& points_v, TString filename){
   ifstream cluster_file (filename.Data());
@@ -158,6 +158,7 @@ void shuffle(vector<point>& points_v){
 
 int main(){    
   vector<point> points_v;
+  vector<Double_t> k_dist_graph;
   dbscan ds;
   unsigned int minPts = 4;
   Double_t eps = 1.4;
@@ -189,18 +190,21 @@ int main(){
   //Double_t eps = 0.0001;
   //
   points_v.clear();
+  k_dist_graph.clear();
   genData_spiral(points_v, "Compound.txt");
   //shuffle(points_v);
   minPts = 4;
-  eps = 1.4;
+  eps = 1.1;
   ds.run( minPts, eps, points_v);
   ds.print_points_info();
   ds.get_cluster_stats();
   ds.print_cluster_stats();
-  plot_and_save(ds,"hist_dbscan_Compound.root");
+  k_dist_graph = ds.build_k_dist_graph(4);
+  plot_and_save( ds, "hist_dbscan_Compound.root", k_dist_graph);
   ds.clear();
   //
   points_v.clear();
+  k_dist_graph.clear();
   genData_spiral(points_v, "Aggregation.txt");
   minPts = 7;
   eps = 1.7;
@@ -208,10 +212,12 @@ int main(){
   //ds.print_points_info();
   ds.get_cluster_stats();
   ds.print_cluster_stats();
-  plot_and_save(ds,"hist_dbscan_Aggregation.root");
+  k_dist_graph = ds.build_k_dist_graph(4);
+  plot_and_save( ds, "hist_dbscan_Aggregation.root", k_dist_graph);
   ds.clear();  
   //
   points_v.clear();
+  k_dist_graph.clear();
   genData_spiral(points_v, "spiral.txt");
   minPts = 4;
   eps = 3;
@@ -219,10 +225,12 @@ int main(){
   //ds.print_points_info();
   ds.get_cluster_stats();
   ds.print_cluster_stats();
-  plot_and_save(ds,"hist_dbscan_spiral.root");
+  k_dist_graph = ds.build_k_dist_graph(4);
+  plot_and_save( ds, "hist_dbscan_spiral.root", k_dist_graph);
   ds.clear();  
   //
   points_v.clear();
+  k_dist_graph.clear();
   genData(points_v, "S_sets.s1");
   minPts = 15;
   eps = 30000;
@@ -230,7 +238,8 @@ int main(){
   //ds.print_points_info();
   ds.get_cluster_stats();
   ds.print_cluster_stats();
-  plot_and_save(ds,"hist_dbscan_S_sets.root");
+  //k_dist_graph = ds.build_k_dist_graph(4);
+  plot_and_save( ds, "hist_dbscan_S_sets.root", k_dist_graph);
   ds.clear();  
   //
   //points_v.clear();
@@ -248,7 +257,7 @@ int main(){
   return 0;
 }
 
-void plot_and_save(dbscan &ds, TString outrootFile){
+void plot_and_save(dbscan &ds, TString outrootFile, vector<Double_t> &k_dist_graph){
   //
   TGraph *gr = new TGraph();
   gr->SetNameTitle("gr","gr");
@@ -271,11 +280,16 @@ void plot_and_save(dbscan &ds, TString outrootFile){
   TGraph *gr_cl03_BORDER = new TGraph();
   gr_cl03_BORDER->SetNameTitle("gr_cl03_BORDER","gr_cl03_BORDER");
   //
+  TGraph *gr_k_dist_graph = new TGraph();
+  gr_k_dist_graph->SetNameTitle("gr_k_dist_graph","gr_k_dist_graph");
+  //
   TGraph *gr_NOISE = new TGraph();
   gr_NOISE->SetNameTitle("gr_NOISE","gr_NOISE");
   //
   for(unsigned int k = 0; k < ds.get_points_v().size(); k++)
     gr->SetPoint( gr->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+  for(unsigned int k = 0; k < k_dist_graph.size(); k++)
+    gr_k_dist_graph->SetPoint( k, k, k_dist_graph.at(k_dist_graph.size()-1-k));
   if(ds.get_nclusters()>0){
     for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
       if(ds.get_points_v().at(k).clusterID == 0){
@@ -330,6 +344,7 @@ void plot_and_save(dbscan &ds, TString outrootFile){
   gr_cl02_BORDER->Write();
   gr_cl03_BORDER->Write();
   gr_NOISE->Write();
+  gr_k_dist_graph->Write();
   //
   rootFile->Close();
   //

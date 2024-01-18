@@ -64,6 +64,8 @@ void dbscan::print_cluster_stats() const {
   cout<<"N_points   : "<<_points_v.size()<<endl
       <<"N_clusters : "<<_clusters_v.size()<<endl
       <<"N_NOISE    : "<<get_number_of_NOISE()<<endl;
+  cout<<"_minPts    : "<<_minPts<<endl
+      <<"_eps       : "<<_eps<<endl;
   if(_clusters_v.size()>0){
     _clusters_v.at(0).print_cluster_info_header();
     for(unsigned int i = 0; i<_clusters_v.size(); i++)
@@ -123,6 +125,24 @@ bool dbscan::expandCluster(point &p, int clusterID){
     return true;
   }
   return false;
+}
+
+vector<Double_t> dbscan::build_k_dist_graph(Int_t kk){
+  vector<Double_t> k_dist_graph;
+  for(unsigned int k = 0;k<_points_v.size();k++){
+    point_kdis pkd;
+    pkd.p = _points_v.at(k);
+    for(unsigned int l = 0;l<_points_v.size();l++)
+      pkd.dists.push_back(calculateDistance(_points_v.at(k), _points_v.at(l)));
+    point_kdis::bubbleSort(pkd.dists);
+    _points_kdis_v.push_back(pkd);    
+  }
+  for(unsigned int k = 0;k<_points_kdis_v.size();k++){
+    if((unsigned int)kk<_points_kdis_v.at(k).dists.size())
+      k_dist_graph.push_back(_points_kdis_v.at(k).dists.at(kk));
+  }
+  point_kdis::bubbleSort(k_dist_graph);
+  return k_dist_graph;
 }
 
 vector<unsigned int> dbscan::regionQuery(point p){
