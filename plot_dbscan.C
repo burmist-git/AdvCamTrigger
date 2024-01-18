@@ -17,10 +17,12 @@ Int_t plot_dbscan(){
   //
   TString objectName;
   //fileN01 = "./hist_dbscan.root";
-  //fileN01 = "./hist_dbscan_Compound.root"; 
+  fileN01 = "./hist_dbscan_Compound.root"; 
   //fileN01 = "./hist_dbscan_Aggregation.root";
   //fileN01 = "./hist_dbscan_spiral.root";
-  fileN01 = "./hist_dbscan_S_sets.root";
+  //fileN01 = "./hist_dbscan_S_sets.root";
+  //fileN01 = "./hist_dbscan_worms_2d.root";
+
   //
   TFile *f01 = new TFile(fileN01.Data());
   //

@@ -71,6 +71,7 @@ public:
   ~dbscan();
   
   Int_t run(unsigned int minPts, Double_t eps, vector<point> point_v);
+  void set_points(vector<point> point_v);
 
   vector<unsigned int> regionQuery(point p);
   bool expandCluster(point &p, int clusterID);
@@ -85,7 +86,7 @@ public:
   void print_cluster_stats() const;
   Int_t get_number_of_NOISE() const;
 
-  inline const vector<point> get_points_v() const {return _points_v;};
+  inline const vector<point>& get_points_v() const {return _points_v;};
 
   void clear();
   

@@ -36,7 +36,7 @@ void dbscan::get_cluster_stats(){
   }
   //
   for(unsigned int k = 0; k<_points_v.size(); k++){
-    if(_points_v.at(k).clusterID>=0 && _points_v.at(k).clusterID<nclus){
+    if(_points_v.at(k).clusterID>=0 && _points_v.at(k).clusterID<(Int_t)nclus){
       _clusters_v.at(_points_v.at(k).clusterID).clusterID = _points_v.at(k).clusterID;
       _clusters_v.at(_points_v.at(k).clusterID).number_of_points++;
       if(_points_v.at(k).point_type == CORE_POINT)
@@ -82,6 +82,11 @@ Int_t dbscan::run(unsigned int minPts, Double_t eps, vector<point> point_v){
     if((_points_v.at(i).point_type == UNCLASSIFIED) && expandCluster(_points_v.at(i), clusterID))
       clusterID++;
   return 0;
+}
+
+void dbscan::set_points(vector<point> point_v){
+  _points_v.clear();
+  _points_v = point_v;
 }
 
 bool dbscan::expandCluster(point &p, int clusterID){

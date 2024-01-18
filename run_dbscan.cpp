@@ -33,6 +33,28 @@ void genData_spiral(vector<point>& points_v, TString filename){
   }
 }
 
+void genData_worms(vector<point>& points_v, TString filename){
+  ifstream cluster_file(filename.Data());
+  Double_t x;
+  Double_t y;
+  Int_t counter=0;
+  if (cluster_file.is_open()){
+    while(cluster_file>>x>>y){
+      //if(x>3000 & y>3000){
+      if(x>0 & y>0){
+	point p;
+	p.x = x;
+	p.y = y;
+	p.z = 0.0;
+	p.point_id = (Int_t)points_v.size();
+	points_v.push_back(p);      
+      }
+      counter++;
+    }
+    cluster_file.close();
+  }
+}
+
 void genData(vector<point>& points_v, TString filename){
   ifstream cluster_file (filename.Data());
   Double_t x;
@@ -108,6 +130,32 @@ void genData(vector<point>& points_v){
   }
 }
 
+void shuffle(vector<point>& points_v){
+  vector<point> points_copy_v;
+  for(unsigned int k = 0;k<points_v.size();k++){
+    point p;
+    p.x = points_v.at(k).x;
+    p.y = points_v.at(k).y;
+    p.z = points_v.at(k).z;
+    p.point_id = points_v.at(k).point_id;
+    points_copy_v.push_back(p);
+  }
+  TRandom3 *rnd = new TRandom3(123123);
+  unsigned int k;
+  unsigned int counter = 0;
+  while(points_copy_v.size() != 0){
+    k = rnd->Uniform( 0.0, ((Double_t)points_copy_v.size()-0.00001));
+    if(counter<points_v.size()){
+      points_v.at(counter).x = points_copy_v.at(k).x;
+      points_v.at(counter).y = points_copy_v.at(k).y;
+      points_v.at(counter).z = points_copy_v.at(k).z;
+      points_v.at(counter).point_id = counter;
+    }
+    points_copy_v.erase(points_copy_v.begin()+k);
+    counter++;
+  }
+}
+
 int main(){    
   vector<point> points_v;
   dbscan ds;
@@ -142,10 +190,11 @@ int main(){
   //
   points_v.clear();
   genData_spiral(points_v, "Compound.txt");
+  //shuffle(points_v);
   minPts = 4;
   eps = 1.4;
   ds.run( minPts, eps, points_v);
-  //ds.print_points_info();
+  ds.print_points_info();
   ds.get_cluster_stats();
   ds.print_cluster_stats();
   plot_and_save(ds,"hist_dbscan_Compound.root");
@@ -184,6 +233,18 @@ int main(){
   plot_and_save(ds,"hist_dbscan_S_sets.root");
   ds.clear();  
   //
+  //points_v.clear();
+  //genData_worms(points_v, "worms_2d.txt");
+  //minPts = 23;
+  //eps = 17;
+  //ds.set_points(points_v);
+  //ds.run( minPts, eps, points_v);
+  //ds.print_points_info();
+  //ds.get_cluster_stats();
+  //ds.print_cluster_stats();
+  //plot_and_save(ds,"hist_dbscan_worms_2d.root");
+  //ds.clear();
+  //
   return 0;
 }
 
@@ -213,40 +274,41 @@ void plot_and_save(dbscan &ds, TString outrootFile){
   TGraph *gr_NOISE = new TGraph();
   gr_NOISE->SetNameTitle("gr_NOISE","gr_NOISE");
   //
-  //
   for(unsigned int k = 0; k < ds.get_points_v().size(); k++)
     gr->SetPoint( gr->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
-  for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
-    if(ds.get_points_v().at(k).clusterID == 0){
-      gr_cl00->SetPoint( gr_cl00->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
-      if(ds.get_points_v().at(k).point_type == BORDER_POINT)
-	gr_cl00_BORDER->SetPoint( gr_cl00_BORDER->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+  if(ds.get_nclusters()>0){
+    for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
+      if(ds.get_points_v().at(k).clusterID == 0){
+	gr_cl00->SetPoint( gr_cl00->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+	if(ds.get_points_v().at(k).point_type == BORDER_POINT)
+	  gr_cl00_BORDER->SetPoint( gr_cl00_BORDER->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+      }
     }
-  }
-  for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
-    if(ds.get_points_v().at(k).clusterID == 1){
-      gr_cl01->SetPoint( gr_cl01->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
-      if(ds.get_points_v().at(k).point_type == BORDER_POINT)
-	gr_cl01_BORDER->SetPoint( gr_cl01_BORDER->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+    for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
+      if(ds.get_points_v().at(k).clusterID == 1){
+	gr_cl01->SetPoint( gr_cl01->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+	if(ds.get_points_v().at(k).point_type == BORDER_POINT)
+	  gr_cl01_BORDER->SetPoint( gr_cl01_BORDER->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+      }
     }
-  }
-  for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
-    if(ds.get_points_v().at(k).clusterID == 2){
-      gr_cl02->SetPoint( gr_cl02->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
-      if(ds.get_points_v().at(k).point_type == BORDER_POINT)
-	gr_cl02_BORDER->SetPoint( gr_cl02_BORDER->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+    for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
+      if(ds.get_points_v().at(k).clusterID == 2){
+	gr_cl02->SetPoint( gr_cl02->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+	if(ds.get_points_v().at(k).point_type == BORDER_POINT)
+	  gr_cl02_BORDER->SetPoint( gr_cl02_BORDER->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+      }
     }
-  }
-  for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
-    if(ds.get_points_v().at(k).clusterID == 3){
-      gr_cl03->SetPoint( gr_cl03->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
-      if(ds.get_points_v().at(k).point_type == BORDER_POINT)
-	gr_cl03_BORDER->SetPoint( gr_cl03_BORDER->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+    for(unsigned int k = 0; k < ds.get_points_v().size(); k++){
+      if(ds.get_points_v().at(k).clusterID == 3){
+	gr_cl03->SetPoint( gr_cl03->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+	if(ds.get_points_v().at(k).point_type == BORDER_POINT)
+	  gr_cl03_BORDER->SetPoint( gr_cl03_BORDER->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
+      }
     }
+    for(unsigned int k = 0; k < ds.get_points_v().size(); k++)
+      if(ds.get_points_v().at(k).point_type == NOISE)
+	gr_NOISE->SetPoint( gr_NOISE->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
   }
-  for(unsigned int k = 0; k < ds.get_points_v().size(); k++)
-    if(ds.get_points_v().at(k).point_type == NOISE)
-      gr_NOISE->SetPoint( gr_NOISE->GetN(), ds.get_points_v().at(k).x, ds.get_points_v().at(k).y);
   //
   //
   TFile* rootFile = new TFile(outrootFile.Data(), "RECREATE", " Histograms", 1);

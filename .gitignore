@@ -470,3 +470,5 @@ hist_dbscan_S_sets.root.pdf
 hist_dbscan_spiral.root
 hist_dbscan_spiral.root.pdf
 sipm_ped_norm.pdf
+hist_dbscan_worms_2d.root
+hist_dbscan_worms_2d.root.pdf
