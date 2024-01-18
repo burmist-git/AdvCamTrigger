@@ -140,11 +140,10 @@ void anaTrg::Loop(TString histOut){
     //if(cut(h1_n_pe_bins)){
     Double_t theta_p_t = get_theta_p_t();
     Double_t theta_p_t_deg = theta_p_t*180/TMath::Pi();
-
     if(cut()){
       if(nevsim<100 && n_pe < 49 ){
 	if( rcore<150.0){
-	  if(theta_p_t_deg>1.0 && theta_p_t_deg<=2.0 ){
+	  if(theta_p_t_deg>1.0 && theta_p_t_deg<=2.0){
 	  //if(nevsim<100){
 	  cout<<"jentry = "<<jentry<<endl;
 	  h1_n_pe->Fill(n_pe);

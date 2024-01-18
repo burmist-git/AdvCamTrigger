@@ -1,6 +1,7 @@
 //my
 #include "src/ana.hh"
 #include "src/anaTrg.hh"
+#include "src/anaTrgA.hh"
 #include "src/anashort.hh"
 #include "src/anaPCA.hh"
 #include "src/anaPCAp.hh"
@@ -38,6 +39,15 @@ int main(int argc, char *argv[]){
     ana a(rootFilesList);
     a.Loop(outRootFileF);
   }
+  else if(argc == 4 && atoi(argv[1])==100){
+    TString inRootFiles = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"inRootFiles   : "<<inRootFiles<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+    anaTrgA a( inRootFiles, 1);
+    a.SiPM_dist(outRootFileF);
+  }
   else if(argc == 4 && atoi(argv[1])==1){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
@@ -55,6 +65,28 @@ int main(int argc, char *argv[]){
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     anaTrg a( inRootFiles, 1);
     a.Loop(outRootFileF);
+  }
+  else if(argc == 10 && atoi(argv[1])==111){
+    TString inRootFiles = argv[2];
+    TString outRootFileF = argv[3];
+    Int_t binE = atoi(argv[4]);
+    Int_t binTheta = atoi(argv[5]);
+    Int_t binDist = atoi(argv[6]);
+    Int_t npe_min = atoi(argv[7]);
+    Int_t npe_max = atoi(argv[8]);
+    Int_t nEv_max = atoi(argv[9]);
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"inRootFiles   : "<<inRootFiles<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl
+	<<"binE          : "<<binE<<endl
+	<<"binTheta      : "<<binTheta<<endl
+	<<"binDist       : "<<binDist<<endl
+	<<"npe_min       : "<<npe_min<<endl
+	<<"npe_max       : "<<npe_max<<endl
+	<<"nEv_max       : "<<nEv_max<<endl;
+    //
+    anaTrgA a( inRootFiles, 1);
+    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max);
   }
   else if(argc == 4 && atoi(argv[1])==2){
     TString rootFilesList = argv[2];
@@ -242,6 +274,21 @@ int main(int argc, char *argv[]){
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 8 (execution ID number) short file format: fast npe scan"<<endl
       	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 11 (execution ID number) Trg "<<endl
+      	<<"       [2] - in root file"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 111 (execution ID number) TrgA "<<endl
+      	<<"       [2] - in root file"<<endl
+	<<"       [3] - name of root file with histograms"<<endl
+      	<<"       [4] - binE"<<endl
+	<<"       [5] - binTheta"<<endl
+      	<<"       [6] - binDist"<<endl
+	<<"       [7] - npe_min"<<endl
+      	<<"       [8] - npe_max"<<endl
+	<<"       [9] - nEv_max"<<endl;    
+    cout<<" runID [1] = 100 (execution ID number) SiPM distributions "<<endl
+	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
   }
   return 0;

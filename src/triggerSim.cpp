@@ -203,17 +203,17 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
 }
 
 std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_dbscan(const std::vector<std::vector<unsigned int>> &trg_vector){
-  vector<Point> points;
+  vector<point> points;
   //
   Double_t i_time_todist=0.05;
   //
   for(unsigned int i = 0;i<trg_vector.size();i++){
     for(unsigned int j = 0;j<trg_vector.at(i).size();j++){
-      Point singlepoint;
+      point singlepoint;
       singlepoint.x = _simphist->get_pixel_vec().at(trg_vector.at(i).at(j)).x;
       singlepoint.y = _simphist->get_pixel_vec().at(trg_vector.at(i).at(j)).y;
       singlepoint.z = i*i_time_todist;
-      singlepoint.ii = i;
+      singlepoint.time_ii = i;
       singlepoint.clusterID = UNCLASSIFIED;
       singlepoint.pixel_id = trg_vector.at(i).at(j);
       points.push_back(singlepoint);      
@@ -221,11 +221,11 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   }
   unsigned int minPts = 15;
   float eps = 0.1;
-  DBSCAN ds(minPts, eps, points);
+  //DBSCAN ds(minPts, eps, points);
   //_ds->run(minPts, eps, points);
   //std::cout<<"_ds->get_nclusters() "<<_ds->get_nclusters()<<endl;
-  ds.run();
-  std::cout<<"ds.get_nclusters() "<<ds.get_nclusters()<<endl;
+  //ds.run();
+  //std::cout<<"ds.get_nclusters() "<<ds.get_nclusters()<<endl;
   //
   //ds.print_points_info();
   //
@@ -235,13 +235,13 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   for(unsigned int i = 0;i<trg_vector.size();i++){
     spatial_cluster.clear();
     for(unsigned int j = 0;j<trg_vector.at(i).size();j++){
-      for(unsigned int k = 0;k<ds.m_points.size();k++){
-	if(ds.m_points.at(k).pixel_id == trg_vector.at(i).at(j) && ds.m_points.at(k).ii == i){
+      //for(unsigned int k = 0;k<ds.m_points.size();k++){
+      //if(ds.m_points.at(k).pixel_id == trg_vector.at(i).at(j) && ds.m_points.at(k).ii == i){
 	  //std::cout<<"_ds->m_points.at(k).pixel_id = "<<_dm->m_points.at(k).pixel_id<<std::endl;
-	  if(ds.m_points.at(k).clusterID > 0)
-	    spatial_cluster.push_back(trg_vector.at(i).at(j));
-	}
-      }
+	  //if(ds.m_points.at(k).clusterID > 0)
+	  //spatial_cluster.push_back(trg_vector.at(i).at(j));
+      //}
+      //}
     }
     cam_trg_vector.push_back(spatial_cluster);
   }

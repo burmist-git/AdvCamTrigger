@@ -524,15 +524,31 @@ void evstHist::LoadBinContent(TString data_in, bool with_r_core){
   }
 }
 
-const void evstHist::PrintBinsInfo(const TH1D *h1){
+const void evstHist::get_Bin_Edge(const TH1D *h1, Int_t binID, Double_t &bin_l, Double_t &bin_r){
+  bin_l = h1->GetBinLowEdge(binID+1);
+  bin_r = h1->GetBinLowEdge(binID+1) + h1->GetBinWidth(binID+1);
+}
+  
+const void evstHist::Print_hist_BinsInfo(Int_t binE, Int_t binTheta, Int_t binDist){
+  PrintBinsInfo(get_E_hist(),binE);
+  PrintBinsInfo(get_theta_hist(), binTheta);
+  PrintBinsInfo(get_v_r().at(0), binDist);
+}
+
+const void evstHist::PrintBinsInfo(const TH1D *h1, Int_t binID){
   Double_t bin_l;
   Double_t bin_r;
-  std::cout<<"Name  : "<<h1->GetName()<<std::endl
-	   <<"Title : "<<h1->GetTitle()<<std::endl;
+  if(binID<0)
+    std::cout<<"Name  : "<<h1->GetName()<<std::endl
+	     <<"Title : "<<h1->GetTitle()<<std::endl;
   for(Int_t i = 1; i<=h1->GetNbinsX();i++){
     bin_l = h1->GetBinLowEdge(i);
     bin_r = h1->GetBinLowEdge(i) + h1->GetBinWidth(i);
-    std::cout<<bin_l<<"   "<<bin_r<<std::endl;
+    if(binID<0)
+      std::cout<<setw(5)<<(i-1)<<" "<<setw(20)<<bin_l<<" "<<setw(20)<<bin_r<<std::endl;
+    else
+      if(binID == (i-1))
+	std::cout<<setw(5)<<(i-1)<<" "<<setw(20)<<bin_l<<" "<<setw(20)<<bin_r<<std::endl;
   }
 }
 

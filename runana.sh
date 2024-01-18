@@ -32,6 +32,7 @@ outHistF="./hist_gamma_on_tw.root"
 function printHelp {
     echo " --> ERROR in input arguments "
     echo " [0] -d     : single root file"
+    echo " [0] -SiPM  : get SiPM distr."
     echo " [0] -ds    : single root file (short format)"
     echo " [0] -tw    : test waveforms"
     echo " [0] -th    : test cam sipmCameraHist"
@@ -53,6 +54,9 @@ function printHelp {
     echo " [0] -trgp  : Trg proton"
     echo " [0] -trgg  : Trg gamma"
     echo " [0] -trggd : Trg gamma diffuse"
+    echo " [0] -trgAg   : TrgA gamma"
+    echo " [0] -trgAgd  : TrgA gamma diffuse"
+    echo " [0] -trgAp   : Trg proton"
     echo " [0] -fscang  : fast scan gamma"
     echo " [0] -fscangd : fast scan gamma diffuse"
     echo " [0] -fscane  : fast scan electron"
@@ -83,6 +87,77 @@ else
 	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/root/0000/corsika_0000ID.root"
 	outHistF="./hist_trg_gamma_diffuse_nsb_1x_corsika_0000ID.root"
 	./runana 11 $inRootFile $outHistF
+    elif [ "$1" = "-SiPM" ]; then
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_SiPM.root"
+	./runana 100 $inRootFile $outHistF
+    elif [ "$1" = "-trgAg" ]; then
+	################################################
+	#  E                                           #
+	################################################
+	#  0                    1              1.58489 #
+	#  1              1.58489              2.51189 #
+	#  2              2.51189              3.98107 #
+	#  3              3.98107              6.30957 #
+	#  4              6.30957                   10 #
+	#  5                   10              15.8489 #
+	#  6              15.8489              25.1189 #
+	#  7              25.1189              39.8107 #
+	#  8              39.8107              63.0957 #
+	#  9              63.0957                  100 #
+	# 10                  100              158.489 #
+	################################################
+	# theta                                        #
+	################################################
+	#  0                    0                    1 #
+	#  1                    1                    2 #
+	#  2                    2                    3 #
+	#  3                    3                    4 #
+	#  4                    4                    5 #
+	#  5                    5                    6 #
+	################################################
+	#  r                                           #
+	################################################
+	#  0                    0                  150 #
+	#  1                  150                  250 #
+	#  2                  250                  350 #
+	#  3                  350                  500 #
+	#  4                  500                  650 #
+	#  5                  650                  800 #
+	#  6                  800                 1000 #
+	#  7                 1000                 1300 #
+	#  8                 1300                 1600 #
+	#  9                 1600                 2000 #
+	################################################
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_trg_gamma_on_nsb_1x_corsika_0000ID.root"
+	binE=5
+	binTheta=0
+	binDist=0
+	npe_min=49
+	npe_max=1000
+	nEv_max=10
+	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max
+    elif [ "$1" = "-trgAgd" ]; then
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_trg_gamma_diffuse_nsb_1x_corsika_0000ID.root"
+	binE=5
+	binTheta=1
+	binDist=2
+	npe_min=100
+	npe_max=1000
+	nEv_max=100
+	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max
+    elif [ "$1" = "-trgAp" ]; then
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_trg_proton_nsb_1x_corsika_0000ID.root"
+	binE=5
+	binTheta=1
+	binDist=1
+	npe_min=1
+	npe_max=1000
+	nEv_max=10
+	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max
     elif [ "$1" = "-tw" ]; then
 
 	## azimuth  = 180 +/- 0.1

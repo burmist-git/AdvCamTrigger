@@ -45,8 +45,10 @@ class evstHist: public TH2Poly {
   Double_t GetTotIntegral();
   Double_t GetIntegral(Double_t e_min, Double_t e_max, Double_t theta_min, Double_t theta_max) const;
   
-  static const void PrintBinsInfo(const TH1D *h1);
-
+  static const void PrintBinsInfo(const TH1D *h1, Int_t binID=-1);
+  const void Print_hist_BinsInfo(Int_t binE = -1, Int_t binTheta = -1, Int_t binDist =-1);
+  const void get_Bin_Edge(const TH1D *h1, Int_t binID, Double_t &bin_l, Double_t &bin_r);
+  
   static void set_r_core_bins(TH1D *h1, Double_t r_core_max = 2000);
   static void init_core_hist(TH1D *h1);
   

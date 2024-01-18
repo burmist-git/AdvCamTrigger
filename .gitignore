@@ -459,3 +459,14 @@ ev_synthetic_trg_v_7617ev.csv
 ev_synthetic_trg_v_7830ev.csv
 ev_synthetic_trg_v_7ev.csv
 hist_trg_gamma_diffuse_nsb_1x_corsika_0000ID.root
+hist_SiPM.root
+hist_dbscan.root
+hist_dbscan_Aggregation.root
+hist_dbscan_Aggregation.root.pdf
+hist_dbscan_Compound.root
+hist_dbscan_Compound.root.pdf
+hist_dbscan_S_sets.root
+hist_dbscan_S_sets.root.pdf
+hist_dbscan_spiral.root
+hist_dbscan_spiral.root.pdf
+sipm_ped_norm.pdf
