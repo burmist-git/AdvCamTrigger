@@ -1,0 +1,197 @@
+--> main 
+--> Parameter calculation from the WF <--
+rootFilesList : electron_nsb_1x.list
+outRootFileF  : hist_fast_electron_nsb_1x.root
+conf_file     : anaFast_e.conf
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0000/corsika_0000ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0001/corsika_0001ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0002/corsika_0002ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0003/corsika_0003ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0004/corsika_0004ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0005/corsika_0005ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0006/corsika_0006ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0007/corsika_0007ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0008/corsika_0008ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0009/corsika_0009ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0010/corsika_0010ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0011/corsika_0011ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0012/corsika_0012ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0013/corsika_0013ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0014/corsika_0014ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0015/corsika_0015ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0016/corsika_0016ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0017/corsika_0017ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0018/corsika_0018ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/0019/corsika_0019ID.root
+_short_format_flag 1
+confFileName      anaFast_e.conf
+nentries_max      -1
+jentry_modulo     10000000
+n_ev_cuts_max     100
+wf_trg_sim        0
+disable_all_cuts  0
+cuts_set_to_false 0
+if_cout_jentry    1
+ellipse_A         1112.6
+ellipse_B         1000
+     spe file : spe.dat
+template file : Template_CTA_SiPM.txt
+n_max_pe    10
+n_ADC_bins  83
+bits_per_pe 8.25
+_n_ADC_arr               : 2000
+totcounter               : 1983
+_n_ADC_max_for_generator : 1983
+_Ampl_Prompt_max            0.921381
+_Prompt_max                 2.23501
+_t_max_ampl_wf_tmpl         2.3
+_fadc_offset                300
+_fadc_sample_in_ns          0.976562
+_fadc_electronic_noise_RMS  0
+_fadc_pedestal              300
+_NGB_rate_in_MHz            0
+_t_left_in_ns               -29.2969
+_t_righ_in_ns               73.2422
+_n_NGB_pe_average_in_window 0
+_nn_fadc_point              75
+_nn_PMT_channels            7987
+_n_arr_wf_tmpl              22048
+_dt_arr_wf_tmpl             0.00976562
+_wf_tmpl_t_start            0
+_wf_tmpl_t_stop             10
+_wf_tmpl_t_left             -107.656
+_NGB_pedestal_mean          0
+_NGB_pedestal_std           0
+Name  : _h1_E_evH_E_all
+Title : _h1_E_evH_E_all
+    0                    1              1.58489
+    1              1.58489              2.51189
+    2              2.51189              3.98107
+    3              3.98107              6.30957
+    4              6.30957                   10
+    5                   10              15.8489
+    6              15.8489              25.1189
+    7              25.1189              39.8107
+    8              39.8107              63.0957
+    9              63.0957                  100
+   10                  100              158.489
+   11              158.489              251.189
+   12              251.189              398.107
+   13              398.107              630.957
+   14              630.957                 1000
+   15                 1000              1584.89
+   16              1584.89              2511.89
+   17              2511.89              3981.07
+   18              3981.07              6309.57
+   19              6309.57                10000
+   20                10000              15848.9
+   21              15848.9              25118.9
+   22              25118.9              39810.7
+   23              39810.7              63095.7
+   24              63095.7               100000
+pixel_mapping.csv
+pixel_mapping.csv
+nentries = 48347162
+0
+./runana 4 $inRootFile $outHistF 5820 electron # n_pe 1400  energy 261.108 GeV
+./runana 4 $inRootFile $outHistF 21598 electron # n_pe 3404  energy 497.672 GeV
+./runana 4 $inRootFile $outHistF 25867 electron # n_pe 3591  energy 278.56 GeV
+./runana 4 $inRootFile $outHistF 27126 electron # n_pe 64210  energy 4166 GeV
+./runana 4 $inRootFile $outHistF 69593 electron # n_pe 674  energy 236.041 GeV
+./runana 4 $inRootFile $outHistF 72605 electron # n_pe 1952  energy 249.668 GeV
+./runana 4 $inRootFile $outHistF 80318 electron # n_pe 39685  energy 2929.16 GeV
+./runana 4 $inRootFile $outHistF 85828 electron # n_pe 1934  energy 298.553 GeV
+./runana 4 $inRootFile $outHistF 96084 electron # n_pe 1851  energy 261.791 GeV
+./runana 4 $inRootFile $outHistF 99491 electron # n_pe 2633  energy 442.797 GeV
+./runana 4 $inRootFile $outHistF 101467 electron # n_pe 326  energy 202.588 GeV
+./runana 4 $inRootFile $outHistF 107387 electron # n_pe 3088  energy 412.553 GeV
+./runana 4 $inRootFile $outHistF 116043 electron # n_pe 1271  energy 271.672 GeV
+./runana 4 $inRootFile $outHistF 117615 electron # n_pe 5449  energy 753.813 GeV
+./runana 4 $inRootFile $outHistF 120077 electron # n_pe 2907  energy 499.789 GeV
+./runana 4 $inRootFile $outHistF 121606 electron # n_pe 1488  energy 228.141 GeV
+./runana 4 $inRootFile $outHistF 121840 electron # n_pe 9979  energy 838.104 GeV
+./runana 4 $inRootFile $outHistF 131412 electron # n_pe 23445  energy 1693.58 GeV
+./runana 4 $inRootFile $outHistF 149514 electron # n_pe 2148  energy 263.827 GeV
+./runana 4 $inRootFile $outHistF 150831 electron # n_pe 1147  energy 221.468 GeV
+./runana 4 $inRootFile $outHistF 159977 electron # n_pe 2359  energy 296.707 GeV
+./runana 4 $inRootFile $outHistF 165472 electron # n_pe 3359  energy 358.659 GeV
+./runana 4 $inRootFile $outHistF 167915 electron # n_pe 1714  energy 260.037 GeV
+./runana 4 $inRootFile $outHistF 189193 electron # n_pe 7276  energy 934.116 GeV
+./runana 4 $inRootFile $outHistF 189953 electron # n_pe 1758  energy 245.085 GeV
+./runana 4 $inRootFile $outHistF 200635 electron # n_pe 3825  energy 446.848 GeV
+./runana 4 $inRootFile $outHistF 201273 electron # n_pe 141  energy 353.569 GeV
+./runana 4 $inRootFile $outHistF 216134 electron # n_pe 1615  energy 284.296 GeV
+./runana 4 $inRootFile $outHistF 223185 electron # n_pe 3640  energy 393.224 GeV
+./runana 4 $inRootFile $outHistF 229235 electron # n_pe 1185  energy 214.868 GeV
+./runana 4 $inRootFile $outHistF 239768 electron # n_pe 35475  energy 2155.17 GeV
+./runana 4 $inRootFile $outHistF 241064 electron # n_pe 1570  energy 219.255 GeV
+./runana 4 $inRootFile $outHistF 261942 electron # n_pe 9787  energy 1033.07 GeV
+./runana 4 $inRootFile $outHistF 261943 electron # n_pe 8851  energy 1033.07 GeV
+./runana 4 $inRootFile $outHistF 269999 electron # n_pe 73275  energy 2804.53 GeV
+./runana 4 $inRootFile $outHistF 276533 electron # n_pe 1622  energy 224.015 GeV
+./runana 4 $inRootFile $outHistF 288375 electron # n_pe 10520  energy 1252.46 GeV
+./runana 4 $inRootFile $outHistF 298935 electron # n_pe 4030  energy 459.106 GeV
+./runana 4 $inRootFile $outHistF 300932 electron # n_pe 12572  energy 564.372 GeV
+./runana 4 $inRootFile $outHistF 303148 electron # n_pe 1716  energy 202.521 GeV
+./runana 4 $inRootFile $outHistF 308927 electron # n_pe 3124  energy 537.578 GeV
+./runana 4 $inRootFile $outHistF 317430 electron # n_pe 1474  energy 200.504 GeV
+./runana 4 $inRootFile $outHistF 326195 electron # n_pe 4291  energy 589.833 GeV
+./runana 4 $inRootFile $outHistF 328639 electron # n_pe 3014  energy 412.451 GeV
+./runana 4 $inRootFile $outHistF 336723 electron # n_pe 7262  energy 853.882 GeV
+./runana 4 $inRootFile $outHistF 337725 electron # n_pe 2396  energy 344.383 GeV
+./runana 4 $inRootFile $outHistF 372587 electron # n_pe 1625  energy 236.764 GeV
+./runana 4 $inRootFile $outHistF 373951 electron # n_pe 2681  energy 387.403 GeV
+./runana 4 $inRootFile $outHistF 379672 electron # n_pe 32624  energy 3254.96 GeV
+./runana 4 $inRootFile $outHistF 386652 electron # n_pe 4406  energy 506.314 GeV
+./runana 4 $inRootFile $outHistF 400488 electron # n_pe 1530  energy 228.797 GeV
+./runana 4 $inRootFile $outHistF 401060 electron # n_pe 197  energy 506.087 GeV
+./runana 4 $inRootFile $outHistF 405875 electron # n_pe 56244  energy 4247.69 GeV
+./runana 4 $inRootFile $outHistF 408606 electron # n_pe 1789  energy 252.917 GeV
+./runana 4 $inRootFile $outHistF 409450 electron # n_pe 5065  energy 596.039 GeV
+./runana 4 $inRootFile $outHistF 418338 electron # n_pe 1880  energy 272.111 GeV
+./runana 4 $inRootFile $outHistF 426241 electron # n_pe 6388  energy 489.385 GeV
+./runana 4 $inRootFile $outHistF 429085 electron # n_pe 7999  energy 1057.49 GeV
+./runana 4 $inRootFile $outHistF 429751 electron # n_pe 3928  energy 450.787 GeV
+./runana 4 $inRootFile $outHistF 429752 electron # n_pe 4044  energy 450.787 GeV
+./runana 4 $inRootFile $outHistF 430353 electron # n_pe 1941  energy 211.601 GeV
+./runana 4 $inRootFile $outHistF 440298 electron # n_pe 2234  energy 370.065 GeV
+./runana 4 $inRootFile $outHistF 444416 electron # n_pe 1629  energy 278.064 GeV
+./runana 4 $inRootFile $outHistF 462706 electron # n_pe 56485  energy 1966.24 GeV
+./runana 4 $inRootFile $outHistF 473777 electron # n_pe 1628  energy 207.556 GeV
+./runana 4 $inRootFile $outHistF 487575 electron # n_pe 27645  energy 2915.35 GeV
+./runana 4 $inRootFile $outHistF 487825 electron # n_pe 24138  energy 800.381 GeV
+./runana 4 $inRootFile $outHistF 488012 electron # n_pe 4640  energy 680.029 GeV
+./runana 4 $inRootFile $outHistF 488156 electron # n_pe 4586  energy 637.429 GeV
+./runana 4 $inRootFile $outHistF 507055 electron # n_pe 4633  energy 765.174 GeV
+./runana 4 $inRootFile $outHistF 509936 electron # n_pe 1461  energy 223.372 GeV
+./runana 4 $inRootFile $outHistF 516035 electron # n_pe 12317  energy 1450.13 GeV
+./runana 4 $inRootFile $outHistF 517128 electron # n_pe 1807  energy 217.166 GeV
+./runana 4 $inRootFile $outHistF 528335 electron # n_pe 14073  energy 1583.02 GeV
+./runana 4 $inRootFile $outHistF 531871 electron # n_pe 1581  energy 239.321 GeV
+./runana 4 $inRootFile $outHistF 532776 electron # n_pe 30076  energy 2006.5 GeV
+./runana 4 $inRootFile $outHistF 538913 electron # n_pe 6845  energy 804.277 GeV
+./runana 4 $inRootFile $outHistF 545732 electron # n_pe 5734  energy 722.004 GeV
+./runana 4 $inRootFile $outHistF 563655 electron # n_pe 4229  energy 592.891 GeV
+./runana 4 $inRootFile $outHistF 579882 electron # n_pe 6406  energy 649.616 GeV
+./runana 4 $inRootFile $outHistF 582172 electron # n_pe 4436  energy 606.203 GeV
+./runana 4 $inRootFile $outHistF 584817 electron # n_pe 1079  energy 209.013 GeV
+./runana 4 $inRootFile $outHistF 595381 electron # n_pe 713  energy 286.964 GeV
+./runana 4 $inRootFile $outHistF 625123 electron # n_pe 3036  energy 466.934 GeV
+./runana 4 $inRootFile $outHistF 630099 electron # n_pe 7387  energy 828.907 GeV
+./runana 4 $inRootFile $outHistF 640375 electron # n_pe 33320  energy 3653.16 GeV
+./runana 4 $inRootFile $outHistF 659637 electron # n_pe 4898  energy 582.93 GeV
+./runana 4 $inRootFile $outHistF 660409 electron # n_pe 76359  energy 4668.11 GeV
+./runana 4 $inRootFile $outHistF 667589 electron # n_pe 3519  energy 508.143 GeV
+./runana 4 $inRootFile $outHistF 678136 electron # n_pe 2125  energy 276.722 GeV
+./runana 4 $inRootFile $outHistF 680283 electron # n_pe 6396  energy 657.39 GeV
+./runana 4 $inRootFile $outHistF 688291 electron # n_pe 14585  energy 1482.26 GeV
+./runana 4 $inRootFile $outHistF 688841 electron # n_pe 35447  energy 2847.6 GeV
+./runana 4 $inRootFile $outHistF 695874 electron # n_pe 2788  energy 335.559 GeV
+./runana 4 $inRootFile $outHistF 698721 electron # n_pe 7958  energy 580.496 GeV
+./runana 4 $inRootFile $outHistF 699199 electron # n_pe 10672  energy 1149.18 GeV
+./runana 4 $inRootFile $outHistF 705161 electron # n_pe 3465  energy 526.981 GeV
+./runana 4 $inRootFile $outHistF 729041 electron # n_pe 2033  energy 231.35 GeV
+./runana 4 $inRootFile $outHistF 731338 electron # n_pe 39103  energy 3910.12 GeV
+./runana 4 $inRootFile $outHistF 762522 electron # n_pe 1196  energy 266.353 GeV
+  Output Histos file ---> hist_fast_electron_nsb_1x.root
+n_ev_cuts = 101

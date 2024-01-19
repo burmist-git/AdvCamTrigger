@@ -1,0 +1,187 @@
+--> main 
+--> Parameter calculation from the WF <--
+rootFilesList : gamma_on_nsb_1x.list
+outRootFileF  : hist_fast_gamma_on_nsb_1x_cut_faint.root
+conf_file     : anaFast_g.conf
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0001/corsika_0001ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0002/corsika_0002ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0003/corsika_0003ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0004/corsika_0004ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0005/corsika_0005ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0006/corsika_0006ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0007/corsika_0007ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0008/corsika_0008ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0009/corsika_0009ID.root
+_short_format_flag 1
+confFileName      anaFast_g.conf
+nentries_max      -1
+jentry_modulo     10000000
+n_ev_cuts_max     100
+wf_trg_sim        0
+disable_all_cuts  0
+cuts_set_to_false 0
+if_cout_jentry    1
+ellipse_A         851
+ellipse_B         800
+     spe file : spe.dat
+template file : Template_CTA_SiPM.txt
+n_max_pe    10
+n_ADC_bins  83
+bits_per_pe 8.25
+_n_ADC_arr               : 2000
+totcounter               : 1983
+_n_ADC_max_for_generator : 1983
+_Ampl_Prompt_max            0.921381
+_Prompt_max                 2.23501
+_t_max_ampl_wf_tmpl         2.3
+_fadc_offset                300
+_fadc_sample_in_ns          0.976562
+_fadc_electronic_noise_RMS  0
+_fadc_pedestal              300
+_NGB_rate_in_MHz            0
+_t_left_in_ns               -29.2969
+_t_righ_in_ns               73.2422
+_n_NGB_pe_average_in_window 0
+_nn_fadc_point              75
+_nn_PMT_channels            7987
+_n_arr_wf_tmpl              22048
+_dt_arr_wf_tmpl             0.00976562
+_wf_tmpl_t_start            0
+_wf_tmpl_t_stop             10
+_wf_tmpl_t_left             -107.656
+_NGB_pedestal_mean          0
+_NGB_pedestal_std           0
+Name  : _h1_E_evH_E_all
+Title : _h1_E_evH_E_all
+    0                    1              1.58489
+    1              1.58489              2.51189
+    2              2.51189              3.98107
+    3              3.98107              6.30957
+    4              6.30957                   10
+    5                   10              15.8489
+    6              15.8489              25.1189
+    7              25.1189              39.8107
+    8              39.8107              63.0957
+    9              63.0957                  100
+   10                  100              158.489
+   11              158.489              251.189
+   12              251.189              398.107
+   13              398.107              630.957
+   14              630.957                 1000
+   15                 1000              1584.89
+   16              1584.89              2511.89
+   17              2511.89              3981.07
+   18              3981.07              6309.57
+   19              6309.57                10000
+   20                10000              15848.9
+   21              15848.9              25118.9
+   22              25118.9              39810.7
+   23              39810.7              63095.7
+   24              63095.7               100000
+pixel_mapping.csv
+pixel_mapping.csv
+nentries = 43014320
+0
+./runana 4 $inRootFile $outHistF 1080 gamma # n_pe 1773  energy 298.723 GeV
+./runana 4 $inRootFile $outHistF 2193 gamma # n_pe 9064  energy 878.742 GeV
+./runana 4 $inRootFile $outHistF 4525 gamma # n_pe 15350  energy 1020.35 GeV
+./runana 4 $inRootFile $outHistF 5391 gamma # n_pe 4887  energy 438.689 GeV
+./runana 4 $inRootFile $outHistF 6490 gamma # n_pe 11730  energy 551.567 GeV
+./runana 4 $inRootFile $outHistF 7677 gamma # n_pe 283606  energy 13327.7 GeV
+./runana 4 $inRootFile $outHistF 9437 gamma # n_pe 3820  energy 357.466 GeV
+./runana 4 $inRootFile $outHistF 18779 gamma # n_pe 4729  energy 545.897 GeV
+./runana 4 $inRootFile $outHistF 19134 gamma # n_pe 4641  energy 646.117 GeV
+./runana 4 $inRootFile $outHistF 28298 gamma # n_pe 2446  energy 220.243 GeV
+./runana 4 $inRootFile $outHistF 30433 gamma # n_pe 3290  energy 316.691 GeV
+./runana 4 $inRootFile $outHistF 31469 gamma # n_pe 2479  energy 231.742 GeV
+./runana 4 $inRootFile $outHistF 32027 gamma # n_pe 8679  energy 574.981 GeV
+./runana 4 $inRootFile $outHistF 33141 gamma # n_pe 2260  energy 304.991 GeV
+./runana 4 $inRootFile $outHistF 35489 gamma # n_pe 80228  energy 3506.29 GeV
+./runana 4 $inRootFile $outHistF 41893 gamma # n_pe 3836  energy 386.595 GeV
+./runana 4 $inRootFile $outHistF 43145 gamma # n_pe 19630  energy 1308.66 GeV
+./runana 4 $inRootFile $outHistF 45533 gamma # n_pe 2157  energy 316.756 GeV
+./runana 4 $inRootFile $outHistF 57218 gamma # n_pe 3338  energy 461.698 GeV
+./runana 4 $inRootFile $outHistF 58871 gamma # n_pe 24469  energy 1710.38 GeV
+./runana 4 $inRootFile $outHistF 59510 gamma # n_pe 26280  energy 1264.34 GeV
+./runana 4 $inRootFile $outHistF 64891 gamma # n_pe 3194  energy 451.76 GeV
+./runana 4 $inRootFile $outHistF 65896 gamma # n_pe 2529  energy 385.6 GeV
+./runana 4 $inRootFile $outHistF 67687 gamma # n_pe 1240  energy 200.399 GeV
+./runana 4 $inRootFile $outHistF 68417 gamma # n_pe 2063  energy 323.978 GeV
+./runana 4 $inRootFile $outHistF 71399 gamma # n_pe 1734  energy 200.214 GeV
+./runana 4 $inRootFile $outHistF 78482 gamma # n_pe 1568  energy 253.633 GeV
+./runana 4 $inRootFile $outHistF 78833 gamma # n_pe 2050  energy 253.427 GeV
+./runana 4 $inRootFile $outHistF 79648 gamma # n_pe 32105  energy 2638.29 GeV
+./runana 4 $inRootFile $outHistF 79872 gamma # n_pe 1833  energy 234.748 GeV
+./runana 4 $inRootFile $outHistF 83812 gamma # n_pe 8452  energy 977.621 GeV
+./runana 4 $inRootFile $outHistF 97777 gamma # n_pe 5285  energy 530.11 GeV
+./runana 4 $inRootFile $outHistF 102001 gamma # n_pe 3971  energy 209.131 GeV
+./runana 4 $inRootFile $outHistF 102749 gamma # n_pe 3551  energy 331.042 GeV
+./runana 4 $inRootFile $outHistF 103005 gamma # n_pe 16871  energy 539.226 GeV
+./runana 4 $inRootFile $outHistF 103948 gamma # n_pe 2999  energy 429.983 GeV
+./runana 4 $inRootFile $outHistF 107718 gamma # n_pe 6281  energy 341.029 GeV
+./runana 4 $inRootFile $outHistF 110552 gamma # n_pe 3420  energy 343.082 GeV
+./runana 4 $inRootFile $outHistF 110554 gamma # n_pe 3025  energy 343.082 GeV
+./runana 4 $inRootFile $outHistF 112731 gamma # n_pe 2097  energy 215.711 GeV
+./runana 4 $inRootFile $outHistF 117664 gamma # n_pe 5819  energy 489.869 GeV
+./runana 4 $inRootFile $outHistF 124087 gamma # n_pe 2898  energy 249.315 GeV
+./runana 4 $inRootFile $outHistF 127398 gamma # n_pe 3736  energy 521.078 GeV
+./runana 4 $inRootFile $outHistF 127417 gamma # n_pe 261729  energy 11278.8 GeV
+./runana 4 $inRootFile $outHistF 128492 gamma # n_pe 1915  energy 261.772 GeV
+./runana 4 $inRootFile $outHistF 129346 gamma # n_pe 7576  energy 987.23 GeV
+./runana 4 $inRootFile $outHistF 129830 gamma # n_pe 5327  energy 563.191 GeV
+./runana 4 $inRootFile $outHistF 130321 gamma # n_pe 7744  energy 355.23 GeV
+./runana 4 $inRootFile $outHistF 136111 gamma # n_pe 1758  energy 253.964 GeV
+./runana 4 $inRootFile $outHistF 138017 gamma # n_pe 9972  energy 510.39 GeV
+./runana 4 $inRootFile $outHistF 139249 gamma # n_pe 1336  energy 205.966 GeV
+./runana 4 $inRootFile $outHistF 140179 gamma # n_pe 1759  energy 237.769 GeV
+./runana 4 $inRootFile $outHistF 144155 gamma # n_pe 251240  energy 11119.8 GeV
+./runana 4 $inRootFile $outHistF 145878 gamma # n_pe 4139  energy 421.283 GeV
+./runana 4 $inRootFile $outHistF 160255 gamma # n_pe 7099  energy 783.272 GeV
+./runana 4 $inRootFile $outHistF 164847 gamma # n_pe 6554  energy 307.067 GeV
+./runana 4 $inRootFile $outHistF 171256 gamma # n_pe 11861  energy 1417.69 GeV
+./runana 4 $inRootFile $outHistF 176701 gamma # n_pe 4802  energy 691.297 GeV
+./runana 4 $inRootFile $outHistF 177092 gamma # n_pe 124584  energy 6220.12 GeV
+./runana 4 $inRootFile $outHistF 178096 gamma # n_pe 6204  energy 880.178 GeV
+./runana 4 $inRootFile $outHistF 179737 gamma # n_pe 2757  energy 380.375 GeV
+./runana 4 $inRootFile $outHistF 179922 gamma # n_pe 22030  energy 1307.44 GeV
+./runana 4 $inRootFile $outHistF 195937 gamma # n_pe 16593  energy 412.944 GeV
+./runana 4 $inRootFile $outHistF 197180 gamma # n_pe 2508  energy 241.742 GeV
+./runana 4 $inRootFile $outHistF 202897 gamma # n_pe 1434  energy 233.946 GeV
+./runana 4 $inRootFile $outHistF 208882 gamma # n_pe 3967  energy 409.254 GeV
+./runana 4 $inRootFile $outHistF 211284 gamma # n_pe 12077  energy 1120.95 GeV
+./runana 4 $inRootFile $outHistF 212867 gamma # n_pe 1753  energy 218.606 GeV
+./runana 4 $inRootFile $outHistF 215126 gamma # n_pe 4485  energy 338.294 GeV
+./runana 4 $inRootFile $outHistF 215816 gamma # n_pe 2420  energy 285.177 GeV
+./runana 4 $inRootFile $outHistF 216237 gamma # n_pe 4124  energy 302.431 GeV
+./runana 4 $inRootFile $outHistF 218806 gamma # n_pe 55170  energy 3034.07 GeV
+./runana 4 $inRootFile $outHistF 228069 gamma # n_pe 5509  energy 561.667 GeV
+./runana 4 $inRootFile $outHistF 228386 gamma # n_pe 8674  energy 545.806 GeV
+./runana 4 $inRootFile $outHistF 231707 gamma # n_pe 3203  energy 305.432 GeV
+./runana 4 $inRootFile $outHistF 232022 gamma # n_pe 1188  energy 230.356 GeV
+./runana 4 $inRootFile $outHistF 235822 gamma # n_pe 1892  energy 235.075 GeV
+./runana 4 $inRootFile $outHistF 240933 gamma # n_pe 2086  energy 258.668 GeV
+./runana 4 $inRootFile $outHistF 243936 gamma # n_pe 26532  energy 2350.6 GeV
+./runana 4 $inRootFile $outHistF 244740 gamma # n_pe 1948  energy 222.262 GeV
+./runana 4 $inRootFile $outHistF 247197 gamma # n_pe 7008  energy 747.094 GeV
+./runana 4 $inRootFile $outHistF 248707 gamma # n_pe 3323  energy 235.324 GeV
+./runana 4 $inRootFile $outHistF 251208 gamma # n_pe 73988  energy 4056.47 GeV
+./runana 4 $inRootFile $outHistF 253802 gamma # n_pe 42110  energy 3313.9 GeV
+./runana 4 $inRootFile $outHistF 255141 gamma # n_pe 4311  energy 519.667 GeV
+./runana 4 $inRootFile $outHistF 255273 gamma # n_pe 4124  energy 426.209 GeV
+./runana 4 $inRootFile $outHistF 257010 gamma # n_pe 6602  energy 943.494 GeV
+./runana 4 $inRootFile $outHistF 260956 gamma # n_pe 2206  energy 338.474 GeV
+./runana 4 $inRootFile $outHistF 264384 gamma # n_pe 34802  energy 3144.47 GeV
+./runana 4 $inRootFile $outHistF 265694 gamma # n_pe 2831  energy 334.944 GeV
+./runana 4 $inRootFile $outHistF 266746 gamma # n_pe 3527  energy 287.203 GeV
+./runana 4 $inRootFile $outHistF 269020 gamma # n_pe 2155  energy 304.047 GeV
+./runana 4 $inRootFile $outHistF 271583 gamma # n_pe 5534  energy 522.693 GeV
+./runana 4 $inRootFile $outHistF 274389 gamma # n_pe 3512  energy 214.703 GeV
+./runana 4 $inRootFile $outHistF 287758 gamma # n_pe 43400  energy 1676.92 GeV
+./runana 4 $inRootFile $outHistF 287945 gamma # n_pe 2512  energy 294.915 GeV
+./runana 4 $inRootFile $outHistF 292154 gamma # n_pe 3668  energy 323.17 GeV
+./runana 4 $inRootFile $outHistF 295531 gamma # n_pe 3071  energy 230.099 GeV
+./runana 4 $inRootFile $outHistF 296607 gamma # n_pe 2172  energy 230.907 GeV
+./runana 4 $inRootFile $outHistF 296765 gamma # n_pe 1439  energy 202.041 GeV
+  Output Histos file ---> hist_fast_gamma_on_nsb_1x_cut_faint.root
+n_ev_cuts = 101

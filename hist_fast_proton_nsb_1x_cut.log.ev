@@ -1,0 +1,227 @@
+--> main 
+--> Parameter calculation from the WF <--
+rootFilesList : proton_nsb_1x.list
+outRootFileF  : hist_fast_proton_nsb_1x.root
+conf_file     : anaFast_p.conf
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0000/corsika_0000ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0001/corsika_0001ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0002/corsika_0002ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0003/corsika_0003ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0004/corsika_0004ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0005/corsika_0005ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0006/corsika_0006ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0007/corsika_0007ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0008/corsika_0008ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0009/corsika_0009ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0010/corsika_0010ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0011/corsika_0011ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0012/corsika_0012ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0013/corsika_0013ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0014/corsika_0014ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0015/corsika_0015ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0016/corsika_0016ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0017/corsika_0017ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0018/corsika_0018ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0019/corsika_0019ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0020/corsika_0020ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0021/corsika_0021ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0022/corsika_0022ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0023/corsika_0023ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0024/corsika_0024ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0025/corsika_0025ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0026/corsika_0026ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0027/corsika_0027ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0028/corsika_0028ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0029/corsika_0029ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0030/corsika_0030ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0031/corsika_0031ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0032/corsika_0032ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0033/corsika_0033ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0034/corsika_0034ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0035/corsika_0035ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0036/corsika_0036ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0037/corsika_0037ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0038/corsika_0038ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0039/corsika_0039ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0040/corsika_0040ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0041/corsika_0041ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0042/corsika_0042ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0043/corsika_0043ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0044/corsika_0044ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0045/corsika_0045ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0046/corsika_0046ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0047/corsika_0047ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0048/corsika_0048ID.root
+        adding ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0049/corsika_0049ID.root
+_short_format_flag 1
+confFileName      anaFast_p.conf
+nentries_max      -1
+jentry_modulo     10000000
+n_ev_cuts_max     100
+wf_trg_sim        0
+disable_all_cuts  0
+cuts_set_to_false 0
+if_cout_jentry    1
+ellipse_A         1732.1
+ellipse_B         1500
+     spe file : spe.dat
+template file : Template_CTA_SiPM.txt
+n_max_pe    10
+n_ADC_bins  83
+bits_per_pe 8.25
+_n_ADC_arr               : 2000
+totcounter               : 1983
+_n_ADC_max_for_generator : 1983
+_Ampl_Prompt_max            0.921381
+_Prompt_max                 2.23501
+_t_max_ampl_wf_tmpl         2.3
+_fadc_offset                300
+_fadc_sample_in_ns          0.976562
+_fadc_electronic_noise_RMS  0
+_fadc_pedestal              300
+_NGB_rate_in_MHz            0
+_t_left_in_ns               -29.2969
+_t_righ_in_ns               73.2422
+_n_NGB_pe_average_in_window 0
+_nn_fadc_point              75
+_nn_PMT_channels            7987
+_n_arr_wf_tmpl              22048
+_dt_arr_wf_tmpl             0.00976562
+_wf_tmpl_t_start            0
+_wf_tmpl_t_stop             10
+_wf_tmpl_t_left             -107.656
+_NGB_pedestal_mean          0
+_NGB_pedestal_std           0
+Name  : _h1_E_evH_E_all
+Title : _h1_E_evH_E_all
+    0                    1              1.58489
+    1              1.58489              2.51189
+    2              2.51189              3.98107
+    3              3.98107              6.30957
+    4              6.30957                   10
+    5                   10              15.8489
+    6              15.8489              25.1189
+    7              25.1189              39.8107
+    8              39.8107              63.0957
+    9              63.0957                  100
+   10                  100              158.489
+   11              158.489              251.189
+   12              251.189              398.107
+   13              398.107              630.957
+   14              630.957                 1000
+   15                 1000              1584.89
+   16              1584.89              2511.89
+   17              2511.89              3981.07
+   18              3981.07              6309.57
+   19              6309.57                10000
+   20                10000              15848.9
+   21              15848.9              25118.9
+   22              25118.9              39810.7
+   23              39810.7              63095.7
+   24              63095.7               100000
+pixel_mapping.csv
+pixel_mapping.csv
+nentries = 112643298
+0
+./runana 4 $inRootFile $outHistF 6548 proton # n_pe 23077  energy 9594.3 GeV
+./runana 4 $inRootFile $outHistF 13400 proton # n_pe 554  energy 13788.5 GeV
+./runana 4 $inRootFile $outHistF 18468 proton # n_pe 37131  energy 6069.89 GeV
+./runana 4 $inRootFile $outHistF 26562 proton # n_pe 72833  energy 7371.46 GeV
+./runana 4 $inRootFile $outHistF 30805 proton # n_pe 6071  energy 9931.6 GeV
+./runana 4 $inRootFile $outHistF 36998 proton # n_pe 21616  energy 4250.05 GeV
+./runana 4 $inRootFile $outHistF 42037 proton # n_pe 231  energy 7155.61 GeV
+./runana 4 $inRootFile $outHistF 48968 proton # n_pe 16712  energy 4555.02 GeV
+./runana 4 $inRootFile $outHistF 71559 proton # n_pe 180422  energy 28807.5 GeV
+./runana 4 $inRootFile $outHistF 73038 proton # n_pe 7967  energy 4026.81 GeV
+./runana 4 $inRootFile $outHistF 98531 proton # n_pe 8190  energy 4456.23 GeV
+./runana 4 $inRootFile $outHistF 112234 proton # n_pe 2879  energy 9822.1 GeV
+./runana 4 $inRootFile $outHistF 124790 proton # n_pe 454323  energy 30093.3 GeV
+./runana 4 $inRootFile $outHistF 132854 proton # n_pe 171  energy 17202.6 GeV
+./runana 4 $inRootFile $outHistF 143047 proton # n_pe 190618  energy 20220.5 GeV
+./runana 4 $inRootFile $outHistF 179111 proton # n_pe 139  energy 7468.27 GeV
+./runana 4 $inRootFile $outHistF 194468 proton # n_pe 951  energy 5229.66 GeV
+./runana 4 $inRootFile $outHistF 202593 proton # n_pe 3191  energy 15835.8 GeV
+./runana 4 $inRootFile $outHistF 222736 proton # n_pe 39769  energy 5222.68 GeV
+./runana 4 $inRootFile $outHistF 231021 proton # n_pe 32506  energy 5253.09 GeV
+./runana 4 $inRootFile $outHistF 237580 proton # n_pe 611  energy 9343.47 GeV
+./runana 4 $inRootFile $outHistF 240388 proton # n_pe 13999  energy 7531.53 GeV
+./runana 4 $inRootFile $outHistF 249587 proton # n_pe 23523  energy 7624.99 GeV
+./runana 4 $inRootFile $outHistF 287713 proton # n_pe 6818  energy 4968.53 GeV
+./runana 4 $inRootFile $outHistF 293062 proton # n_pe 17789  energy 4060.01 GeV
+./runana 4 $inRootFile $outHistF 303613 proton # n_pe 42738  energy 4436.84 GeV
+./runana 4 $inRootFile $outHistF 306238 proton # n_pe 11822  energy 4272 GeV
+./runana 4 $inRootFile $outHistF 314124 proton # n_pe 18521  energy 6704.95 GeV
+./runana 4 $inRootFile $outHistF 314128 proton # n_pe 2658  energy 6704.95 GeV
+./runana 4 $inRootFile $outHistF 314561 proton # n_pe 30091  energy 6631.03 GeV
+./runana 4 $inRootFile $outHistF 316582 proton # n_pe 4577  energy 4010.62 GeV
+./runana 4 $inRootFile $outHistF 322885 proton # n_pe 55173  energy 4676.96 GeV
+./runana 4 $inRootFile $outHistF 338715 proton # n_pe 291733  energy 24059.9 GeV
+./runana 4 $inRootFile $outHistF 338855 proton # n_pe 12384  energy 13162.5 GeV
+./runana 4 $inRootFile $outHistF 347857 proton # n_pe 217  energy 26496.7 GeV
+./runana 4 $inRootFile $outHistF 359288 proton # n_pe 92383  energy 24979.8 GeV
+./runana 4 $inRootFile $outHistF 360445 proton # n_pe 37355  energy 5087.78 GeV
+./runana 4 $inRootFile $outHistF 374290 proton # n_pe 3873  energy 15342.4 GeV
+./runana 4 $inRootFile $outHistF 380672 proton # n_pe 652779  energy 77215.1 GeV
+./runana 4 $inRootFile $outHistF 390860 proton # n_pe 33055  energy 14552.9 GeV
+./runana 4 $inRootFile $outHistF 402975 proton # n_pe 525  energy 5093.15 GeV
+./runana 4 $inRootFile $outHistF 405631 proton # n_pe 9677  energy 21666.1 GeV
+./runana 4 $inRootFile $outHistF 412538 proton # n_pe 78617  energy 20297.4 GeV
+./runana 4 $inRootFile $outHistF 428817 proton # n_pe 4257  energy 9803.68 GeV
+./runana 4 $inRootFile $outHistF 429297 proton # n_pe 67096  energy 23707.8 GeV
+./runana 4 $inRootFile $outHistF 433098 proton # n_pe 10791  energy 6548.67 GeV
+./runana 4 $inRootFile $outHistF 460436 proton # n_pe 4386  energy 6461.42 GeV
+./runana 4 $inRootFile $outHistF 467110 proton # n_pe 282  energy 6913.59 GeV
+./runana 4 $inRootFile $outHistF 480926 proton # n_pe 16613  energy 4995.46 GeV
+./runana 4 $inRootFile $outHistF 480968 proton # n_pe 63  energy 7059.2 GeV
+./runana 4 $inRootFile $outHistF 499225 proton # n_pe 297997  energy 31003 GeV
+./runana 4 $inRootFile $outHistF 531073 proton # n_pe 68839  energy 6999.84 GeV
+./runana 4 $inRootFile $outHistF 531074 proton # n_pe 27455  energy 6999.84 GeV
+./runana 4 $inRootFile $outHistF 548919 proton # n_pe 39575  energy 8767.89 GeV
+./runana 4 $inRootFile $outHistF 579595 proton # n_pe 72926  energy 13881.5 GeV
+./runana 4 $inRootFile $outHistF 594937 proton # n_pe 239  energy 5249.96 GeV
+./runana 4 $inRootFile $outHistF 603565 proton # n_pe 58949  energy 6376.52 GeV
+./runana 4 $inRootFile $outHistF 628521 proton # n_pe 635  energy 6099.62 GeV
+./runana 4 $inRootFile $outHistF 628655 proton # n_pe 124833  energy 25699.7 GeV
+./runana 4 $inRootFile $outHistF 639792 proton # n_pe 401  energy 4129.73 GeV
+./runana 4 $inRootFile $outHistF 650089 proton # n_pe 70049  energy 25129.7 GeV
+./runana 4 $inRootFile $outHistF 651883 proton # n_pe 76908  energy 11783.1 GeV
+./runana 4 $inRootFile $outHistF 663307 proton # n_pe 243543  energy 12833.2 GeV
+./runana 4 $inRootFile $outHistF 663468 proton # n_pe 19384  energy 4243.47 GeV
+./runana 4 $inRootFile $outHistF 678368 proton # n_pe 36109  energy 4424.19 GeV
+./runana 4 $inRootFile $outHistF 684499 proton # n_pe 11688  energy 4008.02 GeV
+./runana 4 $inRootFile $outHistF 703115 proton # n_pe 50137  energy 8719.9 GeV
+./runana 4 $inRootFile $outHistF 704979 proton # n_pe 4683  energy 7657.94 GeV
+./runana 4 $inRootFile $outHistF 714851 proton # n_pe 159505  energy 22390.1 GeV
+./runana 4 $inRootFile $outHistF 717665 proton # n_pe 11880  energy 4287.45 GeV
+./runana 4 $inRootFile $outHistF 718647 proton # n_pe 2542  energy 5901.34 GeV
+./runana 4 $inRootFile $outHistF 736295 proton # n_pe 148290  energy 19422.5 GeV
+./runana 4 $inRootFile $outHistF 742380 proton # n_pe 2454  energy 5197.33 GeV
+./runana 4 $inRootFile $outHistF 762120 proton # n_pe 227532  energy 25128 GeV
+./runana 4 $inRootFile $outHistF 789565 proton # n_pe 66313  energy 15999.3 GeV
+./runana 4 $inRootFile $outHistF 791134 proton # n_pe 639  energy 6683.4 GeV
+./runana 4 $inRootFile $outHistF 792792 proton # n_pe 4514  energy 11495.5 GeV
+./runana 4 $inRootFile $outHistF 809713 proton # n_pe 110169  energy 21493.8 GeV
+./runana 4 $inRootFile $outHistF 822992 proton # n_pe 68652  energy 8331.75 GeV
+./runana 4 $inRootFile $outHistF 825055 proton # n_pe 22139  energy 4184.32 GeV
+./runana 4 $inRootFile $outHistF 827233 proton # n_pe 23282  energy 5232.07 GeV
+./runana 4 $inRootFile $outHistF 828702 proton # n_pe 15058  energy 6163.34 GeV
+./runana 4 $inRootFile $outHistF 835440 proton # n_pe 15736  energy 6890.33 GeV
+./runana 4 $inRootFile $outHistF 837472 proton # n_pe 82456  energy 7980.02 GeV
+./runana 4 $inRootFile $outHistF 838629 proton # n_pe 13580  energy 70326.6 GeV
+./runana 4 $inRootFile $outHistF 840964 proton # n_pe 51826  energy 41766.4 GeV
+./runana 4 $inRootFile $outHistF 844055 proton # n_pe 99818  energy 5055.74 GeV
+./runana 4 $inRootFile $outHistF 846190 proton # n_pe 372  energy 16403.6 GeV
+./runana 4 $inRootFile $outHistF 859963 proton # n_pe 2085  energy 21702.4 GeV
+./runana 4 $inRootFile $outHistF 890894 proton # n_pe 286546  energy 32411.8 GeV
+./runana 4 $inRootFile $outHistF 908795 proton # n_pe 25505  energy 6444.62 GeV
+./runana 4 $inRootFile $outHistF 917480 proton # n_pe 1276  energy 4315.27 GeV
+./runana 4 $inRootFile $outHistF 942642 proton # n_pe 51263  energy 10106.7 GeV
+./runana 4 $inRootFile $outHistF 966391 proton # n_pe 20492  energy 4227.19 GeV
+./runana 4 $inRootFile $outHistF 969016 proton # n_pe 42150  energy 5889.73 GeV
+./runana 4 $inRootFile $outHistF 970578 proton # n_pe 11973  energy 4201.4 GeV
+./runana 4 $inRootFile $outHistF 978770 proton # n_pe 2910  energy 29870.6 GeV
+./runana 4 $inRootFile $outHistF 980732 proton # n_pe 44200  energy 9253.26 GeV
+./runana 4 $inRootFile $outHistF 1015823 proton # n_pe 125814  energy 25035.8 GeV
+./runana 4 $inRootFile $outHistF 1030196 proton # n_pe 905  energy 7451.84 GeV
+  Output Histos file ---> hist_fast_proton_nsb_1x.root
+n_ev_cuts = 101
