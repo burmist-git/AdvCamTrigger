@@ -111,6 +111,61 @@ void anaTrgA::SiPM_dist(TString histOut){
   rootFile->Close();
 }
 
+void anaTrgA::test_single_pe_amplitude_generator(TString histOut){
+  //
+  //----------------------
+  //
+  const unsigned int nn_PMT_channels = nChannels;
+  Int_t fadc_sum_offset = 15;
+  Int_t fadc_MHz = 1024;
+  Int_t fadc_offset = 300;
+  Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
+  Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
+  Float_t NGB_rate_in_MHz = 0.0;
+  Float_t fadc_electronic_noise_RMS = 0.01;
+  //
+  TRandom3 *rnd = new TRandom3(123123);
+  //
+  wfCamSim *wfc = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
+			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz, fadc_electronic_noise_RMS);
+  wfc->print_wfCamSim_configure();
+  //
+  //----------------------
+  //
+  Int_t n_pe_to_sim = 10000000;
+  TH1D *h1_single_pe_amplitude_generator = new TH1D("h1_single_pe_amplitude_generator","h1_single_pe_amplitude_generator",100, 0.0, 100.0);
+  TH1D *h1_single_pe_amplitude_from_hist_generator = new TH1D("h1_single_pe_amplitude_from_hist_generator","h1_single_pe_amplitude_from_hist_generator",100, 0.0, 100.0);
+  TH1D *h1_single_pe_amplitude_invf_generate = new TH1D("h1_single_pe_amplitude_invf_generate","h1_single_pe_amplitude_invf_generate",100, 0.0, 100.0);
+  wfc->test_single_pe_amplitude_generator( h1_single_pe_amplitude_generator,  n_pe_to_sim);
+  wfc->test_single_pe_amplitude_from_hist_generator( h1_single_pe_amplitude_from_hist_generator, n_pe_to_sim);
+  wfc->test_single_pe_amplitude_invf_generate(h1_single_pe_amplitude_invf_generate, n_pe_to_sim);
+  //
+  //----------------------
+  //  
+  TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
+  rootFile->cd();
+  if (rootFile->IsZombie()){
+    cout<<"  ERROR ---> file "<<histOut.Data()<<" is zombi"<<endl;
+    assert(0);
+  }
+  else
+    cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
+  //
+  wfc->getTemplate()->Write();
+  wfc->get_gr_wf_ampl()->Write();
+  wfc->get_h1_wf_ampl_ADC()->Write();
+  wfc->get_h1_wf_ampl_ADC_integral()->Write();  
+  wfc->get_h1_wf_ampl()->Write();
+  wfc->get_h1_adc_NGB_pedestal()->Write();
+  wfc->get_h1_dadc_NGB_pedestal()->Write();
+  //
+  h1_single_pe_amplitude_generator->Write();
+  h1_single_pe_amplitude_from_hist_generator->Write();
+  h1_single_pe_amplitude_invf_generate->Write();
+  //
+  rootFile->Close();
+}
+
 void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max){
   //
   TVector3 v_det;

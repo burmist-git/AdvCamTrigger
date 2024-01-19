@@ -40,6 +40,7 @@ public :
   const inline TGraph *getTemplate() {return _gr_wf_tmpl;}
   const inline TGraph *get_gr_wf_ampl() {return _gr_wf_ampl;}
   const inline TH1D *get_h1_wf_ampl_ADC() {return _h1_wf_ampl_ADC;}
+  const inline TH1D *get_h1_wf_ampl_ADC_integral() {return _h1_wf_ampl_ADC_integral;}
   const inline TH1D *get_h1_wf_ampl() {return _h1_wf_ampl;}
   const inline TH1D *get_h1_adc_NGB_pedestal(){return _h1_adc_NGB_pedestal;}
   const inline TH1D *get_h1_dadc_NGB_pedestal(){return _h1_dadc_NGB_pedestal;}
@@ -47,6 +48,7 @@ public :
   void setupe_ADC_ampl(Double_t bits_per_pe = 8.25, Int_t n_max_pe = 10);
   void test_single_pe_amplitude_generator( TH1D *h1, Int_t n_pe_to_sim);
   void test_single_pe_amplitude_from_hist_generator( TH1D *h1, Int_t n_pe_to_sim);
+  void test_single_pe_amplitude_invf_generate(TH1D *h1, Int_t n_pe_to_sim);
   //
   //
   void simulate_cam_event(const Int_t nn_fadc_point,
@@ -89,17 +91,23 @@ private:
   TGraph *_gr_wf_ampl;
   TH1D *_h1_wf_ampl;
   TH1D *_h1_wf_ampl_ADC;
+  TH1D *_h1_wf_ampl_ADC_integral;
   //
   TH1D *_h1_adc_NGB_pedestal;
   TH1D *_h1_dadc_NGB_pedestal;
   //
-  static const unsigned int _n_ADC_arr = 2000000000;
+  //static const unsigned int _n_ADC_arr = 2000000000;
+  static const unsigned int _n_ADC_arr = 2000;
   Double_t _n_ADC_max_for_generator;
   unsigned char *_ampl_ADC_arr;
   TGraph *_gr_wf_tmpl;
   Float_t *_arr_wf_tmpl;
+  Double_t *_h1_wf_ampl_ADC_int_arr_min;
+  Double_t *_h1_wf_ampl_ADC_int_arr_max;
+  Int_t __n_ADC_bins;
   unsigned int _n_arr_wf_tmpl;
   Int_t generate_single_pe_amplitude();
+  Int_t generate_single_pe_amplitude_invf();
   Int_t generate_single_pe_amplitude_from_hist();
   //
   void generateNGB(std::vector<int> &wf);

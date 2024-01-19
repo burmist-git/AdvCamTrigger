@@ -739,8 +739,8 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //Double_t y0_LST01 = -52.07;
   //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //
-  if(n_pe>=100)
-    return true;
+  //if(n_pe>=100)
+  //return true;
   //if(n_pe>=0)
   //return true;
   //if(n_pe>=500){
@@ -752,18 +752,18 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //}
   //}
   //
-  //Double_t x0_LST01 = -70.93;
-  //Double_t y0_LST01 = -52.07;
-  //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
+  Double_t x0_LST01 = -70.93;
+  Double_t y0_LST01 = -52.07;
+  Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //if(energy>=0.010 && energy<0.02)
   //if(n_pe>=40)
   //if(r<=300)
   //return true;
   //proton
-  //if(theta_p_t_deg<3.0)
-  //if(energy>=3.98107)
-  //if(r<=150)
-  //return true;     
+  if(theta_p_t_deg<3.0)
+    if(energy>=3.98107)
+      if(r<=150)
+  	return true;     
   //gamma diff, gamma, electron
   //if(theta_p_t_deg<2.0)
   //if(energy>=0.20)

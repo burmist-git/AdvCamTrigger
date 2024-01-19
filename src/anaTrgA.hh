@@ -31,6 +31,8 @@ public:
 
   void transform_SiPM_distadd( TGraph *gr_tr, const TGraph *gr);
 
+  void test_single_pe_amplitude_generator(TString histOut);
+  
 private:
   //
   Bool_t cut(Int_t nevsim, Double_t theta_p_t_deg, Double_t rcore);

@@ -10,13 +10,13 @@
 ##inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
 ##outHistF="./hist_gamma_on_corsika_0000ID.root"
 ##
-inRootFile="gamma_on_nsb_1x.list"
-outHistF="./hist_gamma_on_tw.root"
+#inRootFile="gamma_on_nsb_1x.list"
+#outHistF="./hist_gamma_on_tw.root"
 #inRootFile="gamma_diffuse_nsb_1x.list"
 #inRootFile="gamma_diffuse_nsb_1x.listshort"
 #outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
-#inRootFile="proton_nsb_1x.list"
-#outHistF="./hist_proton_nsb_1x_tw.root"
+inRootFile="proton_nsb_1x.list"
+outHistF="./hist_proton_nsb_1x_tw.root"
 
 #short
 #'nightsky_background=all:0.001'
@@ -61,6 +61,7 @@ function printHelp {
     echo " [0] -fscangd : fast scan gamma diffuse"
     echo " [0] -fscane  : fast scan electron"
     echo " [0] -fscanp  : fast scan proton"
+    echo " [0] -test_pe : test single pe amplitude generator"
     echo " [0] -c     : recompile"
     echo " [0] -h     : print help"
 }
@@ -158,8 +159,21 @@ else
 	npe_max=1000
 	nEv_max=10
 	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max
-    elif [ "$1" = "-tw" ]; then
+    elif [ "$1" = "-test_pe" ]; then
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_test_single_pe_amplitude_generator.root"
+	./runana 1111 $inRootFile $outHistF
+    elif [ "$1" = "-tw" ]; then	
 
+	./runana 4 $inRootFile $outHistF 35489 gamma # n_pe 80228  energy 3506.29 GeV
+	#./runana 4 $inRootFile $outHistF 127417 gamma # n_pe 261729  energy 11278.8 GeV
+	#./runana 4 $inRootFile $outHistF 144155 gamma # n_pe 251240  energy 11119.8 GeV
+	#./runana 4 $inRootFile $outHistF 177092 gamma # n_pe 124584  energy 6220.12 GeV
+	#./runana 4 $inRootFile $outHistF 218806 gamma # n_pe 55170  energy 3034.07 GeV
+	#./runana 4 $inRootFile $outHistF 287758 gamma # n_pe 43400  energy 1676.92 GeV
+	#./runana 4 $inRootFile $outHistF 58871 gamma # n_pe 24469  energy 1710.38 GeV
+	#./runana 4 $inRootFile $outHistF 7677 gamma # n_pe 283606  energy 13327.7 GeV
+	
 	## azimuth  = 180 +/- 0.1
         ## altitude = 70  +/- 0.1
 	#./runana 4 $inRootFile $outHistF 3192050  gamma # 4580
@@ -393,15 +407,15 @@ else
 	#./runana 4 $inRootFile $outHistF 93711 gamma_diff
 	#./runana 4 $inRootFile $outHistF 100131 gamma_diff
 	
-	./runana 4 $inRootFile $outHistF 4027 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 4727 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 6332 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 7347 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 7478 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 8142 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 9855 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 12409 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 4027 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 4727 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 6332 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 7347 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 7478 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 8142 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 9855 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 12409 gamma   # n_pe 50 energy  GeV
 	
     elif [ "$1" = "-th" ]; then
 	./runana 5
@@ -432,14 +446,20 @@ else
     elif [ "$1" = "-fg" ]; then
 	#./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x.log
 	#./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut.log
-	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut_faint.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut_faint.log
+	#./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut_faint.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut_faint.log
+	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut_faint.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut.log
     elif [ "$1" = "-fgd" ]; then
 	#./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x.log
+	#./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x_cut.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x_cut.log.ev
 	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x_cut.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x_cut.log
     elif [ "$1" = "-fe" ]; then
-	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x.log
+	#./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x.log
+	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x_cut.log
+	#./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x_cut.log.ev
     elif [ "$1" = "-fp" ]; then
-	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
+	#./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
+	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x_cut.log
+	#./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x_cut.log.ev
     elif [ "$1" = "-fall" ]; then	
 	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x.log
 	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x.log

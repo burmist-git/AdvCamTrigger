@@ -88,6 +88,16 @@ int main(int argc, char *argv[]){
     anaTrgA a( inRootFiles, 1);
     a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max);
   }
+  else if(argc == 4 && atoi(argv[1])==1111){
+    TString inRootFiles = argv[2];
+    TString outRootFileF = argv[3];
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"inRootFiles   : "<<inRootFiles<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl;
+    //
+    anaTrgA a( inRootFiles, 1);
+    a.test_single_pe_amplitude_generator(outRootFileF);
+  }
   else if(argc == 4 && atoi(argv[1])==2){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
@@ -287,6 +297,9 @@ int main(int argc, char *argv[]){
 	<<"       [7] - npe_min"<<endl
       	<<"       [8] - npe_max"<<endl
 	<<"       [9] - nEv_max"<<endl;    
+    cout<<" runID [1] = 1111 (execution ID number) test single pe amplitude generator "<<endl
+      	<<"       [2] - in root file"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 100 (execution ID number) SiPM distributions "<<endl
 	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;

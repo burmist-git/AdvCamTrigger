@@ -655,7 +655,7 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   TString gif_sim_name_pref = "./ev_synthetic_";
   gif_sim_name_pref += (Int_t)evID;
   gif_sim_name_pref += "_";
-  //wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam_real, wfcam, trg_vec, this);
+  wfc->generate_gif_for_event(gif_sim_name_pref, event_id, wfcam_real, wfcam, trg_vec, this);
   TString trg_vector_out_file = "ev_synthetic_trg_v_";
   trg_vector_out_file += (Int_t)evID;
   trg_vector_out_file += "ev.csv";

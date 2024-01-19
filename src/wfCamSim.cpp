@@ -130,6 +130,41 @@ Double_t wfCamSim::integrate_spe( TGraph *gr, Double_t x0, Double_t Dx){
   return gr_integral*d_x;
 }
 
+Int_t wfCamSim::generate_single_pe_amplitude_invf(){
+  Double_t val = _rnd->Uniform(0.0,1.0);
+  if(val >= _h1_wf_ampl_ADC_int_arr_min[0] && val < _h1_wf_ampl_ADC_int_arr_max[0])
+    return 1;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[1] && val < _h1_wf_ampl_ADC_int_arr_max[1])
+    return 2;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[2] && val < _h1_wf_ampl_ADC_int_arr_max[2])
+    return 3;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[3] && val < _h1_wf_ampl_ADC_int_arr_max[3])
+    return 4;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[4] && val < _h1_wf_ampl_ADC_int_arr_max[4])
+    return 5;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[5] && val < _h1_wf_ampl_ADC_int_arr_max[5])
+    return 6;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[6] && val < _h1_wf_ampl_ADC_int_arr_max[6])
+    return 7;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[7] && val < _h1_wf_ampl_ADC_int_arr_max[7])
+    return 8;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[8] && val < _h1_wf_ampl_ADC_int_arr_max[8])
+    return 9;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[9] && val < _h1_wf_ampl_ADC_int_arr_max[9])
+    return 10;
+  else if(val >= _h1_wf_ampl_ADC_int_arr_min[10] && val < _h1_wf_ampl_ADC_int_arr_max[10])
+    return 11;
+  //
+  Int_t i = 11;
+  while(i<__n_ADC_bins){
+    if(val >= _h1_wf_ampl_ADC_int_arr_min[i] && val < _h1_wf_ampl_ADC_int_arr_max[i])
+      return i+1;
+    i++;
+  }
+  assert(0);
+  return 0;   
+}
+
 Int_t wfCamSim::generate_single_pe_amplitude(){
   return (Int_t)_ampl_ADC_arr[((unsigned int)_rnd->Uniform(0.0,_n_ADC_max_for_generator))];
 } 
@@ -151,23 +186,61 @@ Int_t wfCamSim::generate_single_pe_amplitude_from_hist(){
   return 0.0;
 }
 
+void wfCamSim::test_single_pe_amplitude_invf_generate(TH1D *h1, Int_t n_pe_to_sim){
+  clock_t start, finish;
+  h1->SetBins(_h1_wf_ampl_ADC->GetNbinsX(),
+	      _h1_wf_ampl_ADC->GetBinLowEdge(1),
+	      _h1_wf_ampl_ADC->GetBinLowEdge(_h1_wf_ampl_ADC->GetNbinsX()) + _h1_wf_ampl_ADC->GetBinWidth(_h1_wf_ampl_ADC->GetNbinsX()));
+  start = clock();
+  for(Int_t i = 0;i<n_pe_to_sim;i++)
+    h1->Fill(((Double_t)generate_single_pe_amplitude_invf()-0.1),1.0/n_pe_to_sim);
+  finish = clock();
+  std::cout<<"test_single_pe_amplitude_invf_generate : "<<std::endl
+	   <<"function time + fill histogram         : "<<((finish - start)/CLOCKS_PER_SEC)<<" (sec)"<<std::endl;
+  start = clock();
+  for(Int_t i = 0;i<n_pe_to_sim;i++)
+    generate_single_pe_amplitude_invf();
+  finish = clock();
+  std::cout<<"function time                          : "<<((finish - start)/CLOCKS_PER_SEC)<<" (sec)"<<std::endl;
+}
+
 void wfCamSim::test_single_pe_amplitude_generator( TH1D *h1, Int_t n_pe_to_sim){
+  clock_t start, finish;
   h1->SetBins(_h1_wf_ampl_ADC->GetNbinsX(),
 	      _h1_wf_ampl_ADC->GetBinLowEdge(1),
 	      _h1_wf_ampl_ADC->GetBinLowEdge(_h1_wf_ampl_ADC->GetNbinsX()) + _h1_wf_ampl_ADC->GetBinWidth(_h1_wf_ampl_ADC->GetNbinsX()));
   //for(unsigned int i = 0;i<((unsigned int)_n_ADC_max_for_generator);i++)
   //h1->Fill(((Double_t)_ampl_ADC_arr[i]-0.1),1.0/_n_ADC_max_for_generator);
   //_ampl_ADC_arr[((unsigned int)_rnd->Uniform(0.0,_n_ADC_max_for_generator))];
+  start = clock();
   for(Int_t i = 0;i<n_pe_to_sim;i++)
     h1->Fill(((Double_t)generate_single_pe_amplitude()-0.1),1.0/n_pe_to_sim);
+  finish = clock();
+  std::cout<<"test_single_pe_amplitude_generator : "<<std::endl
+	   <<"function time + fill histogram         : "<<((finish - start)/CLOCKS_PER_SEC)<<" (sec)"<<std::endl;
+  start = clock();
+  for(Int_t i = 0;i<n_pe_to_sim;i++)
+    generate_single_pe_amplitude();
+  finish = clock();
+  std::cout<<"function time                          : "<<((finish - start)/CLOCKS_PER_SEC)<<" (sec)"<<std::endl;
 }
 
 void wfCamSim::test_single_pe_amplitude_from_hist_generator( TH1D *h1, Int_t n_pe_to_sim){
+  clock_t start, finish;
   h1->SetBins(_h1_wf_ampl_ADC->GetNbinsX(),
 	      _h1_wf_ampl_ADC->GetBinLowEdge(1),
 	      _h1_wf_ampl_ADC->GetBinLowEdge(_h1_wf_ampl_ADC->GetNbinsX()) + _h1_wf_ampl_ADC->GetBinWidth(_h1_wf_ampl_ADC->GetNbinsX()));
+  start = clock();
   for(Int_t i = 0;i<n_pe_to_sim;i++)
     h1->Fill(((Double_t)generate_single_pe_amplitude_from_hist()),1.0/n_pe_to_sim);
+  finish = clock();
+  std::cout<<"test_single_pe_amplitude_from_hist_generator : "<<std::endl
+	   <<"function time + fill histogram         : "<<((finish - start)/CLOCKS_PER_SEC)<<" (sec)"<<std::endl;
+  start = clock();
+  for(Int_t i = 0;i<n_pe_to_sim;i++)
+    generate_single_pe_amplitude_from_hist();
+  finish = clock();
+  std::cout<<"function time                          : "<<((finish - start)/CLOCKS_PER_SEC)<<" (sec)"<<std::endl;
 }
 
 void wfCamSim::generateNGB(std::vector<int> &wf){
@@ -187,7 +260,7 @@ void wfCamSim::generate_zero_wf(std::vector<int> &wf, Int_t pedestal){
   
 void wfCamSim::generate_wf(std::vector<int> &wf, Float_t pe_time){
   unsigned int i0 = (-pe_time + 1.0 - _wf_tmpl_t_left)/_dt_arr_wf_tmpl;
-  Int_t ampl_single_pe = generate_single_pe_amplitude();
+  Int_t ampl_single_pe = generate_single_pe_amplitude_invf();
   for( unsigned int i = 0; i < wf.size(); i++){
     unsigned int jj = i0+i*100;
     if(jj>=0 &&jj<_n_arr_wf_tmpl){
@@ -199,7 +272,7 @@ void wfCamSim::generate_wf(std::vector<int> &wf, Float_t pe_time){
 }
 
 void wfCamSim::generate_wf_from_gr(std::vector<int> &wf, Float_t pe_time){
-  Int_t ampl_single_pe = generate_single_pe_amplitude();
+  Int_t ampl_single_pe = generate_single_pe_amplitude_invf();
   for( unsigned int i = 0; i < wf.size(); i++){
     wf.at(i) += (Int_t)(_gr_wf_tmpl->Eval(pe_time-i*_fadc_sample_in_ns+5)*ampl_single_pe);
     if(wf.at(i)>16384)
@@ -340,11 +413,38 @@ void wfCamSim::setupe_ADC_ampl(Double_t bits_per_pe, Int_t n_max_pe){
     //std::cout<<"_h1_wf_ampl_ADC == NULL"<<std::endl;
     //
     _h1_wf_ampl_ADC = new TH1D("_h1_wf_ampl_ADC","_h1_wf_ampl_ADC",n_ADC_bins,0.0,n_ADC_bins);
+    _h1_wf_ampl_ADC_integral = new TH1D("_h1_wf_ampl_ADC_integral","_h1_wf_ampl_ADC_integral",n_ADC_bins,0.0,n_ADC_bins);
     //
-    for(Int_t i = 1;i<=n_ADC_bins;i++)
+    _h1_wf_ampl_ADC_int_arr_max = new Double_t[n_ADC_bins];
+    _h1_wf_ampl_ADC_int_arr_min = new Double_t[n_ADC_bins];
+    __n_ADC_bins = n_ADC_bins;
+    for(Int_t i = 1;i<=n_ADC_bins;i++){
       _h1_wf_ampl_ADC->SetBinContent(i,integrate_spe(_gr_wf_ampl,
 						     _h1_wf_ampl_ADC->GetBinLowEdge(i)/bits_per_pe,
 						     _h1_wf_ampl_ADC->GetBinWidth(i)/bits_per_pe));
+      _h1_wf_ampl_ADC_integral->SetBinContent(i,_h1_wf_ampl_ADC_integral->GetBinContent(i-1)+_h1_wf_ampl_ADC->GetBinContent(i));
+      if(i==1){
+	_h1_wf_ampl_ADC_int_arr_max[i-1] = 0.0 + _h1_wf_ampl_ADC->GetBinContent(i);
+      }
+      else if (i == n_ADC_bins){
+	_h1_wf_ampl_ADC_int_arr_max[i-1] = 1.0;
+      }
+      else{
+	_h1_wf_ampl_ADC_int_arr_max[i-1] = _h1_wf_ampl_ADC_int_arr_max[i-1-1] + _h1_wf_ampl_ADC->GetBinContent(i);
+      }
+    }
+    //
+    for(Int_t i = 0;i<n_ADC_bins;i++){
+      if(i==0)
+	_h1_wf_ampl_ADC_int_arr_min[i] = 0.0;
+      else
+	_h1_wf_ampl_ADC_int_arr_min[i] = _h1_wf_ampl_ADC_int_arr_max[i-1];
+    }    
+    //
+    //for(Int_t i = 0;i<n_ADC_bins;i++)
+    //std::cout<<std::setw(30)<<i
+    //	       <<std::setw(30)<<std::setprecision(20)<<_h1_wf_ampl_ADC_int_arr_min[i]
+    //	       <<std::setw(30)<<std::setprecision(20)<<_h1_wf_ampl_ADC_int_arr_max[i]<<std::endl;
     //
     _ampl_ADC_arr = new unsigned char[_n_ADC_arr];
     unsigned int counter_per_bin = 0;
