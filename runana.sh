@@ -10,13 +10,13 @@
 ##inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
 ##outHistF="./hist_gamma_on_corsika_0000ID.root"
 ##
-#inRootFile="gamma_on_nsb_1x.list"
-#outHistF="./hist_gamma_on_tw.root"
+inRootFile="gamma_on_nsb_1x.list"
+outHistF="./hist_gamma_on_tw.root"
 #inRootFile="gamma_diffuse_nsb_1x.list"
 #inRootFile="gamma_diffuse_nsb_1x.listshort"
 #outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
-inRootFile="proton_nsb_1x.list"
-outHistF="./hist_proton_nsb_1x_tw.root"
+#inRootFile="proton_nsb_1x.list"
+#outHistF="./hist_proton_nsb_1x_tw.root"
 
 #short
 #'nightsky_background=all:0.001'
@@ -54,9 +54,10 @@ function printHelp {
     echo " [0] -trgp  : Trg proton"
     echo " [0] -trgg  : Trg gamma"
     echo " [0] -trggd : Trg gamma diffuse"
-    echo " [0] -trgAg   : TrgA gamma"
-    echo " [0] -trgAgd  : TrgA gamma diffuse"
-    echo " [0] -trgAp   : Trg proton"
+    echo " [0] -trgAg    : TrgA gamma"
+    echo " [0] -trgAgd   : TrgA gamma diffuse"
+    echo " [0] -trgAp    : TrgA proton"
+    echo " [0] -trgA_NGB : TrgA NGB"
     echo " [0] -fscang  : fast scan gamma"
     echo " [0] -fscangd : fast scan gamma diffuse"
     echo " [0] -fscane  : fast scan electron"
@@ -135,37 +136,50 @@ else
 	binE=5
 	binTheta=0
 	binDist=0
-	npe_min=49
-	npe_max=1000
-	nEv_max=10
-	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max
+	npe_min=40
+	npe_max=200
+	nEv_max=100
+	rndseed=12312
+	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
     elif [ "$1" = "-trgAgd" ]; then
 	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/root/0000/corsika_0000ID.root"
 	outHistF="./hist_trg_gamma_diffuse_nsb_1x_corsika_0000ID.root"
 	binE=5
 	binTheta=1
 	binDist=2
-	npe_min=100
-	npe_max=1000
-	nEv_max=100
-	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max
+	npe_min=40
+	npe_max=200
+	nEv_max=100	
+	rndseed=12312
+	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
     elif [ "$1" = "-trgAp" ]; then
 	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0000/corsika_0000ID.root"
 	outHistF="./hist_trg_proton_nsb_1x_corsika_0000ID.root"
 	binE=5
 	binTheta=1
 	binDist=1
+	npe_min=40
+	npe_max=200
+	nEv_max=100
+	rndseed=12312
+	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
+    elif [ "$1" = "-trgA_NGB" ]; then
+	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0000/corsika_0000ID.root"
+	outHistF="./hist_trg_NGB.root"
+	binE=5
+	binTheta=5
+	binDist=7
 	npe_min=1
-	npe_max=1000
-	nEv_max=10
-	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max
+	npe_max=5
+	nEv_max=100
+	rndseed=12312
+	./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
     elif [ "$1" = "-test_pe" ]; then
 	inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/0000/corsika_0000ID.root"
 	outHistF="./hist_test_single_pe_amplitude_generator.root"
 	./runana 1111 $inRootFile $outHistF
-    elif [ "$1" = "-tw" ]; then	
-
-	./runana 4 $inRootFile $outHistF 35489 gamma # n_pe 80228  energy 3506.29 GeV
+    elif [ "$1" = "-tw" ]; then
+	#./runana 4 $inRootFile $outHistF 35489 gamma # n_pe 80228  energy 3506.29 GeV
 	#./runana 4 $inRootFile $outHistF 127417 gamma # n_pe 261729  energy 11278.8 GeV
 	#./runana 4 $inRootFile $outHistF 144155 gamma # n_pe 251240  energy 11119.8 GeV
 	#./runana 4 $inRootFile $outHistF 177092 gamma # n_pe 124584  energy 6220.12 GeV
@@ -410,7 +424,7 @@ else
 	#./runana 4 $inRootFile $outHistF 4027 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 4727 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 6332 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 7347 gamma   # n_pe 50 energy  GeV
+	./runana 4 $inRootFile $outHistF 7347 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 7478 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 8142 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 9855 gamma   # n_pe 50 energy  GeV

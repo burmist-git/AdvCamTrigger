@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
     anaTrg a( inRootFiles, 1);
     a.Loop(outRootFileF);
   }
-  else if(argc == 10 && atoi(argv[1])==111){
+  else if(argc == 11 && atoi(argv[1])==111){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
     Int_t binE = atoi(argv[4]);
@@ -75,6 +75,7 @@ int main(int argc, char *argv[]){
     Int_t npe_min = atoi(argv[7]);
     Int_t npe_max = atoi(argv[8]);
     Int_t nEv_max = atoi(argv[9]);
+    Int_t rndseed = atoi(argv[10]);
     cout<<"--> Parameter calculation from the WF <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl
@@ -83,10 +84,11 @@ int main(int argc, char *argv[]){
 	<<"binDist       : "<<binDist<<endl
 	<<"npe_min       : "<<npe_min<<endl
 	<<"npe_max       : "<<npe_max<<endl
-	<<"nEv_max       : "<<nEv_max<<endl;
+	<<"nEv_max       : "<<nEv_max<<endl
+    	<<"rndseed       : "<<rndseed<<endl;
     //
     anaTrgA a( inRootFiles, 1);
-    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max);
+    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed);
   }
   else if(argc == 4 && atoi(argv[1])==1111){
     TString inRootFiles = argv[2];

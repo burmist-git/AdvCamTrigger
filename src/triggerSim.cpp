@@ -6,6 +6,8 @@
 //root
 #include "TH1D.h"
 #include "TGraph2D.h"
+#include "TGraph.h"
+#include "TFile.h"
 
 //C, C++
 #include <iostream>
@@ -15,8 +17,9 @@
 #include <iomanip>
 #include <stdlib.h>
 
-triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist)
+triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0)
 {
+  //_dbs->print_cluster_stats();
 }
 
 triggerSim::~triggerSim(){
@@ -162,9 +165,11 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
 							       TH1D *h1_fadc_val){
   std::vector<std::vector<unsigned int>> trg_vector;
   std::vector<unsigned int> trg_chID;
-  int digital_sum;
-  int digital_sum_3ns;
-  int digital_sum_5ns;
+  trg_vector.clear();
+  trg_chID.clear();
+  int digital_sum = 0;
+  int digital_sum_3ns = 0;
+  int digital_sum_5ns = 0;
   int fadc_val;
   for(unsigned int wf_j = 0;wf_j<wf.at(0).size();wf_j++){
     trg_chID.clear();
@@ -172,9 +177,9 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
       //digital_sum = get_flower_digital_sum(ch_i,wf_j,wf,0,0,true);
       //digital_sum_3ns = get_flower_digital_sum(ch_i,wf_j,wf,-1,1,true);
       //digital_sum_5ns = get_flower_digital_sum(ch_i,wf_j,wf,-2,2,true);
-      digital_sum     = get_digital_sum( ch_i, wf_j, wf,  0, 0, true, 0);
+      //digital_sum     = get_digital_sum( ch_i, wf_j, wf,  0, 0, true, 0);
       digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 0);
-      digital_sum_5ns = get_digital_sum( ch_i, wf_j, wf, -2, 2, true, 0);
+      //digital_sum_5ns = get_digital_sum( ch_i, wf_j, wf, -2, 2, true, 0);
       fadc_val = wf.at(ch_i).at(wf_j);
       if(h1_digital_sum != NULL)
 	h1_digital_sum->Fill(digital_sum);
@@ -202,10 +207,30 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
   return build_spatial_time_cluster_dbscan(trg_vector);
 }
 
+void triggerSim::plot_and_save_to_hist_root(TString outrootFile, vector<Double_t> &k_dist_graph){
+  if(k_dist_graph.size()>0){
+    TGraph *gr_k_dist_graph = new TGraph();
+    gr_k_dist_graph->SetNameTitle("gr_k_dist_graph","gr_k_dist_graph");
+    //
+    for(unsigned int k = 0; k < k_dist_graph.size(); k++)
+      gr_k_dist_graph->SetPoint( k, k, k_dist_graph.at(k_dist_graph.size()-1-k));
+    //  
+    TFile* rootFile = new TFile(outrootFile.Data(), "RECREATE", " Histograms", 1);
+    rootFile->cd();
+    //
+    gr_k_dist_graph->Write();
+    //
+    rootFile->Close();
+  }
+}
+
 std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_dbscan(const std::vector<std::vector<unsigned int>> &trg_vector){
   vector<point> points;
+  points.clear();
   //
   Double_t i_time_todist=0.05;
+  unsigned int minPts = 15;
+  float eps = 0.1;
   //
   for(unsigned int i = 0;i<trg_vector.size();i++){
     for(unsigned int j = 0;j<trg_vector.at(i).size();j++){
@@ -216,38 +241,47 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
       singlepoint.time_ii = i;
       singlepoint.clusterID = UNCLASSIFIED;
       singlepoint.pixel_id = trg_vector.at(i).at(j);
+      singlepoint.point_id=(Int_t)points.size();
       points.push_back(singlepoint);      
     }
   }
-  unsigned int minPts = 15;
-  float eps = 0.1;
-  //DBSCAN ds(minPts, eps, points);
-  //_ds->run(minPts, eps, points);
-  //std::cout<<"_ds->get_nclusters() "<<_ds->get_nclusters()<<endl;
-  //ds.run();
-  //std::cout<<"ds.get_nclusters() "<<ds.get_nclusters()<<endl;
-  //
-  //ds.print_points_info();
+  _dbs->run( minPts, eps, points);
+  _dbs->get_cluster_stats();
+  _dbs->print_cluster_stats();
+  //TString outrootFile;
+  //outrootFile = "hist_trg_counter_";
+  //outrootFile += _trg_counter;
+  //outrootFile += "ev";
+  //outrootFile += ".root";
+  //vector<Double_t> k_dist_graph;
+  //k_dist_graph = _dbs->build_k_dist_graph(10);
+  //plot_and_save_to_hist_root(outrootFile,k_dist_graph);
   //
   std::vector<std::vector<unsigned int>> cam_trg_vector;
   std::vector<unsigned int> spatial_cluster;
+  cam_trg_vector.clear();
+  spatial_cluster.clear();
   //
   for(unsigned int i = 0;i<trg_vector.size();i++){
     spatial_cluster.clear();
     for(unsigned int j = 0;j<trg_vector.at(i).size();j++){
-      //for(unsigned int k = 0;k<ds.m_points.size();k++){
-      //if(ds.m_points.at(k).pixel_id == trg_vector.at(i).at(j) && ds.m_points.at(k).ii == i){
-	  //std::cout<<"_ds->m_points.at(k).pixel_id = "<<_dm->m_points.at(k).pixel_id<<std::endl;
-	  //if(ds.m_points.at(k).clusterID > 0)
-	  //spatial_cluster.push_back(trg_vector.at(i).at(j));
-      //}
-      //}
+      for(unsigned int k = 0;k<_dbs->get_points_v().size();k++){
+	if(_dbs->get_points_v().at(k).pixel_id == trg_vector.at(i).at(j) && _dbs->get_points_v().at(k).time_ii == i){
+	  if(_dbs->get_points_v().at(k).clusterID > -1)
+	    spatial_cluster.push_back(trg_vector.at(i).at(j));
+	}
+      }
     }
     cam_trg_vector.push_back(spatial_cluster);
   }
+  _dbclusters_v.clear();
+  _dbclusters_v = _dbs->get_clusters_v();
+  _dbs->clear();
+  //dbscan::print_cluster_stats(_dbclusters_v);
   //
   //print_trigger_vec(cam_trg_vector);
   //
+  //_trg_counter++;
   return cam_trg_vector;
   //return trg_vector;
 }

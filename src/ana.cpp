@@ -550,7 +550,7 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   vector<vector<Int_t>> wfcam(nn_PMT_channels, vector<Int_t>(nn_fadc_point));
   vector<vector<Int_t>> wfcam_real(nn_PMT_channels, vector<Int_t>(nn_fadc_point));
   //
-  TRandom3 *rnd = new TRandom3(123123);
+  TRandom3 *rnd = new TRandom3(1231232);
   wfCamSim *wfc = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
 			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz, fadc_electronic_noise_RMS);
   wfc->print_wfCamSim_configure();
@@ -646,6 +646,7 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
     h1_wf_charge_sim->Fill(wfCamSim::get_charge(wfcam.at(j),fadc_offset));
     //
   }
+  //save_data_for_luca(v_gr, v_gr_sim,fadc_sample_in_ns);
   //
   TString gif_name_pref = "./ev_";
   gif_name_pref += (Int_t)evID;
@@ -728,4 +729,52 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   //cout<<"_particle_type_name = "<<_particle_type_name<<endl;
   //
   rootFile->Close();
+}
+
+void ana::save_data_for_luca( vector<TGraph*> &v_gr, vector<TGraph*> &v_gr_sim, Float_t fadc_sample_in_ns){
+  TString data_out;
+  Int_t ntot_pe_ev = 0;
+  for(unsigned int i = 0; i<v_gr.size(); i++){
+    ntot_pe_ev = 0;
+    for(Int_t j = 0;j<n_pe;j++)
+      if(pe_chID[j] == i)
+	ntot_pe_ev++;
+    //
+    data_out = "./data_for_luca/";
+    data_out += "v_gr_";
+    data_out += i;
+    data_out += "_ch_";
+    data_out += ntot_pe_ev;
+    data_out += "npe";
+    data_out += ".dat";
+    write_wf_to_file(data_out,v_gr.at(i),fadc_sample_in_ns);
+  }
+  for(unsigned int i = 0; i<v_gr_sim.size(); i++){
+    ntot_pe_ev = 0;
+    for(Int_t j = 0;j<n_pe;j++)
+      if(pe_chID[j] == i)
+	ntot_pe_ev++;
+    //
+    data_out = "./data_for_luca/";
+    data_out += "v_gr_sim_";
+    data_out += i;
+    data_out += "_ch_";
+    data_out += ntot_pe_ev;
+    data_out += "npe";
+    data_out += ".dat";
+    write_wf_to_file(data_out,v_gr_sim.at(i),fadc_sample_in_ns);
+  }
+}
+
+void ana::write_wf_to_file(TString data_out, TGraph *gr, Float_t fadc_sample_in_ns){
+  ofstream myfile;
+  myfile.open(data_out.Data());
+  Double_t t,a;
+  for(Int_t i = 0; i < gr->GetN();i++){
+    gr->GetPoint(i,t,a);
+    myfile<<setw(10)<<i*fadc_sample_in_ns
+	  <<setw(10)<<(a-300)
+	  <<endl;
+  }
+  myfile.close();
 }

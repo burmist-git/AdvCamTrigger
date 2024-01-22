@@ -23,24 +23,36 @@ struct cluster_info {
   Int_t number_of_points;
   Int_t number_of_CORE_POINT;
   Int_t number_of_BORDER_POINT;
+  Double_t mean_x;
+  Double_t mean_y;
+  Double_t mean_time_ii;
   cluster_info(){
     clusterID = -999;
     number_of_points = 0;
     number_of_CORE_POINT = 0;
     number_of_BORDER_POINT = 0;
+    mean_x       = 0.0;
+    mean_y       = 0.0;
+    mean_time_ii = 0.0;
   }
   void print_cluster_info_header() const {
-    std::cout<<setw(30)<<"clusterID"
-	     <<setw(30)<<"number_of_points"
-	     <<setw(30)<<"number_of_CORE_POINT"
-	     <<setw(30)<<"number_of_BORDER_POINT"
+    std::cout<<setw(15)<<"clusterID"
+	     <<setw(20)<<"number_of_points"
+	     <<setw(25)<<"number_of_CORE_POINT"
+	     <<setw(25)<<"number_of_BORDER_POINT"
+	     <<setw(15)<<"mean_x"
+	     <<setw(15)<<"mean_y"
+	     <<setw(15)<<"mean_time_ii"
 	     <<std::endl;
   }
   void print_cluster_info() const {
-    std::cout<<setw(30)<<clusterID
-	     <<setw(30)<<number_of_points
-	     <<setw(30)<<number_of_CORE_POINT
-	     <<setw(30)<<number_of_BORDER_POINT
+    std::cout<<setw(15)<<clusterID
+	     <<setw(20)<<number_of_points
+	     <<setw(25)<<number_of_CORE_POINT
+	     <<setw(25)<<number_of_BORDER_POINT
+	     <<setw(15)<<mean_x
+	     <<setw(15)<<mean_y
+	     <<setw(15)<<mean_time_ii
 	     <<std::endl;    
   }
 };
@@ -105,10 +117,12 @@ public:
   Int_t get_nclusters() const;
 
   void get_cluster_stats();
+  static void print_cluster_stats(vector<cluster_info> clusters_v);
   void print_cluster_stats() const;
   Int_t get_number_of_NOISE() const;
 
   inline const vector<point>& get_points_v() const {return _points_v;};
+  inline const vector<cluster_info> get_clusters_v() const {return _clusters_v;};
 
   void clear();
 

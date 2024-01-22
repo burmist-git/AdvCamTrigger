@@ -166,7 +166,7 @@ void anaTrgA::test_single_pe_amplitude_generator(TString histOut){
   rootFile->Close();
 }
 
-void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max){
+void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed){
   //
   TVector3 v_det;
   v_det.SetXYZ(1.0*TMath::Sin(20.0/180.0*TMath::Pi()),0,1.0*TMath::Cos(20.0/180.0*TMath::Pi()));
@@ -200,6 +200,18 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TH1D *h1_theta_p_t_deg = new TH1D("h1_theta_p_t_deg","h1_theta_p_t_deg", 1000, 0.0, 10.0);
   TH1D *h1_npe = new TH1D("h1_npe","h1_npe", 1000, 0.0, 1000.0);
   //
+  TH1D *h1_N_dbc = new TH1D("h1_N_dbc","h1_N_dbc", 21, -0.5, 20.5);
+  TH1D *h1_dbc_number_of_points = new TH1D("h1_dbc_number_of_points","h1_dbc_number_of_points", 101, -0.5, 100.5);
+  TH1D *h1_dbc_number_of_CORE_POINT = new TH1D("h1_dbc_number_of_CORE_POINT","h1_dbc_number_of_CORE_POINT", 101, -0.5, 100.5);
+  TH1D *h1_dbc_number_of_BORDER_POINT = new TH1D("h1_dbc_number_of_BORDER_POINT","h1_dbc_number_of_BORDER_POINT", 101, -0.5, 100.5);
+  //
+  TH2D *h2_dbc_number_of_points_vs_npe = new TH2D("h2_dbc_number_of_points_vs_npe","h2_dbc_number_of_points_vs_npe", 101, -0.5, 100.5, 201, -0.5, 200.5);
+  TH1D *h1_dbc_number_of_points_npe_norm = new TH1D("h1_dbc_number_of_points_npe_norm","h1_dbc_number_of_points_npe_norm", 201, -0.5, 200.5);
+  //
+  TH1D *h1_dbc_mean_x = new TH1D("h1_dbc_mean_x","h1_dbc_mean_x", 300, -2.0, 2.0);
+  TH1D *h1_dbc_mean_y = new TH1D("h1_dbc_mean_y","h1_dbc_mean_y", 300, -2.0, 2.0);
+  TH1D *h1_dbc_mean_time_ii = new TH1D("h1_dbc_mean_time_ii","h1_dbc_mean_time_ii", 100, 0.0, 100.0);
+  //
   /////////////
   //
   //
@@ -221,7 +233,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //Float_t fadc_electronic_noise_RMS = 0.01;
   Float_t fadc_electronic_noise_RMS = 3.8436441; //takes into account 3.0/sqrt(12)
   //
-  TRandom3 *rnd = new TRandom3(123123);
+  TRandom3 *rnd = new TRandom3(rndseed);
   //
   ////////////////////////////////////  
   //static const Int_t nChannels = 7987;
@@ -274,11 +286,26 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
       finish_sim = clock();
       start_trg = clock();
       //
+      cout<<"---------------------"<<endl
+	  <<"n_pe = "<<n_pe<<endl;
       trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
       finish_trg = clock();
       cout<<nevsim
 	  <<" "<<((finish_sim - start_sim)/(CLOCKS_PER_SEC/1000))<<" (msec)"
 	  <<" "<<((finish_trg - start_trg)/(CLOCKS_PER_SEC/1000))<<" (msec)"<<endl;
+      //
+      h1_N_dbc->Fill(trg_sim->get_dbclusters().size());
+      for(unsigned int k = 0; k<trg_sim->get_dbclusters().size(); k++){
+	h1_dbc_number_of_points->Fill(trg_sim->get_dbclusters().at(k).number_of_points);
+	h2_dbc_number_of_points_vs_npe->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe);
+	h1_dbc_number_of_points_npe_norm->Fill(n_pe);
+	h1_dbc_number_of_CORE_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_CORE_POINT);
+	h1_dbc_number_of_BORDER_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_BORDER_POINT);
+	//
+	h1_dbc_mean_x->Fill(trg_sim->get_dbclusters().at(k).mean_x);
+	h1_dbc_mean_y->Fill(trg_sim->get_dbclusters().at(k).mean_y);
+	h1_dbc_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii);
+      }	
       //
       nevsim++;
     }
@@ -310,6 +337,17 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   h1_rcore->Write();
   h1_theta_p_t_deg->Write();
   h1_npe->Write();
+  //
+  h1_N_dbc->Write();
+  h1_dbc_number_of_points->Write();
+  h2_dbc_number_of_points_vs_npe->Write();
+  h1_dbc_number_of_points_npe_norm->Write();
+  h1_dbc_number_of_CORE_POINT->Write();
+  h1_dbc_number_of_BORDER_POINT->Write();
+  //
+  h1_dbc_mean_x->Write();
+  h1_dbc_mean_y->Write();
+  h1_dbc_mean_time_ii->Write();
   //
   //cout<<"nevsim = "<<nevsim<<endl;
   //

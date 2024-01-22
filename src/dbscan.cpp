@@ -30,19 +30,33 @@ Int_t dbscan::get_nclusters() const {
 void dbscan::get_cluster_stats(){
   //
   unsigned int nclus = (unsigned int)get_nclusters();
-  for(unsigned int k = 0; k<nclus; k++){
-    cluster_info cl;
-    _clusters_v.push_back(cl);
-  }
-  //
-  for(unsigned int k = 0; k<_points_v.size(); k++){
-    if(_points_v.at(k).clusterID>=0 && _points_v.at(k).clusterID<(Int_t)nclus){
-      _clusters_v.at(_points_v.at(k).clusterID).clusterID = _points_v.at(k).clusterID;
-      _clusters_v.at(_points_v.at(k).clusterID).number_of_points++;
-      if(_points_v.at(k).point_type == CORE_POINT)
-	_clusters_v.at(_points_v.at(k).clusterID).number_of_CORE_POINT++;
-      if(_points_v.at(k).point_type == BORDER_POINT)
-	_clusters_v.at(_points_v.at(k).clusterID).number_of_BORDER_POINT++;
+  if(nclus>0){
+    for(unsigned int k = 0; k<nclus; k++){
+      cluster_info cl;
+      _clusters_v.push_back(cl);
+    }
+    //
+    for(unsigned int k = 0; k<_points_v.size(); k++){
+      if(_points_v.at(k).clusterID>=0 && _points_v.at(k).clusterID<(Int_t)nclus){
+	_clusters_v.at(_points_v.at(k).clusterID).clusterID = _points_v.at(k).clusterID;
+	_clusters_v.at(_points_v.at(k).clusterID).number_of_points++;
+	//
+	_clusters_v.at(_points_v.at(k).clusterID).mean_x += _points_v.at(k).x;
+	_clusters_v.at(_points_v.at(k).clusterID).mean_y += _points_v.at(k).y;
+	_clusters_v.at(_points_v.at(k).clusterID).mean_time_ii += _points_v.at(k).time_ii;
+	//
+	if(_points_v.at(k).point_type == CORE_POINT)
+	  _clusters_v.at(_points_v.at(k).clusterID).number_of_CORE_POINT++;
+	if(_points_v.at(k).point_type == BORDER_POINT)
+	  _clusters_v.at(_points_v.at(k).clusterID).number_of_BORDER_POINT++;
+      }
+    }
+    for(unsigned int k = 0; k < nclus; k++){
+      if(_clusters_v.at(k).number_of_points>0){
+	_clusters_v.at(k).mean_x /= _clusters_v.at(k).number_of_points;
+	_clusters_v.at(k).mean_y /= _clusters_v.at(k).number_of_points;
+	_clusters_v.at(k).mean_time_ii /= _clusters_v.at(k).number_of_points;
+      }
     }
   }
 }
@@ -58,6 +72,15 @@ Int_t dbscan::get_number_of_NOISE() const{
     if(_points_v.at(k).point_type == NOISE)
       n_NOISE++;
   return n_NOISE;
+}
+
+void dbscan::print_cluster_stats(vector<cluster_info> clusters_v) {
+  cout<<"N_clusters : "<<clusters_v.size()<<endl;
+  if(clusters_v.size()>0){
+    clusters_v.at(0).print_cluster_info_header();
+    for(unsigned int i = 0; i<clusters_v.size(); i++)
+      clusters_v.at(i).print_cluster_info();
+  }  
 }
 
 void dbscan::print_cluster_stats() const {
