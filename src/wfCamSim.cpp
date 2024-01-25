@@ -373,6 +373,13 @@ void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
   }
 }
 
+void wfCamSim::simulate_cam_event_NGB(std::vector<std::vector<Int_t>> &wf){
+  for( unsigned int i = 0; i < wf.size(); i++ ){
+    generate_zero_wf(wf.at(i),(_fadc_offset-_NGB_pedestal_mean));
+    generateNGB(wf.at(i));
+  }
+}
+
 void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
 				  const Int_t nn_PMT_channels,
 				  std::vector<std::vector<Int_t>> &wf,

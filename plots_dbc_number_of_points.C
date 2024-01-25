@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <iostream>
-#include <fstream>
+#include <fstream>2
 #include <string>
 #include <iomanip>
 
@@ -16,18 +16,22 @@ Int_t plots_dbc_number_of_points(){
   TString fileN01;
   TString fileN02;
   TString fileN03;
+  TString fileN04;
   //
-  fileN01 = "./hist_trg_NGB.root";
-  fileN02 = "./hist_trg_gamma_diffuse_nsb_1x_corsika_0000ID.root";
-  fileN03 = "./hist_trg_gamma_on_nsb_1x_corsika_0000ID.root";
+  fileN01 = "./result_NGB.root";
+  fileN02 = "./result_gamma_diffuse_nsb_1x_5binE_3binTheta_3binDist_0000ID.root";
+  fileN03 = "./result_gamma_on_nsb_1x_5binE_0binTheta_3binDist.root";
+  fileN04 = "./result_gamma_diffuse_nsb_1x_5binE_1binTheta_3binDist.root";
   //
   TFile *f01 = new TFile(fileN01.Data());
   TFile *f02 = new TFile(fileN02.Data());
   TFile *f03 = new TFile(fileN03.Data());
+  TFile *f04 = new TFile(fileN04.Data());
   //
   TH1D *h1_01 = (TH1D*)f01->Get("h1_dbc_number_of_points");
   TH1D *h1_02 = (TH1D*)f02->Get("h1_dbc_number_of_points");
   TH1D *h1_03 = (TH1D*)f03->Get("h1_dbc_number_of_points");
+  TH1D *h1_04 = (TH1D*)f04->Get("h1_dbc_number_of_points");
   //TH1D *h1_01 = (TH1D*)f01->Get("h1_N_dbc");
   //TH1D *h1_02 = (TH1D*)f02->Get("h1_N_dbc");
   //TH1D *h1_03 = (TH1D*)f03->Get("h1_N_dbc");
@@ -64,6 +68,10 @@ Int_t plots_dbc_number_of_points(){
   h1_03->SetMarkerColor(kBlue+2);
   h1_03->SetLineWidth(3.0);
   //
+  h1_04->SetLineColor(kGreen+2);
+  h1_04->SetMarkerColor(kGreen+2);
+  h1_04->SetLineWidth(3.0);
+  //
   h1_01->SetTitle("");
   //
   //h1_01->SetMaximum(1.0e+9);
@@ -72,6 +80,17 @@ Int_t plots_dbc_number_of_points(){
   h1_02->Draw("sames");
   //
   h1_03->Draw("sames");
+  h1_04->Draw("sames");
+  //
+
+  TLegend *leg = new TLegend(0.6,0.6,0.9,0.9,"","brNDC");
+  leg->AddEntry(h1_01, "NGB", "apl");
+  leg->AddEntry(h1_02, "gamma diff.   ~10 GeV 3 deg off ax. (rore ~400 m)", "apl");
+  leg->AddEntry(h1_03, "gamma on axis ~10 GeV               (rore ~400 m)", "apl");
+  leg->AddEntry(h1_04, "gamma diff.   ~10 GeV 1 deg off ax. (rore ~400 m)", "apl");
+  leg->Draw();
+  
+  //
   /*
   //
   //h1_01->GetXaxis()->SetTitle("Number of photons on the telescope sphere");

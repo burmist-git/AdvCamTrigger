@@ -25,7 +25,7 @@ public:
   {
   }
 
-  void Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed);
+  void Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed, bool NGBsim = false);
 
   void SiPM_dist(TString histOut);
 

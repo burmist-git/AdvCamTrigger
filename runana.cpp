@@ -90,6 +90,30 @@ int main(int argc, char *argv[]){
     anaTrgA a( inRootFiles, 1);
     a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed);
   }
+  else if(argc == 6 && atoi(argv[1])==112){
+    TString inRootFiles = argv[2];
+    TString outRootFileF = argv[3];
+    Int_t nEv_max = atoi(argv[4]);
+    Int_t rndseed = atoi(argv[5]);
+    Int_t binE = 9;
+    Int_t binTheta = 4;
+    Int_t binDist = 7;
+    Int_t npe_min = 1;
+    Int_t npe_max = 100000;    
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"inRootFiles   : "<<inRootFiles<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl
+	<<"binE          : "<<binE<<endl
+	<<"binTheta      : "<<binTheta<<endl
+	<<"binDist       : "<<binDist<<endl
+	<<"npe_min       : "<<npe_min<<endl
+	<<"npe_max       : "<<npe_max<<endl
+	<<"nEv_max       : "<<nEv_max<<endl
+    	<<"rndseed       : "<<rndseed<<endl;
+    //
+    anaTrgA a( inRootFiles, 1);
+    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, true);
+  }
   else if(argc == 4 && atoi(argv[1])==1111){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
@@ -298,7 +322,13 @@ int main(int argc, char *argv[]){
       	<<"       [6] - binDist"<<endl
 	<<"       [7] - npe_min"<<endl
       	<<"       [8] - npe_max"<<endl
-	<<"       [9] - nEv_max"<<endl;    
+	<<"       [9] - nEv_max"<<endl
+    	<<"       [10]- rndseed"<<endl;
+    cout<<" runID [1] = 112 (execution ID number) TrgA NGB"<<endl
+      	<<"       [2] - in root file"<<endl
+	<<"       [3] - name of root file with histograms"<<endl
+	<<"       [4] - nEv_max"<<endl
+	<<"       [10]- rndseed"<<endl;
     cout<<" runID [1] = 1111 (execution ID number) test single pe amplitude generator "<<endl
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;

@@ -166,7 +166,7 @@ void anaTrgA::test_single_pe_amplitude_generator(TString histOut){
   rootFile->Close();
 }
 
-void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed){
+void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed, bool NGBsim){
   //
   TVector3 v_det;
   v_det.SetXYZ(1.0*TMath::Sin(20.0/180.0*TMath::Pi()),0,1.0*TMath::Cos(20.0/180.0*TMath::Pi()));
@@ -275,19 +275,24 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
       h1_rcore->Fill(rcore);
       //
       start_sim = clock();
-      wfc->simulate_cam_event(nn_fadc_point,
-			      nn_PMT_channels,
-			      wfcam,
-			      ev_time,
-			      time_offset,
-			      n_pe,
-			      pe_chID,
-			      pe_time);
+      if(NGBsim)
+	wfc->simulate_cam_event_NGB(wfcam);
+      else
+	wfc->simulate_cam_event(nn_fadc_point,
+				nn_PMT_channels,
+				wfcam,
+				ev_time,
+				time_offset,
+				n_pe,
+				pe_chID,
+				pe_time);
       finish_sim = clock();
       start_trg = clock();
       //
-      cout<<"---------------------"<<endl
-	  <<"n_pe = "<<n_pe<<endl;
+      if(NGBsim)
+	cout<<"---------------------"<<endl<<"n_pe = "<<0<<endl;
+      else
+	cout<<"---------------------"<<endl<<"n_pe = "<<n_pe<<endl;
       trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
       finish_trg = clock();
       cout<<nevsim

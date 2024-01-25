@@ -62,6 +62,7 @@ public :
   void simulate_cam_event(const Int_t nn_fadc_point,
 			  const Int_t nn_PMT_channels,
 			  std::vector<std::vector<Int_t>> &wf);
+  void simulate_cam_event_NGB(std::vector<std::vector<Int_t>> &wf);
   //
   void print_wfCamSim_configure();
   void get_gr_WF_tmpl_array(TGraph *gr);
