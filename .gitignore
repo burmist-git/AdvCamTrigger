@@ -549,3 +549,9 @@ hist_trg_counter_6ev.root
 hist_trg_counter_7ev.root
 hist_trg_counter_8ev.root
 hist_trg_counter_9ev.root
+4-dist_14-dist.pdf
+result.root
+result_NGB.root
+result_gamma_diffuse_nsb_1x_5binE_1binTheta_3binDist.root
+result_gamma_diffuse_nsb_1x_5binE_3binTheta_3binDist_0000ID.root
+result_gamma_on_nsb_1x_5binE_0binTheta_3binDist.root
