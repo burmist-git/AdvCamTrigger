@@ -212,6 +212,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TH1D *h1_dbc_mean_y = new TH1D("h1_dbc_mean_y","h1_dbc_mean_y", 300, -2.0, 2.0);
   TH1D *h1_dbc_mean_time_ii = new TH1D("h1_dbc_mean_time_ii","h1_dbc_mean_time_ii", 100, 0.0, 100.0);
   //
+  TH2D *h2_dbc_number_of_points_vs_mean_time_ii = new TH2D("h2_dbc_number_of_points_vs_mean_time_ii","h2_dbc_number_of_points_vs_mean_time_ii", 101, -0.5, 100.5, 101, -0.5, 100.5);
+  //
   /////////////
   //
   //
@@ -310,6 +312,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 	h1_dbc_mean_x->Fill(trg_sim->get_dbclusters().at(k).mean_x);
 	h1_dbc_mean_y->Fill(trg_sim->get_dbclusters().at(k).mean_y);
 	h1_dbc_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii);
+	//
+	h2_dbc_number_of_points_vs_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii,
+						      trg_sim->get_dbclusters().at(k).number_of_points);
       }	
       //
       nevsim++;
@@ -353,6 +358,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   h1_dbc_mean_x->Write();
   h1_dbc_mean_y->Write();
   h1_dbc_mean_time_ii->Write();
+  //
+  h2_dbc_number_of_points_vs_mean_time_ii->Write();
   //
   //cout<<"nevsim = "<<nevsim<<endl;
   //

@@ -106,7 +106,7 @@ else
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    mkdir -p $outHistFPref$jobID
 	    outHistF=$outHistFPref$jobID"/hist_trgA_corsika_"$binE"binE_"$binTheta"binTheta_"$binDist"binDist_"$jobID"ID.root"
-	    npe_min=40
+	    npe_min=20
 	    npe_max=200
 	    nEv_max=1000
 	    rndseed=`date +%N`

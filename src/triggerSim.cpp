@@ -229,7 +229,7 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   points.clear();
   //
   Double_t i_time_todist=0.05;
-  unsigned int minPts = 15;
+  unsigned int minPts = 13;
   float eps = 0.1;
   //
   for(unsigned int i = 0;i<trg_vector.size();i++){
