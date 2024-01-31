@@ -22,6 +22,7 @@ class evstHist: public TH2Poly {
 	   Double_t val_Thetamin = 0.0, Double_t val_Thetamax = 10.0, Int_t val_N_bins_t = 10);
   ~evstHist();
   void test();
+  void test_Get_th_bin_ID_and_e_bin_ID();
   void test_get_bin(Double_t E, Double_t th, Double_t val);
   TCanvas* Draw_hist(TString fileName, TString frame_title="");
   TCanvas* Draw_hist_core(Int_t e_bin_i, TString fileName, TString frame_title);
@@ -54,9 +55,9 @@ class evstHist: public TH2Poly {
   
   Int_t get_bin_ID( Double_t E, Double_t th);
 
-  void Fill_rcore( Double_t th, Double_t E, Double_t r_core);
+  void Fill_rcore( Double_t th, Double_t E, Double_t r_core, Double_t weight_val = 1.0);
 
-  void Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID);
+  bool Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID);
 
   inline Double_t get_Emin() const {return _Emin;};
   inline Double_t get_Emax() const {return _Emax;};
@@ -67,6 +68,11 @@ class evstHist: public TH2Poly {
 
   bool check_bin_compatibility(const evstHist *evH, bool with_r_core = false);
   bool check_r_core_bin_compatibility(const evstHist *evH);
+
+  void Weight_TeV();
+  Double_t Weight_integral_GeV( Double_t e_r_GeV, Double_t e_l_GeV);
+
+  static Double_t get_Weight_ETeV(Double_t ETev);
   
  private:
 

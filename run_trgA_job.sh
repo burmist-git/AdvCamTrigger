@@ -108,7 +108,7 @@ else
 	    outHistF=$outHistFPref$jobID"/hist_trgA_corsika_"$binE"binE_"$binTheta"binTheta_"$binDist"binDist_"$jobID"ID.root"
 	    npe_min=20
 	    npe_max=200
-	    nEv_max=1000
+	    nEv_max=100
 	    rndseed=`date +%N`
 	    echo "inRootFile $inRootFile"	
 	    echo "outHistF   $outHistF"

@@ -195,17 +195,19 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns", "h1_digital_sum_5ns",1001,-0.5,1000.5);
   TH1D *h1_fadc_val        = new TH1D("h1_fadc_val",        "h1_fadc_val",       1001,-0.5,1000.5);
   //
-  TH1D *h1_energy = new TH1D("h1_energy","h1_energy", 1000, 0.0, 100.0); 
+  TH1D *h1_energy = new TH1D("h1_energy","h1_energy", 100000, 0.0, 100000.0); 
   TH1D *h1_rcore = new TH1D("h1_rcore","h1_rcore", 1000, 0.0, 1000.0);
   TH1D *h1_theta_p_t_deg = new TH1D("h1_theta_p_t_deg","h1_theta_p_t_deg", 1000, 0.0, 10.0);
   TH1D *h1_npe = new TH1D("h1_npe","h1_npe", 1000, 0.0, 1000.0);
   //
   TH1D *h1_N_dbc = new TH1D("h1_N_dbc","h1_N_dbc", 21, -0.5, 20.5);
   TH1D *h1_dbc_number_of_points = new TH1D("h1_dbc_number_of_points","h1_dbc_number_of_points", 101, -0.5, 100.5);
+  TH1D *h1_dbc_number_of_points_w = new TH1D("h1_dbc_number_of_points_w","h1_dbc_number_of_points_w", 101, -0.5, 100.5);
   TH1D *h1_dbc_number_of_CORE_POINT = new TH1D("h1_dbc_number_of_CORE_POINT","h1_dbc_number_of_CORE_POINT", 101, -0.5, 100.5);
   TH1D *h1_dbc_number_of_BORDER_POINT = new TH1D("h1_dbc_number_of_BORDER_POINT","h1_dbc_number_of_BORDER_POINT", 101, -0.5, 100.5);
   //
   TH2D *h2_dbc_number_of_points_vs_npe = new TH2D("h2_dbc_number_of_points_vs_npe","h2_dbc_number_of_points_vs_npe", 101, -0.5, 100.5, 201, -0.5, 200.5);
+  TH2D *h2_dbc_number_of_points_vs_npe_w = new TH2D("h2_dbc_number_of_points_vs_npe_w","h2_dbc_number_of_points_vs_npe_w", 101, -0.5, 100.5, 201, -0.5, 200.5);
   TH1D *h1_dbc_number_of_points_npe_norm = new TH1D("h1_dbc_number_of_points_npe_norm","h1_dbc_number_of_points_npe_norm", 201, -0.5, 200.5);
   //
   TH1D *h1_dbc_mean_x = new TH1D("h1_dbc_mean_x","h1_dbc_mean_x", 300, -2.0, 2.0);
@@ -213,6 +215,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TH1D *h1_dbc_mean_time_ii = new TH1D("h1_dbc_mean_time_ii","h1_dbc_mean_time_ii", 100, 0.0, 100.0);
   //
   TH2D *h2_dbc_number_of_points_vs_mean_time_ii = new TH2D("h2_dbc_number_of_points_vs_mean_time_ii","h2_dbc_number_of_points_vs_mean_time_ii", 101, -0.5, 100.5, 101, -0.5, 100.5);
+  //
+  TH2D *h2_fadc_val_vs_time_ii = new TH2D("h2_fadc_val_vs_time_ii","h2_fadc_val_vs_time_ii", 101, -0.5, 100.5, 201, 199.5, 400.5);  
   //
   /////////////
   //
@@ -245,7 +249,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //
   wfCamSim *wfc = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
 			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz, fadc_electronic_noise_RMS);
-  wfc->print_wfCamSim_configure();
+  wfc->print_wfCamSim_configure();  
   //
   sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
   triggerSim *trg_sim = new triggerSim(sipm_cam);    
@@ -304,7 +308,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
       h1_N_dbc->Fill(trg_sim->get_dbclusters().size());
       for(unsigned int k = 0; k<trg_sim->get_dbclusters().size(); k++){
 	h1_dbc_number_of_points->Fill(trg_sim->get_dbclusters().at(k).number_of_points);
+	h1_dbc_number_of_points_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points, evstHist::get_Weight_ETeV(energy));
 	h2_dbc_number_of_points_vs_npe->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe);
+	h2_dbc_number_of_points_vs_npe_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe, evstHist::get_Weight_ETeV(energy));
 	h1_dbc_number_of_points_npe_norm->Fill(n_pe);
 	h1_dbc_number_of_CORE_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_CORE_POINT);
 	h1_dbc_number_of_BORDER_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_BORDER_POINT);
@@ -316,6 +322,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 	h2_dbc_number_of_points_vs_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii,
 						      trg_sim->get_dbclusters().at(k).number_of_points);
       }	
+      //trg_sim->fill_fadc_val_vs_time(wfcam,h2_fadc_val_vs_time_ii);
       //
       nevsim++;
     }
@@ -350,6 +357,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //
   h1_N_dbc->Write();
   h1_dbc_number_of_points->Write();
+  h1_dbc_number_of_points_w->Write();
   h2_dbc_number_of_points_vs_npe->Write();
   h1_dbc_number_of_points_npe_norm->Write();
   h1_dbc_number_of_CORE_POINT->Write();
@@ -360,6 +368,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   h1_dbc_mean_time_ii->Write();
   //
   h2_dbc_number_of_points_vs_mean_time_ii->Write();
+  //h2_fadc_val_vs_time_ii->Write();
   //
   //cout<<"nevsim = "<<nevsim<<endl;
   //

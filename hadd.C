@@ -42,11 +42,11 @@ void hadd() {
   // root > .L hadd.C
   // root > hadd()
   
-  Target = TFile::Open( "result_NGB.root", "RECREATE" );
+  //Target = TFile::Open( "result_NGB.root", "RECREATE" );
   //Target = TFile::Open( "result_gamma_diffuse_nsb_1x_5binE_3binTheta_3binDist.root", "RECREATE" );
   //Target = TFile::Open( "result_gamma_diffuse_nsb_1x_5binE_1binTheta_3binDist.root", "RECREATE" );
   //Target = TFile::Open( "result_gamma_on_nsb_1x_5binE_0binTheta_3binDist.root", "RECREATE" );
-
+  Target = TFile::Open( "result_proton_10binE_1binTheta_3binDist.root", "RECREATE" );
 
   
    FileList = new TList();
@@ -115,7 +115,7 @@ void hadd() {
    FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/trgA/0012/hist_trgA_corsika_5binE_1binTheta_3binDist_0012ID.root"));
    FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/trgA/0013/hist_trgA_corsika_5binE_1binTheta_3binDist_0013ID.root"));
    */
-
+   /*
    FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA//hist_trgA_corsika_0000ID.root"));
    FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA//hist_trgA_corsika_0001ID.root"));
    FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA//hist_trgA_corsika_0002ID.root"));
@@ -131,6 +131,23 @@ void hadd() {
    FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA//hist_trgA_corsika_0012ID.root"));
    FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA//hist_trgA_corsika_0013ID.root"));
    FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA//hist_trgA_corsika_0014ID.root"));
+   */
+
+
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0000/hist_trgA_corsika_10binE_1binTheta_3binDist_0000ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0001/hist_trgA_corsika_10binE_1binTheta_3binDist_0001ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0002/hist_trgA_corsika_10binE_1binTheta_3binDist_0002ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0003/hist_trgA_corsika_10binE_1binTheta_3binDist_0003ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0004/hist_trgA_corsika_10binE_1binTheta_3binDist_0004ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0005/hist_trgA_corsika_10binE_1binTheta_3binDist_0005ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0006/hist_trgA_corsika_10binE_1binTheta_3binDist_0006ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0007/hist_trgA_corsika_10binE_1binTheta_3binDist_0007ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0008/hist_trgA_corsika_10binE_1binTheta_3binDist_0008ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0009/hist_trgA_corsika_10binE_1binTheta_3binDist_0009ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0010/hist_trgA_corsika_10binE_1binTheta_3binDist_0010ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0011/hist_trgA_corsika_10binE_1binTheta_3binDist_0011ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0012/hist_trgA_corsika_10binE_1binTheta_3binDist_0012ID.root"));
+   FileList->Add(TFile::Open("../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/0013/hist_trgA_corsika_10binE_1binTheta_3binDist_0013ID.root"));
 
    
    MergeRootfile( Target, FileList );

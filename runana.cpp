@@ -8,6 +8,7 @@
 #include "src/anaFast.hh"
 #include "src/sipmCameraHist.hh"
 #include "src/sipmCameraHistCropped.hh"
+#include "src/evstHist.hh"
 
 //root
 #include "TROOT.h"
@@ -277,6 +278,20 @@ int main(int argc, char *argv[]){
     anaFast a(rootFilesList, conf_file.Data());
     a.Loop_scan(outRootFileF, simtel_all_dat, flux_dat);
   }
+  else if(argc == 2 && atoi(argv[1])==888){
+    Double_t val_Emin = 1.0;      // GeV
+    Double_t val_Emax = 100000;   // GeV
+    Int_t val_N_bins_E = 25;
+    Double_t val_Thetamin = 0.0;  //deg
+    Double_t val_Thetamax = 10.0; //deg
+    Int_t val_N_bins_t = 10;
+    //
+    evstHist *evH = new evstHist("evH","evH",
+				 val_Emin, val_Emax, val_N_bins_E,
+				 val_Thetamin, val_Thetamax, val_N_bins_t);
+    evH->test();
+    evH->test_Get_th_bin_ID_and_e_bin_ID();
+  }
   else{
     cout<<" --> ERROR in input arguments "<<endl
 	<<" runID [1] = 0 (execution ID number)"<<endl
@@ -335,6 +350,7 @@ int main(int argc, char *argv[]){
     cout<<" runID [1] = 100 (execution ID number) SiPM distributions "<<endl
 	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 888 (execution ID number) test of evstHist"<<endl;
   }
   return 0;
 }

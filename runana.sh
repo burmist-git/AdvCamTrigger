@@ -58,11 +58,12 @@ function printHelp {
     echo " [0] -trgAgd   : TrgA gamma diffuse"
     echo " [0] -trgAp    : TrgA proton"
     echo " [0] -trgA_NGB : TrgA NGB"
-    echo " [0] -fscang  : fast scan gamma"
-    echo " [0] -fscangd : fast scan gamma diffuse"
-    echo " [0] -fscane  : fast scan electron"
-    echo " [0] -fscanp  : fast scan proton"
-    echo " [0] -test_pe : test single pe amplitude generator"
+    echo " [0] -fscang        : fast scan gamma"
+    echo " [0] -fscangd       : fast scan gamma diffuse"
+    echo " [0] -fscane        : fast scan electron"
+    echo " [0] -fscanp        : fast scan proton"
+    echo " [0] -test_pe       : test single pe amplitude generator"
+    echo " [0] -test_evstHist : test of evstHist"
     echo " [0] -c     : recompile"
     echo " [0] -h     : print help"
 }
@@ -487,6 +488,8 @@ else
 	time ./runana 8 electron_nsb_1x.list hist_fast_scan_electron_nsb_1x.root anaFast_e.conf ../cosmique_gamma_hadron_generator/electron_simtel.dat ../cosmique_gamma_hadron_generator/flux_ele_pos_diff.dat | tee hist_fast_scan_electron_nsb_1x.log
     elif [ "$1" = "-fscanp" ]; then
 	time ./runana 8 proton_nsb_1x.list hist_fast_scan_proton_nsb_1x.root anaFast_p.conf ../cosmique_gamma_hadron_generator/proton_diff_simtel.dat ../cosmique_gamma_hadron_generator/flux_diff_protons.dat | tee hist_fast_scan_proton_nsb_1x.log
+    elif [ "$1" = "-test_evstHist" ]; then
+	./runana 888
     elif [ "$1" = "-c" ]; then
 	make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j		
     elif [ "$1" = "-h" ]; then

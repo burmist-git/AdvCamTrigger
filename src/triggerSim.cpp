@@ -5,6 +5,7 @@
 
 //root
 #include "TH1D.h"
+#include "TH2D.h"
 #include "TGraph2D.h"
 #include "TGraph.h"
 #include "TFile.h"
@@ -17,7 +18,7 @@
 #include <iomanip>
 #include <stdlib.h>
 
-triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0)
+triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(2)
 {
   //_dbs->print_cluster_stats();
 }
@@ -158,6 +159,12 @@ void triggerSim::print_trigger_vec_to_csv(const std::vector<std::vector<unsigned
   //h1_time_cluster->SaveAs(out_h1_file_name.Data());
 }
 
+void const triggerSim::fill_fadc_val_vs_time( const std::vector<std::vector<int>> &wf, TH2D *h2) const {
+  for(unsigned int ch_i = 0;ch_i<wf.size();ch_i++)
+    for(unsigned int wf_j = 0;wf_j<wf.at(ch_i).size();wf_j++)
+      h2->Fill(wf_j,wf.at(ch_i).at(wf_j));
+}
+
 std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector<std::vector<int>> &wf,
 							       TH1D *h1_digital_sum,
 							       TH1D *h1_digital_sum_3ns,
@@ -171,7 +178,8 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
   int digital_sum_3ns = 0;
   int digital_sum_5ns = 0;
   int fadc_val;
-  for(unsigned int wf_j = 0;wf_j<wf.at(0).size();wf_j++){
+
+  for(unsigned int wf_j = (0 + _n_skip_edge_points);wf_j<(wf.at(0).size() - _n_skip_edge_points);wf_j++){
     trg_chID.clear();
     for(unsigned int ch_i = 0;ch_i<wf.size();ch_i++){
       //digital_sum = get_flower_digital_sum(ch_i,wf_j,wf,0,0,true);

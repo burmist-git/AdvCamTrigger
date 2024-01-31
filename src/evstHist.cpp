@@ -160,17 +160,21 @@ evstHist::evstHist(const char* name, const char* title,
 evstHist::~evstHist(){
 }
 
-void evstHist::Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID){
-  if(cellID>=0)
-    if((unsigned int)cellID<_v_cellID_th_bin_ID.size())
-      th_bin_ID = _v_cellID_th_bin_ID.at((unsigned int)cellID);
-  if(cellID>=0)
-    if((unsigned int)cellID<_v_cellID_e_bin_ID.size())
-      e_bin_ID = _v_cellID_e_bin_ID.at((unsigned int)cellID);
+bool evstHist::Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID){
+  th_bin_ID = -999;
+  e_bin_ID = -999;
+  if( (cellID>=1) && ((unsigned int)cellID<=_v_cellID_th_bin_ID.size()) ){
+    th_bin_ID = _v_cellID_th_bin_ID.at(((unsigned int)cellID-1));
+    if( (unsigned int)cellID<=_v_cellID_e_bin_ID.size() ){
+      e_bin_ID = _v_cellID_e_bin_ID.at(((unsigned int)cellID)-1);
+      return true;
+    }
+  }
+  return false;
 }
 
-void evstHist::Fill_rcore( Double_t th, Double_t E, Double_t r_core){
-  _v_r.at(get_bin_ID(E,th)-1)->Fill(r_core);
+void evstHist::Fill_rcore( Double_t th, Double_t E, Double_t r_core, Double_t weight_val){
+  _v_r.at(get_bin_ID(E,th)-1)->Fill( r_core, weight_val);
 }
 
 void evstHist::set_r_core_bins(TH1D *h1, Double_t r_core_max){
@@ -197,8 +201,31 @@ void evstHist::init_core_hist(TH1D *h1){
 }
 
 void evstHist::test(){
+  cout<<"GetNcells() = "<<GetNcells()<<endl;
   for(Int_t i = 0;i<GetNcells();i++)
-    SetBinContent(i+1,i+1);
+    SetBinContent(i,i);
+  //SetBinContent(0,-999);
+  //for(Int_t i = 0;i<GetNcells();i++)
+  //cout<<i<<" "<<GetBinContent(i)<<endl;
+  //cout<<259<<" "<<GetBinContent(259)<<endl;
+  //cout<<1000<<" "<<GetBinContent(1000)<<endl;
+  //cout<<-1<<" "<<GetBinContent(-1)<<endl;
+  Draw_hist("evH_test.pdf");
+}
+
+void evstHist::test_Get_th_bin_ID_and_e_bin_ID(){
+  Int_t th_bin_ID;
+  Int_t e_bin_ID;
+  for(Int_t i = 0;i<=GetNcells();i++){
+    Get_th_bin_ID_and_e_bin_ID(i, th_bin_ID, e_bin_ID);
+    SetBinContent(i,e_bin_ID+1);
+  }
+  Draw_hist("evH_test_Get_th_bin_ID_and_e_bin_ID_E.pdf");
+  for(Int_t i = 0;i<=GetNcells();i++){
+    Get_th_bin_ID_and_e_bin_ID(i, th_bin_ID, e_bin_ID);
+    SetBinContent(i,th_bin_ID+1);
+  }
+  Draw_hist("evH_test_Get_th_bin_ID_and_e_bin_ID_th.pdf");
 }
 
 void evstHist::test_get_bin(Double_t E, Double_t th, Double_t val){
@@ -452,6 +479,52 @@ void evstHist::Multiply(evstHist *evH_eff, evstHist *evH_flux, bool with_r_core)
   }
 }
 
+Double_t evstHist::get_Weight_ETeV(Double_t ETev){
+  if(ETev>0.0)
+    return 1.0/TMath::Power(ETev,0.68);
+  return 0.0;
+}
+
+Double_t evstHist::Weight_integral_GeV( Double_t e_r_GeV, Double_t e_l_GeV){
+  if(e_r_GeV<0.0 || e_l_GeV<0.0){
+    cout<<" ERROR --> e_r_GeV<0.0 || e_l_GeV<0.0"<<endl
+	<<"           e_r_GeV = "<<e_r_GeV<<endl
+      	<<"           e_l_GeV = "<<e_l_GeV<<endl;
+    assert(0);
+  }
+  if(e_r_GeV <= e_l_GeV){
+    cout<<" ERROR --> e_r_GeV <= e_l_GeV"<<endl
+	<<"           e_r_GeV = "<<e_r_GeV<<endl
+      	<<"           e_l_GeV = "<<e_l_GeV<<endl;
+    assert(0);
+  }
+  return 3.125*(TMath::Power(e_r_GeV/1000.0,0.32)-TMath::Power(e_l_GeV/1000.0,0.32));
+}
+
+void evstHist::Weight_TeV(){
+  //
+  Double_t nev;
+  Double_t nev_norm;
+  Double_t e_l;
+  Double_t e_r;
+  Int_t th_bin_ID;
+  Int_t e_bin_ID;
+  for(Int_t i = 0;i<=GetNcells();i++){
+    nev=GetBinContent(i);
+    if(Get_th_bin_ID_and_e_bin_ID(i, th_bin_ID, e_bin_ID)){
+      e_l = get_E_hist()->GetBinCenter(e_bin_ID+1) - get_E_hist()->GetBinWidth(e_bin_ID+1)/2.0;
+      e_r = get_E_hist()->GetBinCenter(e_bin_ID+1) + get_E_hist()->GetBinWidth(e_bin_ID+1)/2.0;    
+      nev_norm=Weight_integral_GeV(e_r,e_l)/((e_r - e_l)/1000.0);
+      SetBinContent(i,nev*nev_norm);
+      unsigned int ii = i-1;
+      for(Int_t j = 1;j<=get_v_r().at(ii)->GetNbinsX();j++){
+	nev=get_v_r().at(ii)->GetBinContent(j);
+	get_v_r().at(ii)->SetBinContent(j,nev*nev_norm);
+      }
+    }
+  }
+}
+
 void evstHist::selfNorm(){
   Double_t nev;
   Double_t nev_norm;
@@ -519,8 +592,8 @@ void evstHist::LoadBinContent(TString data_in, bool with_r_core){
 	  i++;
 	}
       }
-      myfile.close();
     }
+    myfile.close();
   }
 }
 

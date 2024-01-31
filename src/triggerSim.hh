@@ -14,6 +14,7 @@
 class sipmCameraHist;
 class dbscan;
 class TH1D;
+class TH2D;
 class TString;
 
 class triggerSim {
@@ -39,6 +40,11 @@ public :
 
   inline const vector<cluster_info>& get_dbclusters() const {return _dbclusters_v;};
 
+  void const fill_fadc_val_vs_time( const std::vector<std::vector<int>> &wf, TH2D *h2) const;
+  
+  unsigned int const get_n_skip_edge_points(unsigned int val) const {return _n_skip_edge_points;};
+  inline void set_n_skip_edge_points(unsigned int val){_n_skip_edge_points = val;};
+  
 private:
 
   int get_flower_digital_sum(const unsigned int ch_i, const unsigned int wf_j, const std::vector<std::vector<int>> &wf, Int_t w_l, Int_t w_r, Bool_t norm_yes);
@@ -54,6 +60,9 @@ private:
   vector<cluster_info> _dbclusters_v;
   
   Int_t _trg_counter;
+
+  unsigned int _n_skip_edge_points;
+  
 };
 
 #endif

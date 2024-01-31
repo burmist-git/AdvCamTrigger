@@ -92,9 +92,44 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
 				     val_Emin, val_Emax, val_N_bins_E,
 				     val_Thetamin, val_Thetamax, val_N_bins_t);
   //
+  //
+  evstHist *evH_10npe_w = new evstHist("evH_10npe_w","evH_10npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_20npe_w = new evstHist("evH_20npe_w","evH_20npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_30npe_w = new evstHist("evH_30npe_w","evH_30npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_40npe_w = new evstHist("evH_40npe_w","evH_40npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_50npe_w = new evstHist("evH_50npe_w","evH_50npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_60npe_w = new evstHist("evH_60npe_w","evH_60npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_70npe_w = new evstHist("evH_70npe_w","evH_70npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_80npe_w = new evstHist("evH_80npe_w","evH_80npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_90npe_w = new evstHist("evH_90npe_w","evH_90npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_100npe_w = new evstHist("evH_100npe_w","evH_100npe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
   evstHist *evH_simtel = new evstHist("evH_simtel","evH_simtel",
 				      val_Emin, val_Emax, val_N_bins_E,
 				      val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_simtel_weight= new evstHist("evH_simtel_weight","evH_simtel_weight",
+					    val_Emin, val_Emax, val_N_bins_E,
+					    val_Thetamin, val_Thetamax, val_N_bins_t);
   evstHist *evH_tot_flux_nocore = new evstHist("evH_tot_flux_nocore","evH_tot_flux_nocore",
 					       val_Emin, val_Emax, val_N_bins_E,
 					       val_Thetamin, val_Thetamax, val_N_bins_t);
@@ -136,6 +171,39 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
 					 val_Emin, val_Emax, val_N_bins_E,
 					 val_Thetamin, val_Thetamax, val_N_bins_t);
   //
+  //
+  evstHist *evH_eff_10npe_w = new evstHist("evH_eff_10npe_w","evH_eff_10npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_20npe_w = new evstHist("evH_eff_20npe_w","evH_eff_20npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_30npe_w = new evstHist("evH_eff_30npe_w","evH_eff_30npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_40npe_w = new evstHist("evH_eff_40npe_w","evH_eff_40npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_50npe_w = new evstHist("evH_eff_50npe_w","evH_eff_50npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_60npe_w = new evstHist("evH_eff_60npe_w","evH_eff_60npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_70npe_w = new evstHist("evH_eff_70npe_w","evH_eff_70npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_80npe_w = new evstHist("evH_eff_80npe_w","evH_eff_80npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_90npe_w = new evstHist("evH_eff_90npe_w","evH_eff_90npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_eff_100npe_w = new evstHist("evH_eff_100npe_w","evH_eff_100npe_w",
+					 val_Emin, val_Emax, val_N_bins_E,
+					 val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
+  //
   evstHist *evH_flux = new evstHist("evH_flux","evH_flux",
 				    val_Emin, val_Emax, val_N_bins_E,
 				    val_Thetamin, val_Thetamax, val_N_bins_t);
@@ -170,7 +238,41 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
 					  val_Emin, val_Emax, val_N_bins_E,
 					  val_Thetamin, val_Thetamax, val_N_bins_t);
   //
+  //
+  evstHist *evH_flux_10npe_w = new evstHist("evH_flux_10npe_w","evH_flux_10npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_20npe_w = new evstHist("evH_flux_20npe_w","evH_flux_20npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_30npe_w = new evstHist("evH_flux_30npe_w","evH_flux_30npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_40npe_w = new evstHist("evH_flux_40npe_w","evH_flux_40npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_50npe_w = new evstHist("evH_flux_50npe_w","evH_flux_50npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_60npe_w = new evstHist("evH_flux_60npe_w","evH_flux_60npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_70npe_w = new evstHist("evH_flux_70npe_w","evH_flux_70npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_80npe_w = new evstHist("evH_flux_80npe_w","evH_flux_80npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_90npe_w = new evstHist("evH_flux_90npe_w","evH_flux_90npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_flux_100npe_w = new evstHist("evH_flux_100npe_w","evH_flux_100npe_w",
+					  val_Emin, val_Emax, val_N_bins_E,
+					  val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
   evH_simtel->LoadBinContent(simtel_all_dat.Data(), true);
+  evH_simtel_weight->LoadBinContent(simtel_all_dat.Data(), true);
+  evH_simtel_weight->Weight_TeV();
   evH_tot_flux->LoadBinContent(simtel_all_dat.Data(), true);
   evH_tot_flux->selfNorm();
   evH_tot_flux_nocore->LoadBinContent(flux_dat.Data());
@@ -210,42 +312,72 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
     if(n_pe>9){
       evH_10npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_10npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_10npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_10npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>19){
       evH_20npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_20npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_20npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_20npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>29){
       evH_30npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_30npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_30npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_30npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>39){
       evH_40npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_40npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_40npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_40npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>49){
       evH_50npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_50npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_50npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_50npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>59){
       evH_60npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_60npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_60npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_60npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>69){
       evH_70npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_70npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_70npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_70npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>79){
       evH_80npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_80npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_80npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_80npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>89){
       evH_90npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_90npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_90npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_90npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     if(n_pe>99){
       evH_100npe->Fill(theta_p_t_deg,energy*1000.0);
       evH_100npe->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+      //
+      evH_100npe_w->Fill(theta_p_t_deg,energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      evH_100npe_w->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core, evstHist::get_Weight_ETeV(energy));
     }
     //
     n_ev_cuts++;
@@ -265,6 +397,17 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   evH_eff_90npe->Divide( evH_90npe, evH_simtel, true);
   evH_eff_100npe->Divide( evH_100npe, evH_simtel, true);
   //
+  evH_eff_10npe_w->Divide( evH_10npe_w, evH_simtel_weight, true);
+  evH_eff_20npe_w->Divide( evH_20npe_w, evH_simtel_weight, true);
+  evH_eff_30npe_w->Divide( evH_30npe_w, evH_simtel_weight, true);
+  evH_eff_40npe_w->Divide( evH_40npe_w, evH_simtel_weight, true);
+  evH_eff_50npe_w->Divide( evH_50npe_w, evH_simtel_weight, true);
+  evH_eff_60npe_w->Divide( evH_60npe_w, evH_simtel_weight, true);
+  evH_eff_70npe_w->Divide( evH_70npe_w, evH_simtel_weight, true);
+  evH_eff_80npe_w->Divide( evH_80npe_w, evH_simtel_weight, true);
+  evH_eff_90npe_w->Divide( evH_90npe_w, evH_simtel_weight, true);
+  evH_eff_100npe_w->Divide( evH_100npe_w, evH_simtel_weight, true);
+  //
   evH_flux->Multiply(evH_tot_flux, evH_eff, true);
   evH_flux_10npe->Multiply(evH_tot_flux, evH_eff_10npe, true);
   evH_flux_20npe->Multiply(evH_tot_flux, evH_eff_20npe, true);
@@ -276,6 +419,18 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   evH_flux_80npe->Multiply(evH_tot_flux, evH_eff_80npe, true);
   evH_flux_90npe->Multiply(evH_tot_flux, evH_eff_90npe, true);
   evH_flux_100npe->Multiply(evH_tot_flux, evH_eff_100npe, true);
+  //
+  evH_flux_10npe_w->Multiply(evH_tot_flux, evH_eff_10npe_w, true);
+  evH_flux_20npe_w->Multiply(evH_tot_flux, evH_eff_20npe_w, true);
+  evH_flux_30npe_w->Multiply(evH_tot_flux, evH_eff_30npe_w, true);
+  evH_flux_40npe_w->Multiply(evH_tot_flux, evH_eff_40npe_w, true);
+  evH_flux_50npe_w->Multiply(evH_tot_flux, evH_eff_50npe_w, true);
+  evH_flux_60npe_w->Multiply(evH_tot_flux, evH_eff_60npe_w, true);
+  evH_flux_70npe_w->Multiply(evH_tot_flux, evH_eff_70npe_w, true);
+  evH_flux_80npe_w->Multiply(evH_tot_flux, evH_eff_80npe_w, true);
+  evH_flux_90npe_w->Multiply(evH_tot_flux, evH_eff_90npe_w, true);
+  evH_flux_100npe_w->Multiply(evH_tot_flux, evH_eff_100npe_w, true);  
+  //  
   //
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
@@ -295,6 +450,8 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
     evH_eff_100npe->get_v_r().at(ii)->Write();
   for(unsigned int ii = 0;ii<evH_flux->get_v_r().size();ii++)
     evH_flux->get_v_r().at(ii)->Write();
+  for(unsigned int ii = 0;ii<evH_20npe->get_v_r().size();ii++)
+    evH_20npe->get_v_r().at(ii)->Write();
   //
   //
   evH->Write();
@@ -324,6 +481,29 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   evH_flux_100npe->Write();
   //
   //
+  evH_eff_10npe_w->Write();
+  evH_eff_20npe_w->Write();
+  evH_eff_30npe_w->Write();
+  evH_eff_40npe_w->Write();
+  evH_eff_50npe_w->Write();
+  evH_eff_60npe_w->Write();
+  evH_eff_70npe_w->Write();
+  evH_eff_80npe_w->Write();
+  evH_eff_90npe_w->Write();
+  evH_eff_100npe_w->Write();
+  //
+  evH_flux_10npe_w->Write();
+  evH_flux_20npe_w->Write();
+  evH_flux_30npe_w->Write();
+  evH_flux_40npe_w->Write();
+  evH_flux_50npe_w->Write();
+  evH_flux_60npe_w->Write();
+  evH_flux_70npe_w->Write();
+  evH_flux_80npe_w->Write();
+  evH_flux_90npe_w->Write();
+  evH_flux_100npe_w->Write();
+  //
+  //
   evH->Draw_hist("")->Write();
   evH_simtel->Draw_hist("")->Write();
   evH_tot_flux->Draw_hist("")->Write();
@@ -349,6 +529,77 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   evH_flux_80npe->Draw_hist("")->Write();
   evH_flux_90npe->Draw_hist("")->Write();
   evH_flux_100npe->Draw_hist("")->Write();
+  //
+  //
+  evH_eff_10npe_w->Draw_hist("")->Write();
+  evH_eff_20npe_w->Draw_hist("")->Write();
+  evH_eff_30npe_w->Draw_hist("")->Write();
+  evH_eff_40npe_w->Draw_hist("")->Write();
+  evH_eff_50npe_w->Draw_hist("")->Write();
+  evH_eff_60npe_w->Draw_hist("")->Write();
+  evH_eff_70npe_w->Draw_hist("")->Write();
+  evH_eff_80npe_w->Draw_hist("")->Write();
+  evH_eff_90npe_w->Draw_hist("")->Write();
+  evH_eff_100npe_w->Draw_hist("")->Write();
+  //
+  evH_flux_10npe_w->Draw_hist("")->Write();
+  evH_flux_20npe_w->Draw_hist("")->Write();
+  evH_flux_30npe_w->Draw_hist("")->Write();
+  evH_flux_40npe_w->Draw_hist("")->Write();
+  evH_flux_50npe_w->Draw_hist("")->Write();
+  evH_flux_60npe_w->Draw_hist("")->Write();
+  evH_flux_70npe_w->Draw_hist("")->Write();
+  evH_flux_80npe_w->Draw_hist("")->Write();
+  evH_flux_90npe_w->Draw_hist("")->Write();
+  evH_flux_100npe_w->Draw_hist("")->Write();
+  //
+  //
+  evH_10npe->Write();
+  evH_20npe->Write();
+  evH_30npe->Write();
+  evH_40npe->Write();
+  evH_50npe->Write();
+  evH_60npe->Write();
+  evH_70npe->Write();
+  evH_80npe->Write();
+  evH_90npe->Write();
+  evH_100npe->Write();
+  //
+  //
+  evH_10npe_w->Write();
+  evH_20npe_w->Write();
+  evH_30npe_w->Write();
+  evH_40npe_w->Write();
+  evH_50npe_w->Write();
+  evH_60npe_w->Write();
+  evH_70npe_w->Write();
+  evH_80npe_w->Write();
+  evH_90npe_w->Write();
+  evH_100npe_w->Write();
+  //
+  //
+  evH_10npe->Draw_hist("")->Write();
+  evH_20npe->Draw_hist("")->Write();
+  evH_30npe->Draw_hist("")->Write();
+  evH_40npe->Draw_hist("")->Write();
+  evH_50npe->Draw_hist("")->Write();
+  evH_60npe->Draw_hist("")->Write();
+  evH_70npe->Draw_hist("")->Write();
+  evH_80npe->Draw_hist("")->Write();
+  evH_90npe->Draw_hist("")->Write();
+  evH_100npe->Draw_hist("")->Write();
+  //
+  //
+  evH_10npe_w->Draw_hist("")->Write();
+  evH_20npe_w->Draw_hist("")->Write();
+  evH_30npe_w->Draw_hist("")->Write();
+  evH_40npe_w->Draw_hist("")->Write();
+  evH_50npe_w->Draw_hist("")->Write();
+  evH_60npe_w->Draw_hist("")->Write();
+  evH_70npe_w->Draw_hist("")->Write();
+  evH_80npe_w->Draw_hist("")->Write();
+  evH_90npe_w->Draw_hist("")->Write();
+  evH_100npe_w->Draw_hist("")->Write();
   //
   //
   rootFile->Close();
