@@ -555,3 +555,7 @@ result_NGB.root
 result_gamma_diffuse_nsb_1x_5binE_1binTheta_3binDist.root
 result_gamma_diffuse_nsb_1x_5binE_3binTheta_3binDist_0000ID.root
 result_gamma_on_nsb_1x_5binE_0binTheta_3binDist.root
+muon_head.csv
+muon_head.pkl_0
+muon_pe.csv
+muon_pe_info.pkl_0
