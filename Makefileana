@@ -17,11 +17,14 @@ OUTLIB = ./obj/
 
 all: runana run_dbscan
 
-runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o
+runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 run_dbscan: run_dbscan.cpp obj/dbscan.o
 	$(CXX) -o run_dbscan run_dbscan.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+obj/rateCalculator.o: src/rateCalculator.cpp src/rateCalculator.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)/rateCalculator.o $<
 
 obj/dbscan.o: src/dbscan.cpp src/dbscan.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)/dbscan.o $<

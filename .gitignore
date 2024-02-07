@@ -565,3 +565,10 @@ muon_head.csv
 muon_head.pkl_0
 muon_pe.csv
 muon_pe_info.pkl_0
+evH_test_get_arbitrary_hist_ID_r_core_10m.pdf
+evH_test_get_arbitrary_hist_ID_r_core_1800m.pdf
+evH_test_get_arbitrary_hist_ID_r_core_200m.pdf
+evH_test_get_bin.pdf
+hist_rate_proton_diff.root
+r_core_dist.pdf
+r_core_dist_hist.pdf

@@ -57,6 +57,16 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   //
   Int_t n_ev_cuts = 0;
   //
+
+  evstHist *evH_nhe = new evstHist("evH_nhe","evH_nhe",
+				   val_Emin, val_Emax, val_N_bins_E,
+				   val_Thetamin, val_Thetamax, val_N_bins_t);
+  evH_nhe->init_h1_arb_v( "h1_npe", "h1_npe", 50001,-0.5,50000.5);
+  evstHist *evH_nhe_w = new evstHist("evH_nhe_w","evH_nhe_w",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evH_nhe_w->init_h1_arb_v( "h1_npe_w", "h1_npe_w", 10001,-0.5,10000.5);
+  //
   evstHist *evH = new evstHist("evH","evH",
 			       val_Emin, val_Emax, val_N_bins_E,
 			       val_Thetamin, val_Thetamax, val_N_bins_t);
@@ -282,7 +292,7 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   //
   Double_t theta_p_t;
   Double_t theta_p_t_deg;
-  TH1D *h1_n_pe = new TH1D("h1_n_pe","h1_n_pe",1001,-0.5,10000.5);
+  TH1D *h1_n_pe = new TH1D("h1_n_pe","h1_n_pe",10001,-0.5,10000.5);
   //
   Double_t x0_LST01 = -70.93;
   Double_t y0_LST01 = -52.07;
@@ -308,6 +318,11 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
     //
     evH->Fill(theta_p_t_deg,energy*1000.0);
     evH->Fill_rcore(theta_p_t_deg,energy*1000.0,r_core);
+    //
+    evH_nhe->fill_h1_arb_v(energy*1000.0, theta_p_t_deg, r_core, n_pe);
+    evH_nhe_w->fill_h1_arb_v(energy*1000.0, theta_p_t_deg, r_core, n_pe,evstHist::get_Weight_ETeV(energy));
+    //
+    h1_n_pe->Fill(n_pe);
     //
     if(n_pe>9){
       evH_10npe->Fill(theta_p_t_deg,energy*1000.0);
@@ -452,6 +467,20 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
     evH_flux->get_v_r().at(ii)->Write();
   for(unsigned int ii = 0;ii<evH_20npe->get_v_r().size();ii++)
     evH_20npe->get_v_r().at(ii)->Write();
+  //
+  //
+  TDirectory *cd_evH_nhe = rootFile->mkdir("evH_nhe");
+  cd_evH_nhe->cd();
+  for(unsigned int ii = 0;ii<evH_nhe->get_h1_arb_v().size();ii++)
+    evH_nhe->get_h1_arb_v().at(ii)->Write();
+  rootFile->cd();
+  //
+  TDirectory *cd_evH_nhe_w = rootFile->mkdir("evH_nhe_w");
+  cd_evH_nhe_w->cd();
+  for(unsigned int ii = 0;ii<evH_nhe_w->get_h1_arb_v().size();ii++)
+    evH_nhe_w->get_h1_arb_v().at(ii)->Write();
+  rootFile->cd();  
+  //
   //
   //
   evH->Write();
@@ -600,6 +629,8 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
   evH_80npe_w->Draw_hist("")->Write();
   evH_90npe_w->Draw_hist("")->Write();
   evH_100npe_w->Draw_hist("")->Write();
+  //
+  h1_n_pe->Write();
   //
   //
   rootFile->Close();

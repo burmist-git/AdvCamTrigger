@@ -64,6 +64,7 @@ function printHelp {
     echo " [0] -fscanp        : fast scan proton"
     echo " [0] -test_pe       : test single pe amplitude generator"
     echo " [0] -test_evstHist : test of evstHist"
+    echo " [0] -rate_proton   : calculate proton rate"
     echo " [0] -c     : recompile"
     echo " [0] -h     : print help"
 }
@@ -472,8 +473,8 @@ else
 	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x_cut.log
 	#./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x_cut.log.ev
     elif [ "$1" = "-fp" ]; then
-	#./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
-	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x_cut.log
+	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
+	#./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x_cut.log
 	#./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x_cut.log.ev
     elif [ "$1" = "-fall" ]; then	
 	./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x.log
@@ -490,6 +491,8 @@ else
 	time ./runana 8 proton_nsb_1x.list hist_fast_scan_proton_nsb_1x.root anaFast_p.conf ../cosmique_gamma_hadron_generator/proton_diff_simtel.dat ../cosmique_gamma_hadron_generator/flux_diff_protons.dat | tee hist_fast_scan_proton_nsb_1x.log
     elif [ "$1" = "-test_evstHist" ]; then
 	./runana 888
+    elif [ "$1" = "-rate_proton" ]; then
+	./runana 999 p ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/ ./hist_rate_proton_diff.root
     elif [ "$1" = "-c" ]; then
 	make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j		
     elif [ "$1" = "-h" ]; then

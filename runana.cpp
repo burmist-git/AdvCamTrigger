@@ -9,6 +9,8 @@
 #include "src/sipmCameraHist.hh"
 #include "src/sipmCameraHistCropped.hh"
 #include "src/evstHist.hh"
+#include "src/rateCalculator.hh"
+
 
 //root
 #include "TROOT.h"
@@ -291,6 +293,54 @@ int main(int argc, char *argv[]){
 				 val_Thetamin, val_Thetamax, val_N_bins_t);
     evH->test();
     evH->test_Get_th_bin_ID_and_e_bin_ID();
+    //
+    evstHist *evH02 = new evstHist("evH02","evH02",
+				   val_Emin, val_Emax, val_N_bins_E,
+				   val_Thetamin, val_Thetamax, val_N_bins_t);
+    evH02->test_get_bin(1.1, 0.1, 1);
+    evH02->test_get_bin(10.1, 0.1, 2);
+    evH02->test_get_bin(10.1, 9.1, 3);
+    evH02->test_get_bin(100.1, 9.1, 4);
+    evH02->test_get_bin(1000.1, 9.1, 5);
+    evH02->test_get_bin(10000.1, 8.1, 6);
+    evH02->test_get_bin(99999.1, 7.1, 7);
+    evH02->Draw_hist("evH_test_get_bin.pdf");    
+    //
+    evstHist *evH03 = new evstHist("evH03","evH03",
+				   val_Emin, val_Emax, val_N_bins_E,
+				   val_Thetamin, val_Thetamax, val_N_bins_t);
+    evH03->test_get_arbitrary_hist_ID();
+  }
+  else if(argc == 5 && atoi(argv[1])==999){
+    //
+    TString particle_type = argv[2];
+    TString hist_file_prefix = argv[3];
+    TString outRootFileF = argv[4];
+    TString rateCalc_name_title = "rateCalc";
+    //
+    Double_t val_Emin = 1.0;      // GeV
+    Double_t val_Emax = 100000;   // GeV
+    Int_t val_N_bins_E = 25;      //
+    Double_t val_Thetamin = 0.0;  //deg
+    Double_t val_Thetamax = 10.0; //deg
+    Int_t val_N_bins_t = 10;
+    evstHist *evH_flux= new evstHist("evH_flux","evH_flux",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+    //
+    cout<<"--> Parameter calculation from the WF <--"<<endl
+	<<"particle_type    : "<<particle_type<<endl
+	<<"hist_file_prefix : "<<hist_file_prefix<<endl;
+    //
+    if(particle_type = "p"){
+      rateCalc_name_title += "_proton";
+      evH_flux->LoadBinContent("../cosmique_gamma_hadron_generator/flux_diff_protons.dat", true);
+    }
+    else{
+      assert(0);
+    }
+    //
+    rateCalculator r(rateCalc_name_title.Data(), rateCalc_name_title.Data(), hist_file_prefix, outRootFileF, evH_flux);
   }
   else{
     cout<<" --> ERROR in input arguments "<<endl
@@ -351,6 +401,10 @@ int main(int argc, char *argv[]){
 	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 888 (execution ID number) test of evstHist"<<endl;
+    cout<<" runID [1] = 999 (execution ID number) rate calculator"<<endl
+	<<"       [2] - particle type (g,gd,e,p)"<<endl
+      	<<"       [3] - histogram file prefix"<<endl
+    	<<"       [4] - name of root file with histograms"<<endl;
   }
   return 0;
 }

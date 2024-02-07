@@ -155,9 +155,19 @@ evstHist::evstHist(const char* name, const char* title,
       _v_r.push_back(h1);
     }
   }
+  //
+  _r_core_max_val = Get_r_core_max_val();
+  _N_bins_r_core = get_v_r().at(0)->GetNbinsX();
 }
 
 evstHist::~evstHist(){
+}
+
+Double_t evstHist::Get_r_core_max_val(){
+  Double_t bin_l = 0.0;
+  Double_t bin_r = 0.0;
+  get_Bin_Edge(get_v_r().at(0), get_v_r().at(0)->GetNbinsX(), bin_l, bin_r);
+  return bin_r;
 }
 
 bool evstHist::Get_th_bin_ID_and_e_bin_ID( Int_t cellID, Int_t &th_bin_ID, Int_t &e_bin_ID){
@@ -236,6 +246,136 @@ Int_t evstHist::get_bin_ID( Double_t E, Double_t th){
   Int_t E_bin = _h1_E->FindBin(E);
   Int_t th_bin = _h1_theta->FindBin(th);
   return _N_bins_t*(E_bin-1) + th_bin;
+}
+
+void evstHist::init_h1_arb_v(const char* name, const char* title, Int_t nBins, Double_t valmin, Double_t valmax){
+  Double_t E;
+  Double_t th;
+  Double_t r_core;
+  unsigned int arbitrary_hist_ID;
+  //
+  for(Int_t i_E = 0;i_E<_N_bins_E;i_E++){
+    for(Int_t i_t = 0;i_t<_N_bins_t;i_t++){
+      for(Int_t i_r = 0;i_r<_N_bins_r_core;i_r++){      
+	TH1D *h1 = new TH1D();
+	_h1_arb_v.push_back(h1);
+      }
+    }
+  }
+  //  
+  Int_t iBin;
+  Int_t jBin;
+  Int_t kBin;
+  //
+  TString h1_arb_name = name;
+  TString h1_arb_title = title;
+  //
+  for(Int_t i = 1; i<=get_E_hist()->GetNbinsX(); i++){
+    E = get_E_hist()->GetBinCenter(i);
+    for(Int_t j = 1; j<=get_theta_hist()->GetNbinsX(); j++){
+      th = get_theta_hist()->GetBinCenter(j);
+      for(Int_t k = 1; k<=get_v_r().at(0)->GetNbinsX(); k++){
+	r_core = get_v_r().at(0)->GetBinCenter(k);
+	if(get_arbitrary_hist_ID( E, th, r_core, arbitrary_hist_ID)){
+	  iBin = i-1;
+	  jBin = j-1;
+	  kBin = k-1;
+	  //
+	  h1_arb_name = name;
+	  h1_arb_name += "_i_E_"; h1_arb_name += iBin;
+	  h1_arb_name += "_i_t_"; h1_arb_name += jBin;
+	  h1_arb_name += "_i_r_"; h1_arb_name += kBin;
+	  //
+	  h1_arb_title = title;
+	  h1_arb_title += "_i_E_"; h1_arb_title += iBin;
+	  h1_arb_title += "_i_t_"; h1_arb_title += jBin;
+	  h1_arb_title += "_i_r_"; h1_arb_title += kBin;
+	  //
+	  get_h1_arb_v().at(arbitrary_hist_ID)->SetNameTitle(h1_arb_name.Data(),h1_arb_title.Data());
+	  get_h1_arb_v().at(arbitrary_hist_ID)->SetBins(nBins, valmin, valmax);
+	}
+      }
+    }
+  }
+}
+
+void evstHist::fill_h1_arb_v(Double_t E, Double_t th, Double_t r_core, Double_t val, Double_t valweight){
+  unsigned int arbitrary_hist_ID;
+  if(get_arbitrary_hist_ID( E, th, r_core, arbitrary_hist_ID)){
+    if(get_h1_arb_v().size()>arbitrary_hist_ID){
+      if(valweight!=-999.0)
+	get_h1_arb_v().at(arbitrary_hist_ID)->Fill(val,valweight);
+      else
+	get_h1_arb_v().at(arbitrary_hist_ID)->Fill(val);
+    }
+  }
+}
+
+void evstHist::test_get_arbitrary_hist_ID(){
+  Double_t E;
+  Double_t th;
+  Double_t r_core = 10.0;
+  unsigned int arbitrary_hist_ID;
+  for(Int_t i = 1; i<=get_theta_hist()->GetNbinsX(); i++){
+    th = get_theta_hist()->GetBinCenter(i);
+    for(Int_t j = 1; j<=get_E_hist()->GetNbinsX(); j++){
+      E = get_E_hist()->GetBinCenter(j);
+      if(get_arbitrary_hist_ID( E, th, r_core, arbitrary_hist_ID))
+	SetBinContent(get_bin_ID(E,th),arbitrary_hist_ID);
+    }
+  }
+  Draw_hist("evH_test_get_arbitrary_hist_ID_r_core_10m.pdf");
+  //
+  r_core = 200.0;
+  for(Int_t i = 1; i<=get_theta_hist()->GetNbinsX(); i++){
+    th = get_theta_hist()->GetBinCenter(i);
+    for(Int_t j = 1; j<=get_E_hist()->GetNbinsX(); j++){
+      E = get_E_hist()->GetBinCenter(j);
+      if(get_arbitrary_hist_ID( E, th, r_core, arbitrary_hist_ID))
+	SetBinContent(get_bin_ID(E,th),arbitrary_hist_ID);
+    }
+  }
+  Draw_hist("evH_test_get_arbitrary_hist_ID_r_core_200m.pdf");
+  //
+  r_core = 1800.0;
+  for(Int_t i = 1; i<=get_theta_hist()->GetNbinsX(); i++){
+    th = get_theta_hist()->GetBinCenter(i);
+    for(Int_t j = 1; j<=get_E_hist()->GetNbinsX(); j++){
+      E = get_E_hist()->GetBinCenter(j);
+      if(get_arbitrary_hist_ID( E, th, r_core, arbitrary_hist_ID))
+	SetBinContent(get_bin_ID(E,th),arbitrary_hist_ID);
+    }
+  }
+  Draw_hist("evH_test_get_arbitrary_hist_ID_r_core_1800m.pdf");
+}
+
+bool evstHist::get_arbitrary_hist_ID( Double_t E, Double_t th, Double_t r_core, unsigned int &arbitrary_hist_ID){
+  Int_t E_bin  = _h1_E->FindBin(E);
+  Int_t th_bin = _h1_theta->FindBin(th);
+  Int_t r_bin  = 0;
+  arbitrary_hist_ID = -1;  
+  if(get_v_r().size()>0)
+    r_bin = get_v_r().at(0)->FindBin(r_core);
+  if( E_bin < 1 || th_bin < 1 || r_bin < 1)
+    return false;
+  if( E_bin > _N_bins_E || th_bin > _N_bins_t || r_bin > _N_bins_r_core)
+    return false;
+  //
+  arbitrary_hist_ID = (unsigned int)(r_bin-1)*(_N_bins_E*_N_bins_t) + (unsigned int)(_N_bins_t*(E_bin-1) + th_bin) - 1;
+  //
+  //cout<<setw(15)<<"E"
+  //    <<setw(15)<<"th"
+  //    <<setw(15)<<"r_core"
+  //    <<setw(15)<<"hist_ID"<<endl;
+  //cout<<setw(15)<<E
+  //    <<setw(15)<<th
+  //    <<setw(15)<<r_core<<endl;
+  //cout<<setw(15)<<E_bin
+  //    <<setw(15)<<th_bin
+  //    <<setw(15)<<r_bin
+  //    <<setw(15)<<arbitrary_hist_ID<<endl;
+  //
+  return true;
 }
 
 TCanvas* evstHist::Draw_hist(TString fileName, TString frame_title){

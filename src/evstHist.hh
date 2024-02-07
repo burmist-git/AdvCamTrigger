@@ -29,7 +29,8 @@ class evstHist: public TH2Poly {
   
   inline TH1D* get_theta_hist() {return _h1_theta;}
   inline TH1D* get_E_hist() {return _h1_E;}
-  inline std::vector<TH1D*> get_v_r() {return _v_r;};
+  inline std::vector<TH1D*>& get_v_r() {return _v_r;};
+  inline std::vector<TH1D*>& get_h1_arb_v() {return _h1_arb_v;};
   
   TString _hist_name;
   TString _hist_title;
@@ -52,6 +53,8 @@ class evstHist: public TH2Poly {
   
   static void set_r_core_bins(TH1D *h1, Double_t r_core_max = 2000);
   static void init_core_hist(TH1D *h1);
+
+  Double_t Get_r_core_max_val();
   
   Int_t get_bin_ID( Double_t E, Double_t th);
 
@@ -73,6 +76,13 @@ class evstHist: public TH2Poly {
   Double_t Weight_integral_GeV( Double_t e_r_GeV, Double_t e_l_GeV);
 
   static Double_t get_Weight_ETeV(Double_t ETev);
+
+  bool get_arbitrary_hist_ID( Double_t E, Double_t th, Double_t r_core, unsigned int &arbitrary_hist_ID);
+
+  void test_get_arbitrary_hist_ID();
+
+  void init_h1_arb_v(const char* name, const char* title, Int_t nBins, Double_t valmin, Double_t valmax);
+  void fill_h1_arb_v(Double_t E, Double_t th, Double_t r_core, Double_t val, Double_t valweight = -999.0);
   
  private:
 
@@ -89,6 +99,9 @@ class evstHist: public TH2Poly {
   Double_t _Thetamin;
   Double_t _Thetamax;
   Int_t _N_bins_t;
+
+  Double_t _r_core_max_val;
+  Int_t _N_bins_r_core;
   
   Double_t _d;
   Double_t _le;
@@ -101,5 +114,7 @@ class evstHist: public TH2Poly {
 
   std::vector<Int_t> _v_cellID_th_bin_ID;
   std::vector<Int_t> _v_cellID_e_bin_ID;
+
+  std::vector<TH1D*> _h1_arb_v;
   
 };
