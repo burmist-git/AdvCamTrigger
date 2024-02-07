@@ -574,3 +574,6 @@ r_core_dist.pdf
 r_core_dist_hist.pdf
 hist_trgA_corsika_0000ID_test_live.root
 multiply_data_proton_nsb_1x.log
+hist_trgA_corsika_0000ID_test_live.log
+hist_trgA_test_live_proton_corsika_0000ID.log
+hist_trgA_test_live_proton_corsika_0000ID.root

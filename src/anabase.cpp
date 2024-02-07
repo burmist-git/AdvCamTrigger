@@ -28,7 +28,7 @@
 
 using namespace std;
 
-anabase::anabase(TString fileList, Bool_t short_format_flag) : _particle_type_name("NONE"), _short_format_flag(short_format_flag), fChain(0) 
+anabase::anabase(TString fileList, Bool_t short_format_flag) : _particle_type_name("NONE"), _short_format_flag(short_format_flag), fChain(0), _n_data_chunks(20) 
 {
   ifstream indata;
   TString rootFileName;
@@ -48,7 +48,7 @@ anabase::anabase(TString fileList, Bool_t short_format_flag) : _particle_type_na
   Init(theChain);
 }
 
-anabase::anabase(TString inFileName, Int_t keyID, Bool_t short_format_flag) : _particle_type_name("NONE"), _short_format_flag(short_format_flag), fChain(0) 
+anabase::anabase(TString inFileName, Int_t keyID, Bool_t short_format_flag) : _particle_type_name("NONE"), _short_format_flag(short_format_flag), fChain(0), _n_data_chunks(20)
 {
   if(keyID == 1){
     ifstream indata;
@@ -311,4 +311,13 @@ void anabase::getCore_rel_R_theta(const Double_t x0, const Double_t y0, const Do
   TVector2 vv(xx-x0,yy-y0);
   rr = vv.Mod();
   theta = vv.Phi();
+}
+
+Int_t anabase::get_current_data_chunk_ID(Long64_t nentries, Long64_t jentry){
+  Int_t delta_n = (Double_t)nentries/(Double_t)_n_data_chunks;
+  if(delta_n>0)
+    _data_chunk_ID = (Int_t)jentry/delta_n;
+  else
+    _data_chunk_ID = 0;
+  return _data_chunk_ID;
 }

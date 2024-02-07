@@ -242,8 +242,12 @@ int main(){
   plot_and_save( ds, "hist_dbscan_S_sets.root", k_dist_graph);
   ds.clear();  
   //
-  //points_v.clear();
-  //genData_worms(points_v, "worms_2d.txt");
+  points_v.clear();
+  genData_worms(points_v, "worms_2d.txt");
+  cout<<"points_v.at(0).point_id                = "<<points_v.at(0).point_id<<endl;
+  cout<<"points_v.at(points_v.size()-1).point_id                = "<<points_v.at(points_v.size()-1).point_id<<endl;
+  cout<<"points_v.front().point_id = "<<points_v.front().point_id<<endl;
+  cout<<"points_v.back().point_id = "<<points_v.back().point_id<<endl;
   //minPts = 23;
   //eps = 17;
   //ds.set_points(points_v);

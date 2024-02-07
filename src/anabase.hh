@@ -27,6 +27,7 @@ public :
   inline void set_particle_type_name(TString particle_type_name){_particle_type_name = particle_type_name;};
   void printEv();  
   void getCore_rel_R_theta(const Double_t x0, const Double_t y0, const Double_t xx, const Double_t yy, Double_t &rr, Double_t &theta);
+  Int_t get_current_data_chunk_ID(Long64_t nentries, Long64_t jentry);
   
 public :
   void Loop(TString histOut);
@@ -79,6 +80,10 @@ public :
   ////////////////////////////////////  
   static const Int_t nChannels = 7987;
   static const Int_t nn_fadc_point = 75;
+
+  Int_t _n_data_chunks;
+  Int_t _data_chunk_ID;
+  
   //
   //---------------------------------------------------
   

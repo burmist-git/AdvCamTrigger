@@ -41,6 +41,9 @@ void dbscan::get_cluster_stats(){
 	_clusters_v.at(_points_v.at(k).clusterID).clusterID = _points_v.at(k).clusterID;
 	_clusters_v.at(_points_v.at(k).clusterID).number_of_points++;
 	//
+	_clusters_v.at(_points_v.at(k).clusterID).pixel_id_v.push_back(_points_v.at(k).pixel_id);
+	_clusters_v.at(_points_v.at(k).clusterID).time_ii_v.push_back(_points_v.at(k).time_ii);
+	//
 	_clusters_v.at(_points_v.at(k).clusterID).mean_x += _points_v.at(k).x;
 	_clusters_v.at(_points_v.at(k).clusterID).mean_y += _points_v.at(k).y;
 	_clusters_v.at(_points_v.at(k).clusterID).mean_time_ii += _points_v.at(k).time_ii;
@@ -57,6 +60,8 @@ void dbscan::get_cluster_stats(){
 	_clusters_v.at(k).mean_y /= _clusters_v.at(k).number_of_points;
 	_clusters_v.at(k).mean_time_ii /= _clusters_v.at(k).number_of_points;
       }
+      _clusters_v.at(k).get_n_t_ii();      
+      _clusters_v.at(k).get_number_of_pixels();
     }
   }
 }

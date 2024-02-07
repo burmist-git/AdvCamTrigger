@@ -76,8 +76,9 @@ else
 			jobID=`printf "%04d" $counter`
 			((counter=counter+1))
 			echo "jobID = $jobID"
+			data_chunk_ID="-999"
 			#$simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID
-			sbatch $simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID
+			sbatch $simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID $data_chunk_ID
 		    done
 		done
 	    done	

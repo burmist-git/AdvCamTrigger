@@ -17,22 +17,24 @@ class TBranch;
 class anaTrgA: public anabase {
 public:
 
-  anaTrgA(TString fileList) : anabase(fileList)
+  anaTrgA(TString fileList) : anabase(fileList), _disable_energy_theta_rcore_binwise_cuts(false)
   {
   }
 
-  anaTrgA(TString file, Int_t key) : anabase(file, key)
+  anaTrgA(TString file, Int_t key) : anabase(file, key), _disable_energy_theta_rcore_binwise_cuts(false)
   {
   }
 
-  void Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed, bool NGBsim = false);
+  void Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed, Int_t data_chunk_ID = -999, bool NGBsim = false);
 
   void SiPM_dist(TString histOut);
 
   void transform_SiPM_distadd( TGraph *gr_tr, const TGraph *gr);
 
   void test_single_pe_amplitude_generator(TString histOut);
-  
+
+  inline void set_disable_energy_theta_rcore_binwise_cuts(bool val){_disable_energy_theta_rcore_binwise_cuts = val;};
+    
 private:
   //
   Bool_t cut(Int_t nevsim, Double_t theta_p_t_deg, Double_t rcore);
@@ -46,6 +48,8 @@ private:
   Int_t _npe_min;
   Int_t _npe_max;
   Int_t _nEv_max;
+  //
+  bool _disable_energy_theta_rcore_binwise_cuts; 
   //
   const void print_cuts();
   //

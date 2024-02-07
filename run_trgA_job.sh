@@ -70,27 +70,29 @@ source $simHomeDir/convert2root.sh --set_unlimited_mem
 
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] -d         : default"
-    echo " [1]            : particle type (g,gd,e,p)"
-    echo " [2]            : Ebin   - [0:24]"
-    echo " [3]            : Thbin  - [0:9]"
-    echo " [4]            : rbin   - [0:9]"
-    echo " [5]            : jobID  - [0:199]"
-    echo " [0] -NGB       : NGB"
-    echo " [1]            : jobID  - [0:199] (ex: 0000  0001 ...)"
-    echo " [0] -test_live : test live"
-    echo " [1]            : nEv"
-    echo " [0] -test_srun : test srun"
-    echo " [1]            : nEv"
-    echo " [0] -c         : recompile"
-    echo " [0] -h         : print help"
+    echo " [0] -d             : default"
+    echo " [1]                : particle type (g,gd,e,p)"
+    echo " [2]                : Ebin   - [0:24]"
+    echo " [3]                : Thbin  - [0:9]"
+    echo " [4]                : rbin   - [0:9]"
+    echo " [5]                : jobID  - [0:199]"
+    echo " [0] -NGB           : NGB"
+    echo " [1]                : jobID - [0:199] (ex: 0000  0001 ...)"
+    echo " [0] -test_live_NSB : test live (NSB)"
+    echo " [1]                : nEv"
+    echo " [0] -test_live     : test live"
+    echo " [1]                : nEv"
+    echo " [0] -test_srun     : test srun"
+    echo " [1]                : nEv"
+    echo " [0] -c             : recompile"
+    echo " [0] -h             : print help"
 }
 
 if [ $# -eq 0 ]; then
     printHelp
 else
     if [ "$1" = "-d" ]; then
-	if [ $# -eq 6 ]; then
+	if [ $# -eq 7 ]; then
 	    if [ "$2" = "g" ]; then
 		inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/"
 		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/trgA/"
@@ -108,6 +110,7 @@ else
 	    binTheta=$4
 	    binDist=$5
 	    jobID=$6
+	    data_chunk_ID=$7
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    mkdir -p $outHistFPref$jobID
 	    outHistF=$outHistFPref$jobID"/hist_trgA_corsika_"$binE"binE_"$binTheta"binTheta_"$binDist"binDist_"$jobID"ID.root"
@@ -126,13 +129,13 @@ else
 	    echo "nEv_max    $nEv_max"
 	    echo "rndseed    $rndseed"
 	    #live
-	    #./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
+	    #./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID
 	    #screen
 	    #screenName='tr'$jobID
             #echo "$screenName"
-            #screen -S $screenName -L -d -m ./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
+            #screen -S $screenName -L -d -m ./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID
 	    #srun
-	    srun $simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
+	    srun $simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID
 	else
 	    printHelp	    
 	fi	
@@ -161,13 +164,14 @@ else
 	else
 	    printHelp
 	fi
-    elif [ "$1" = "-test_live" ]; then
+    elif [ "$1" = "-test_live_NSB" ]; then
 	if [ $# -eq 2 ]; then
 	    inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
 	    nEv_max=$2
 	    jobID="0000"
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    outHistF="./hist_trgA_corsika_"$jobID"ID_test_live.root"
+	    outlogF="./hist_trgA_corsika_"$jobID"ID_test_live.log"
 	    rndseed=`date +%N`
 	    echo "inRootFile $inRootFile"	
 	    echo "outHistF   $outHistF"
@@ -175,7 +179,42 @@ else
 	    echo "nEv_max    $nEv_max"
 	    echo "rndseed    $rndseed"
 	    #live
-	    ./runana 112 $inRootFile $outHistF $nEv_max $rndseed
+	    ./runana 112 $inRootFile $outHistF $nEv_max $rndseed | tee $outlogF
+	else
+	    printHelp
+	fi
+    elif [ "$1" = "-test_live" ]; then
+	if [ $# -eq 2 ]; then
+	    nEv_max=$2
+	    inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
+	    outHistFPref="./"
+	    binE=0
+	    binTheta=0
+	    binDist=0
+	    jobID="0000"
+	    data_chunk_ID=-999
+	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
+	    mkdir -p $outHistFPref$jobID
+	    outHistF=$outHistFPref"/hist_trgA_test_live_proton_corsika_"$jobID"ID.root"
+	    outlogF=$outHistFPref"/hist_trgA_test_live_proton_corsika_"$jobID"ID.log"
+	    npe_min=20
+	    npe_max=10000
+	    rndseed=`date +%N`
+	    #
+	    echo "inRootFile    $inRootFile"
+	    echo "outHistF      $outHistF"
+	    echo "binE          $binE"
+	    echo "binTheta      $binTheta"
+	    echo "binDist       $binDist"
+	    echo "jobID         $jobID"
+	    echo "npe_min       $npe_min"	
+	    echo "npe_max       $npe_max"
+	    echo "nEv_max       $nEv_max"
+	    echo "rndseed       $rndseed"
+	    echo "data_chunk_ID $data_chunk_ID"
+	    #
+	    #live
+	    ./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID | tee $outlogF
 	else
 	    printHelp
 	fi

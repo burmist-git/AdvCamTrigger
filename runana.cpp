@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
     anaTrg a( inRootFiles, 1);
     a.Loop(outRootFileF);
   }
-  else if(argc == 11 && atoi(argv[1])==111){
+  else if(argc == 12 && atoi(argv[1])==111){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
     Int_t binE = atoi(argv[4]);
@@ -79,6 +79,7 @@ int main(int argc, char *argv[]){
     Int_t npe_max = atoi(argv[8]);
     Int_t nEv_max = atoi(argv[9]);
     Int_t rndseed = atoi(argv[10]);
+    Int_t data_chunk_ID = atoi(argv[11]);
     cout<<"--> Parameter calculation from the WF <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl
@@ -88,10 +89,12 @@ int main(int argc, char *argv[]){
 	<<"npe_min       : "<<npe_min<<endl
 	<<"npe_max       : "<<npe_max<<endl
 	<<"nEv_max       : "<<nEv_max<<endl
-    	<<"rndseed       : "<<rndseed<<endl;
+    	<<"rndseed       : "<<rndseed<<endl
+	<<"data_chunk_ID : "<<data_chunk_ID<<endl;
     //
     anaTrgA a( inRootFiles, 1);
-    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed);
+    a.set_disable_energy_theta_rcore_binwise_cuts(true);
+    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, data_chunk_ID);
   }
   else if(argc == 6 && atoi(argv[1])==112){
     TString inRootFiles = argv[2];
@@ -103,6 +106,7 @@ int main(int argc, char *argv[]){
     Int_t binDist = 7;
     Int_t npe_min = 1;
     Int_t npe_max = 100000;    
+    Int_t data_chunk_ID = -999;
     cout<<"--> Parameter calculation from the WF <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl
@@ -112,10 +116,11 @@ int main(int argc, char *argv[]){
 	<<"npe_min       : "<<npe_min<<endl
 	<<"npe_max       : "<<npe_max<<endl
 	<<"nEv_max       : "<<nEv_max<<endl
-    	<<"rndseed       : "<<rndseed<<endl;
+    	<<"rndseed       : "<<rndseed<<endl
+	<<"data_chunk_ID : "<<data_chunk_ID<<endl;
     //
     anaTrgA a( inRootFiles, 1);
-    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, true);
+    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, data_chunk_ID, true);
   }
   else if(argc == 4 && atoi(argv[1])==1111){
     TString inRootFiles = argv[2];
@@ -388,7 +393,8 @@ int main(int argc, char *argv[]){
 	<<"       [7] - npe_min"<<endl
       	<<"       [8] - npe_max"<<endl
 	<<"       [9] - nEv_max"<<endl
-    	<<"       [10]- rndseed"<<endl;
+    	<<"       [10]- rndseed"<<endl
+	<<"       [11]- data_chunk_ID"<<endl;
     cout<<" runID [1] = 112 (execution ID number) TrgA NGB"<<endl
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl

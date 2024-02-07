@@ -21,14 +21,20 @@ using namespace std;
 struct cluster_info {
   Int_t clusterID;
   Int_t number_of_points;
+  Int_t number_of_pixels;
+  Int_t n_t_ii;
   Int_t number_of_CORE_POINT;
   Int_t number_of_BORDER_POINT;
   Double_t mean_x;
   Double_t mean_y;
   Double_t mean_time_ii;
+  vector<Int_t> pixel_id_v;
+  vector<Int_t> time_ii_v;
   cluster_info(){
     clusterID = -999;
     number_of_points = 0;
+    number_of_pixels = 0;
+    n_t_ii = 0;
     number_of_CORE_POINT = 0;
     number_of_BORDER_POINT = 0;
     mean_x       = 0.0;
@@ -36,24 +42,62 @@ struct cluster_info {
     mean_time_ii = 0.0;
   }
   void print_cluster_info_header() const {
-    std::cout<<setw(15)<<"clusterID"
-	     <<setw(20)<<"number_of_points"
-	     <<setw(25)<<"number_of_CORE_POINT"
-	     <<setw(25)<<"number_of_BORDER_POINT"
-	     <<setw(15)<<"mean_x"
-	     <<setw(15)<<"mean_y"
-	     <<setw(15)<<"mean_time_ii"
+    std::cout<<setw(13)<<"clusterID"
+	     <<setw(19)<<"number_of_points"
+      	     <<setw(19)<<"number_of_pixels"
+	     <<setw(8)<<"n_t_ii"
+	     <<setw(24)<<"number_of_CORE_POINT"
+	     <<setw(24)<<"number_of_BORDER_POINT"
+	     <<setw(14)<<"mean_x"
+	     <<setw(14)<<"mean_y"
+	     <<setw(14)<<"mean_time_ii"
 	     <<std::endl;
   }
   void print_cluster_info() const {
-    std::cout<<setw(15)<<clusterID
-	     <<setw(20)<<number_of_points
-	     <<setw(25)<<number_of_CORE_POINT
-	     <<setw(25)<<number_of_BORDER_POINT
-	     <<setw(15)<<mean_x
-	     <<setw(15)<<mean_y
-	     <<setw(15)<<mean_time_ii
+    std::cout<<setw(13)<<clusterID
+	     <<setw(19)<<number_of_points
+      	     <<setw(19)<<number_of_pixels
+	     <<setw(8)<<n_t_ii
+	     <<setw(24)<<number_of_CORE_POINT
+	     <<setw(24)<<number_of_BORDER_POINT
+	     <<setw(14)<<mean_x
+	     <<setw(14)<<mean_y
+	     <<setw(14)<<mean_time_ii
 	     <<std::endl;    
+  }
+  static void bubbleSort(vector<Int_t> &a){
+    bool swapp = true;
+    while(swapp){
+      swapp = false;
+      for( unsigned int i = 0; i < a.size()-1; i++){
+	if( a.at(i)>a.at(i+1)){
+	  //
+	  Int_t tmp;
+	  tmp = a.at(i);
+	  //
+	  a.at(i) = a.at(i+1);
+	  a.at(i+1) = tmp;
+	  swapp = true;
+	}
+      }
+    }
+  }
+  void get_n_t_ii(){
+    cluster_info::bubbleSort(time_ii_v);
+    n_t_ii = time_ii_v.back() - time_ii_v.front();
+  }
+  void get_number_of_pixels(){
+    cluster_info::bubbleSort(pixel_id_v);
+    Int_t npx = (Int_t)pixel_id_v.back() + 1;
+    Int_t *tmpint = new Int_t[npx];
+    //
+    for(Int_t i = 0;i<npx;i++)
+      tmpint[i] = 0;
+    //
+    for( unsigned int k = 0; k < pixel_id_v.size(); k++)
+      tmpint[pixel_id_v.at(k)] = 1;
+    for( Int_t i = 0; i < npx; i++)
+      number_of_pixels += tmpint[i];
   }
 };
 

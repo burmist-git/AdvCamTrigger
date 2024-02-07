@@ -247,15 +247,17 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
       singlepoint.y = _simphist->get_pixel_vec().at(trg_vector.at(i).at(j)).y;
       singlepoint.z = i*i_time_todist;
       singlepoint.time_ii = i;
-      singlepoint.clusterID = UNCLASSIFIED;
       singlepoint.pixel_id = trg_vector.at(i).at(j);
       singlepoint.point_id=(Int_t)points.size();
       points.push_back(singlepoint);      
     }
   }
   _dbs->run( minPts, eps, points);
+  //print_trigger_vec(trg_vector);
+  //_dbs->print_points_info();
   _dbs->get_cluster_stats();
   _dbs->print_cluster_stats();
+
   //TString outrootFile;
   //outrootFile = "hist_trg_counter_";
   //outrootFile += _trg_counter;

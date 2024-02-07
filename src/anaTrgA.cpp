@@ -166,7 +166,13 @@ void anaTrgA::test_single_pe_amplitude_generator(TString histOut){
   rootFile->Close();
 }
 
-void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed, bool NGBsim){
+void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, Int_t npe_min, Int_t npe_max, Int_t nEv_max, Int_t rndseed, Int_t data_chunk_ID, bool NGBsim){
+  //
+  cout<<"anaTrgA::Loop"<<endl
+      <<"data_chunk_ID                            "<<data_chunk_ID<<endl
+      <<"NGBsim                                   "<<NGBsim<<endl
+      <<"_n_data_chunks                           "<<_n_data_chunks<<endl
+      <<"_disable_energy_theta_rcore_binwise_cuts "<<_disable_energy_theta_rcore_binwise_cuts<<endl;
   //
   TVector3 v_det;
   v_det.SetXYZ(1.0*TMath::Sin(20.0/180.0*TMath::Pi()),0,1.0*TMath::Cos(20.0/180.0*TMath::Pi()));
@@ -196,15 +202,17 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TH1D *h1_fadc_val        = new TH1D("h1_fadc_val",        "h1_fadc_val",       1001,-0.5,1000.5);
   //
   TH1D *h1_energy = new TH1D("h1_energy","h1_energy", 100000, 0.0, 100000.0); 
-  TH1D *h1_rcore = new TH1D("h1_rcore","h1_rcore", 1000, 0.0, 1000.0);
+  TH1D *h1_rcore = new TH1D("h1_rcore","h1_rcore", 1000, 0.0, 2000.0);
   TH1D *h1_theta_p_t_deg = new TH1D("h1_theta_p_t_deg","h1_theta_p_t_deg", 1000, 0.0, 10.0);
-  TH1D *h1_npe = new TH1D("h1_npe","h1_npe", 1000, 0.0, 1000.0);
+  TH1D *h1_npe = new TH1D("h1_npe","h1_npe", 1000, 0.0, 10000.0);
   //
   TH1D *h1_N_dbc = new TH1D("h1_N_dbc","h1_N_dbc", 21, -0.5, 20.5);
-  TH1D *h1_dbc_number_of_points = new TH1D("h1_dbc_number_of_points","h1_dbc_number_of_points", 101, -0.5, 100.5);
-  TH1D *h1_dbc_number_of_points_w = new TH1D("h1_dbc_number_of_points_w","h1_dbc_number_of_points_w", 101, -0.5, 100.5);
-  TH1D *h1_dbc_number_of_CORE_POINT = new TH1D("h1_dbc_number_of_CORE_POINT","h1_dbc_number_of_CORE_POINT", 101, -0.5, 100.5);
-  TH1D *h1_dbc_number_of_BORDER_POINT = new TH1D("h1_dbc_number_of_BORDER_POINT","h1_dbc_number_of_BORDER_POINT", 101, -0.5, 100.5);
+  TH1D *h1_dbc_number_of_points = new TH1D("h1_dbc_number_of_points","h1_dbc_number_of_points", 1001, -0.5, 1000.5);
+  TH1D *h1_dbc_number_of_points_w = new TH1D("h1_dbc_number_of_points_w","h1_dbc_number_of_points_w", 1001, -0.5, 1000.5);
+  TH1D *h1_dbc_number_of_points_tot = new TH1D("h1_dbc_number_of_points_tot","h1_dbc_number_of_points_tot", 1001, -0.5, 1000.5);
+  TH1D *h1_dbc_number_of_points_tot_w = new TH1D("h1_dbc_number_of_points_tot_w","h1_dbc_number_of_points_tot_w", 1001, -0.5, 1000.5);
+  TH1D *h1_dbc_number_of_CORE_POINT = new TH1D("h1_dbc_number_of_CORE_POINT","h1_dbc_number_of_CORE_POINT", 1001, -0.5, 1000.5);
+  TH1D *h1_dbc_number_of_BORDER_POINT = new TH1D("h1_dbc_number_of_BORDER_POINT","h1_dbc_number_of_BORDER_POINT", 1001, -0.5, 1000.5);
   //
   TH2D *h2_dbc_number_of_points_vs_npe = new TH2D("h2_dbc_number_of_points_vs_npe","h2_dbc_number_of_points_vs_npe", 101, -0.5, 100.5, 201, -0.5, 200.5);
   TH2D *h2_dbc_number_of_points_vs_npe_w = new TH2D("h2_dbc_number_of_points_vs_npe_w","h2_dbc_number_of_points_vs_npe_w", 101, -0.5, 100.5, 201, -0.5, 200.5);
@@ -218,8 +226,12 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //
   TH2D *h2_fadc_val_vs_time_ii = new TH2D("h2_fadc_val_vs_time_ii","h2_fadc_val_vs_time_ii", 101, -0.5, 100.5, 201, 199.5, 400.5);  
   //
-  /////////////
+  TGraph *gr_event_id_vs_jentry = new TGraph();
+  gr_event_id_vs_jentry->SetNameTitle("gr_event_id_vs_jentry","gr_event_id_vs_jentry");
   //
+  Int_t number_of_points_tot = 0;  
+  //
+  /////////////
   //
   Double_t x0_LST01 = -70.93;
   Double_t y0_LST01 = -52.07;
@@ -266,65 +278,77 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry); nbytes += nb;
     //
-    if(nevsim >= _nEv_max)
-      break;
-    //
-    Double_t rcore = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
-    //
-    Double_t theta_p_t = get_theta_p_t( v_det, altitude, azimuth);
-    Double_t theta_p_t_deg = theta_p_t*180/TMath::Pi();
-    //
-    if(cut( nevsim, theta_p_t_deg, rcore)){
-      h1_theta_p_t_deg->Fill(theta_p_t_deg);
-      h1_npe->Fill(n_pe);
-      h1_energy->Fill(energy*1000);
-      h1_rcore->Fill(rcore);
+    if( get_current_data_chunk_ID(nentries, jentry) == data_chunk_ID || data_chunk_ID == -999){
+      if(nevsim >= _nEv_max)
+	break;
       //
-      start_sim = clock();
-      if(NGBsim)
-	wfc->simulate_cam_event_NGB(wfcam);
-      else
-	wfc->simulate_cam_event(nn_fadc_point,
-				nn_PMT_channels,
-				wfcam,
-				ev_time,
-				time_offset,
-				n_pe,
-				pe_chID,
-				pe_time);
-      finish_sim = clock();
-      start_trg = clock();
+      Double_t rcore = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
       //
-      if(NGBsim)
-	cout<<"---------------------"<<endl<<"n_pe = "<<0<<endl;
-      else
-	cout<<"---------------------"<<endl<<"n_pe = "<<n_pe<<endl;
-      trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
-      finish_trg = clock();
-      cout<<nevsim
-	  <<" "<<((finish_sim - start_sim)/(CLOCKS_PER_SEC/1000))<<" (msec)"
-	  <<" "<<((finish_trg - start_trg)/(CLOCKS_PER_SEC/1000))<<" (msec)"<<endl;
+      Double_t theta_p_t = get_theta_p_t( v_det, altitude, azimuth);
+      Double_t theta_p_t_deg = theta_p_t*180/TMath::Pi();
       //
-      h1_N_dbc->Fill(trg_sim->get_dbclusters().size());
-      for(unsigned int k = 0; k<trg_sim->get_dbclusters().size(); k++){
-	h1_dbc_number_of_points->Fill(trg_sim->get_dbclusters().at(k).number_of_points);
-	h1_dbc_number_of_points_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points, evstHist::get_Weight_ETeV(energy));
-	h2_dbc_number_of_points_vs_npe->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe);
-	h2_dbc_number_of_points_vs_npe_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe, evstHist::get_Weight_ETeV(energy));
-	h1_dbc_number_of_points_npe_norm->Fill(n_pe);
-	h1_dbc_number_of_CORE_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_CORE_POINT);
-	h1_dbc_number_of_BORDER_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_BORDER_POINT);
+      //
+      if(cut( nevsim, theta_p_t_deg, rcore)){
 	//
-	h1_dbc_mean_x->Fill(trg_sim->get_dbclusters().at(k).mean_x);
-	h1_dbc_mean_y->Fill(trg_sim->get_dbclusters().at(k).mean_y);
-	h1_dbc_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii);
 	//
-	h2_dbc_number_of_points_vs_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii,
-						      trg_sim->get_dbclusters().at(k).number_of_points);
-      }	
-      //trg_sim->fill_fadc_val_vs_time(wfcam,h2_fadc_val_vs_time_ii);
-      //
-      nevsim++;
+	gr_event_id_vs_jentry->SetPoint(gr_event_id_vs_jentry->GetN(),(Double_t)jentry,(Double_t)event_id);
+	//
+	//
+	h1_theta_p_t_deg->Fill(theta_p_t_deg);
+	h1_npe->Fill(n_pe);
+	h1_energy->Fill(energy*1000);
+	h1_rcore->Fill(rcore);
+	//
+	start_sim = clock();
+	if(NGBsim)
+	  wfc->simulate_cam_event_NGB(wfcam);
+	else
+	  wfc->simulate_cam_event(nn_fadc_point,
+				  nn_PMT_channels,
+				  wfcam,
+				  ev_time,
+				  time_offset,
+				  n_pe,
+				  pe_chID,
+				  pe_time);
+	finish_sim = clock();
+	start_trg = clock();
+	//
+	if(NGBsim)
+	  cout<<"---------------------"<<endl<<"n_pe = "<<0<<endl;
+	else
+	  cout<<"---------------------"<<endl<<"n_pe = "<<n_pe<<endl;
+	trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
+	finish_trg = clock();
+	cout<<nevsim
+	    <<" "<<((finish_sim - start_sim)/(CLOCKS_PER_SEC/1000))<<" (msec)"
+	    <<" "<<((finish_trg - start_trg)/(CLOCKS_PER_SEC/1000))<<" (msec)"<<endl;
+	//
+	h1_N_dbc->Fill(trg_sim->get_dbclusters().size());
+	number_of_points_tot = 0;
+	for(unsigned int k = 0; k<trg_sim->get_dbclusters().size(); k++){
+	  h1_dbc_number_of_points->Fill(trg_sim->get_dbclusters().at(k).number_of_points);
+	  number_of_points_tot += trg_sim->get_dbclusters().at(k).number_of_points;
+	  h1_dbc_number_of_points_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points, evstHist::get_Weight_ETeV(energy));
+	  h2_dbc_number_of_points_vs_npe->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe);
+	  h2_dbc_number_of_points_vs_npe_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe, evstHist::get_Weight_ETeV(energy));
+	  h1_dbc_number_of_points_npe_norm->Fill(n_pe);
+	  h1_dbc_number_of_CORE_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_CORE_POINT);
+	  h1_dbc_number_of_BORDER_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_BORDER_POINT);
+	  //
+	  h1_dbc_mean_x->Fill(trg_sim->get_dbclusters().at(k).mean_x);
+	  h1_dbc_mean_y->Fill(trg_sim->get_dbclusters().at(k).mean_y);
+	  h1_dbc_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii);
+	  //
+	  h2_dbc_number_of_points_vs_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii,
+							trg_sim->get_dbclusters().at(k).number_of_points);
+	}	
+	h1_dbc_number_of_points_tot->Fill(number_of_points_tot);
+	h1_dbc_number_of_points_tot_w->Fill(number_of_points_tot, evstHist::get_Weight_ETeV(energy));
+	//trg_sim->fill_fadc_val_vs_time(wfcam,h2_fadc_val_vs_time_ii);
+	//
+	nevsim++;
+      }
     }
   }
   //
@@ -358,6 +382,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   h1_N_dbc->Write();
   h1_dbc_number_of_points->Write();
   h1_dbc_number_of_points_w->Write();
+  h1_dbc_number_of_points_tot->Write();
+  h1_dbc_number_of_points_tot_w->Write();
   h2_dbc_number_of_points_vs_npe->Write();
   h1_dbc_number_of_points_npe_norm->Write();
   h1_dbc_number_of_CORE_POINT->Write();
@@ -368,6 +394,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   h1_dbc_mean_time_ii->Write();
   //
   h2_dbc_number_of_points_vs_mean_time_ii->Write();
+  gr_event_id_vs_jentry->Write();
   //h2_fadc_val_vs_time_ii->Write();
   //
   //cout<<"nevsim = "<<nevsim<<endl;
@@ -377,9 +404,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 
 Bool_t anaTrgA::cut( Int_t nevsim, Double_t theta_p_t_deg, Double_t rcore){
   if(nevsim<_nEv_max){
-    if(energy>=_E_min/1000.0 && energy<_E_max/1000.0){
-      if(rcore>=_dist_min && rcore<_dist_max){
-	if(theta_p_t_deg>=_theta_deg_min && theta_p_t_deg<_theta_deg_max){
+    if((energy>=_E_min/1000.0 && energy<_E_max/1000.0) || _disable_energy_theta_rcore_binwise_cuts){
+      if((rcore>=_dist_min && rcore<_dist_max) || _disable_energy_theta_rcore_binwise_cuts){
+	if((theta_p_t_deg>=_theta_deg_min && theta_p_t_deg<_theta_deg_max) || _disable_energy_theta_rcore_binwise_cuts){
 	  if(n_pe>=_npe_min && n_pe<_npe_max){
 	    return true;
 	  }
