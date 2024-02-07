@@ -1,7 +1,7 @@
 #!/bin/sh
 
-#simHomeDir="/home/users/b/burmistr/terzina_photon_propagation/terzinag4-build/"
-simHomeDir="./"
+simHomeDir="/home/users/b/burmistr/pyeventio_example/"
+#simHomeDir="./"
 
 function printHelp {
     echo " --> ERROR in input arguments "
@@ -14,58 +14,49 @@ function printHelp {
     echo " [0] -h    : print help"
 }
 
-#Ebin_arr=(
-#    4
-#    5
-#    6
-#    7
-#    8
-#    9
-#    10
-#)
-
-#Thbin_arr=(
-#    0
-#    1
-#    2
-#    3
-#)
-
-#rbin_arr=(
-#    1
-#    2
-#    3
-#    4
-#    5
-#    6
-#    7
-#)
-
 Ebin_arr=(
+    5
+    6
+    7
+    8
+    9
     10
-    10
-    10
-    10
-    10
-    10
-    10
-    10
-    10
-    10
-    10
-    10
-    10
-    10
+    11
+    12
+    13
+    14
+    15
+    16
+    17
+    18
+    19
 )
 
 Thbin_arr=(
+    0
     1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
 )
 
 rbin_arr=(
+    0
+    1
+    2
     3
+    4
+    5
+    6
+    7
+    8
+    9    
 )
-
 
 counter=0
 
@@ -85,14 +76,11 @@ else
 			jobID=`printf "%04d" $counter`
 			((counter=counter+1))
 			echo "jobID = $jobID"
-			#./run_trgA_job.sh
-			$simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID
+			#$simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID
+			sbatch $simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID
 		    done
 		done
 	    done	
-            #screenName='trgA01'
-            #echo "$screenName"
-            #screen -S $screenName -L -d -m 	    
 	else
 	    printHelp
 	fi
@@ -104,7 +92,7 @@ else
 	    do
 		jobID=`printf "%04d" $i`
 		echo "jobID = $jobID"
-		$simHomeDir/run_trgA_job.sh -NGB $jobID
+		sbatch $simHomeDir/run_trgA_job.sh -NGB $jobID
 	    done	
 	else
 	    printHelp

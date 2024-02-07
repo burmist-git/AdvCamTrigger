@@ -572,3 +572,5 @@ evH_test_get_bin.pdf
 hist_rate_proton_diff.root
 r_core_dist.pdf
 r_core_dist_hist.pdf
+hist_trgA_corsika_0000ID_test_live.root
+multiply_data_proton_nsb_1x.log

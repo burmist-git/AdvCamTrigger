@@ -1,13 +1,16 @@
 #!/bin/bash
 #SBATCH --job-name crgen%j
-#SBATCH --error /home/users/b/burmistr//job_error/crgen_%j.error
-#SBATCH --output /home/users/b/burmistr//job_output/output_%j.output
+#SBATCH --error /srv/beegfs/scratch/users/b/burmistr/mono-lst-sipm-pmma-3ns-v1_triggerless/job_error/crgen_%j.error
+#SBATCH --output /srv/beegfs/scratch/users/b/burmistr/mono-lst-sipm-pmma-3ns-v1_triggerless/job_output/output_%j.output
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
 #SBATCH --partition public-cpu
 #SBATCH --time 0-03:00:00
 
-#source /home/users/b/burmistr/terzina_photon_propagation/setupEnv.sh -d
+simHomeDir="/home/users/b/burmistr/pyeventio_example/"
+
+source $simHomeDir/setupEnv.sh -d
+source $simHomeDir/convert2root.sh --set_unlimited_mem
 
 ################################################
 #  E                                           #
@@ -65,20 +68,22 @@
 #  9                 1600                 2000 #
 ################################################
 
-
-
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] -d     : default"
-    echo " [1]        : particle type (g,gd,e,p)"
-    echo " [2]        : Ebin   - [0:24]"
-    echo " [3]        : Thbin  - [0:9]"
-    echo " [4]        : rbin   - [0:9]"
-    echo " [5]        : jobID  - [0:199]"
-    echo " [0] -NGB   : NGB"
-    echo " [1]        : jobID  - [0:199] (ex: 0000  0001 ...)"
-    echo " [0] -c     : recompile"
-    echo " [0] -h     : print help"
+    echo " [0] -d         : default"
+    echo " [1]            : particle type (g,gd,e,p)"
+    echo " [2]            : Ebin   - [0:24]"
+    echo " [3]            : Thbin  - [0:9]"
+    echo " [4]            : rbin   - [0:9]"
+    echo " [5]            : jobID  - [0:199]"
+    echo " [0] -NGB       : NGB"
+    echo " [1]            : jobID  - [0:199] (ex: 0000  0001 ...)"
+    echo " [0] -test_live : test live"
+    echo " [1]            : nEv"
+    echo " [0] -test_srun : test srun"
+    echo " [1]            : nEv"
+    echo " [0] -c         : recompile"
+    echo " [0] -h         : print help"
 }
 
 if [ $# -eq 0 ]; then
@@ -108,9 +113,9 @@ else
 	    outHistF=$outHistFPref$jobID"/hist_trgA_corsika_"$binE"binE_"$binTheta"binTheta_"$binDist"binDist_"$jobID"ID.root"
 	    npe_min=20
 	    npe_max=200
-	    nEv_max=100
+	    nEv_max=1000
 	    rndseed=`date +%N`
-	    echo "inRootFile $inRootFile"	
+	    echo "inRootFile $inRootFile"
 	    echo "outHistF   $outHistF"
 	    echo "binE       $binE"
 	    echo "binTheta   $binTheta"
@@ -123,10 +128,11 @@ else
 	    #live
 	    #./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
 	    #screen
-	    screenName='tr'$jobID
-            echo "$screenName"
-            screen -S $screenName -L -d -m ./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
+	    #screenName='tr'$jobID
+            #echo "$screenName"
+            #screen -S $screenName -L -d -m ./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
 	    #srun
+	    srun $simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed
 	else
 	    printHelp	    
 	fi	
@@ -137,7 +143,7 @@ else
 	    jobID=$2
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    outHistF=$outHistFPref"/hist_trgA_corsika_"$jobID"ID.root"
-	    nEv_max=1000
+	    nEv_max=10000
 	    rndseed=`date +%N`
 	    echo "inRootFile $inRootFile"	
 	    echo "outHistF   $outHistF"
@@ -147,10 +153,47 @@ else
 	    #live
 	    #./runana 112 $inRootFile $outHistF $nEv_max $rndseed
 	    #screen
-	    screenName='tr'$jobID
-            echo "$screenName"
-            screen -S $screenName -L -d -m ./runana 112 $inRootFile $outHistF $nEv_max $rndseed
+	    #screenName='tr'$jobID
+            #echo "$screenName"
+            #screen -S $screenName -L -d -m ./runana 112 $inRootFile $outHistF $nEv_max $rndseed
 	    #srun
+	    srun $simHomeDir/runana 112 $inRootFile $outHistF $nEv_max $rndseed
+	else
+	    printHelp
+	fi
+    elif [ "$1" = "-test_live" ]; then
+	if [ $# -eq 2 ]; then
+	    inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
+	    nEv_max=$2
+	    jobID="0000"
+	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
+	    outHistF="./hist_trgA_corsika_"$jobID"ID_test_live.root"
+	    rndseed=`date +%N`
+	    echo "inRootFile $inRootFile"	
+	    echo "outHistF   $outHistF"
+	    echo "jobID      $jobID"
+	    echo "nEv_max    $nEv_max"
+	    echo "rndseed    $rndseed"
+	    #live
+	    ./runana 112 $inRootFile $outHistF $nEv_max $rndseed
+	else
+	    printHelp
+	fi
+    elif [ "$1" = "-test_srun" ]; then
+	if [ $# -eq 2 ]; then
+	    inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
+	    nEv_max=$2
+	    jobID="0000"
+	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
+	    outHistF="./hist_trgA_corsika_"$jobID"ID_test_live.root"
+	    rndseed=`date +%N`
+	    echo "inRootFile $inRootFile"	
+	    echo "outHistF   $outHistF"
+	    echo "jobID      $jobID"
+	    echo "nEv_max    $nEv_max"
+	    echo "rndseed    $rndseed"
+	    #live
+	    srun ./runana 112 $inRootFile $outHistF $nEv_max $rndseed
 	else
 	    printHelp
 	fi
