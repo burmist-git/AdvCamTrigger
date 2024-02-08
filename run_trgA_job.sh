@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name crgen%j
-#SBATCH --error /srv/beegfs/scratch/users/b/burmistr/mono-lst-sipm-pmma-3ns-v1_triggerless/job_error/crgen_%j.error
-#SBATCH --output /srv/beegfs/scratch/users/b/burmistr/mono-lst-sipm-pmma-3ns-v1_triggerless/job_output/output_%j.output
+#SBATCH --error /srv/beegfs/scratch/users/b/burmistr/pyeventio_example/job_error/crgen_%j.error
+#SBATCH --output /srv/beegfs/scratch/users/b/burmistr/pyeventio_example/job_output/output_%j.output
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
 #SBATCH --partition public-cpu
@@ -72,10 +72,11 @@ function printHelp {
     echo " --> ERROR in input arguments "
     echo " [0] -d             : default"
     echo " [1]                : particle type (g,gd,e,p)"
-    echo " [2]                : Ebin   - [0:24]"
-    echo " [3]                : Thbin  - [0:9]"
-    echo " [4]                : rbin   - [0:9]"
-    echo " [5]                : jobID  - [0:199]"
+    echo " [2]                : Ebin          - [0:24]"
+    echo " [3]                : Thbin         - [0:9]"
+    echo " [4]                : rbin          - [0:9]"
+    echo " [5]                : jobID         - [0:199]"
+    echo " [6]                : data_chunk_ID - [0:19]"
     echo " [0] -NGB           : NGB"
     echo " [1]                : jobID - [0:199] (ex: 0000  0001 ...)"
     echo " [0] -test_live_NSB : test live (NSB)"
@@ -115,19 +116,20 @@ else
 	    mkdir -p $outHistFPref$jobID
 	    outHistF=$outHistFPref$jobID"/hist_trgA_corsika_"$binE"binE_"$binTheta"binTheta_"$binDist"binDist_"$jobID"ID.root"
 	    npe_min=20
-	    npe_max=200
-	    nEv_max=1000
+	    npe_max=10000
+	    nEv_max=15000
 	    rndseed=`date +%N`
-	    echo "inRootFile $inRootFile"
-	    echo "outHistF   $outHistF"
-	    echo "binE       $binE"
-	    echo "binTheta   $binTheta"
-	    echo "binDist    $binDist"
-	    echo "jobID      $jobID"
-	    echo "npe_min    $npe_min"	
-	    echo "npe_max    $npe_max"
-	    echo "nEv_max    $nEv_max"
-	    echo "rndseed    $rndseed"
+	    echo "inRootFile    $inRootFile"
+	    echo "outHistF      $outHistF"
+	    echo "binE          $binE"
+	    echo "binTheta      $binTheta"
+	    echo "binDist       $binDist"
+	    echo "jobID         $jobID"
+	    echo "npe_min       $npe_min"	
+	    echo "npe_max       $npe_max"
+	    echo "nEv_max       $nEv_max"
+	    echo "rndseed       $rndseed"
+	    echo "data_chunk_ID $data_chunk_ID"
 	    #live
 	    #./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID
 	    #screen

@@ -2,19 +2,61 @@
 
 simHomeDir="/home/users/b/burmistr/pyeventio_example/"
 #simHomeDir="./"
-n_data_chunks=20
 
 function printHelp {
     echo " --> ERROR in input arguments "
     echo " [0] -d    : default - simulation with terzinag4"
     echo " [1]       : particle type (g,gd,e,p)"
-    echo " [2]       : njobs"
     echo " [0] -NGB  : NGB"
     echo " [0]       : njobs"
     echo " [0] -info : print info"
     echo " [0] -kill : kill all jobs"
     echo " [0] -h    : print help"
 }
+
+Ebin_arr=(
+    5
+    6
+    7
+    8
+    9
+    10
+    11
+    12
+    13
+    14
+    15
+    16
+    17
+    18
+    19
+)
+
+Thbin_arr=(
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
+)
+
+rbin_arr=(
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9    
+)
 
 counter=0
 
@@ -23,39 +65,23 @@ then
     printHelp
 else
     if [ "$1" = "-d" ]; then
-	if [ $# -eq 3 ]; then
+	if [ $# -eq 2 ]; then
 	    particletype=$2
-	    njobs=$3
-	    #
-	    Ebin=0
-	    Thbin=0
-	    rbin=0
-	    ((njobs=njobs-1))
-	    #
-	    if [ "$particletype" = "g" ]; then
-                nDir=10
-                n_multiply=25
-            elif [ "$particletype" = "gd" ]; then
-                nDir=20
-                n_multiply=75
-            elif [ "$particletype" = "e" ]; then
-                nDir=20
-                n_multiply=10
-            elif [ "$particletype" = "p" ]; then
-                nDir=50
-                n_multiply=30
-            fi
-	    #
-	    for i in $(seq 0 $njobs)
-	    do
-		((counter=counter+1))
-		jobID=`printf "%04d" $i`
-		echo "jobID = $jobID"
-		data_chunk_ID=$(echo "$i/$nDir" | bc)
-		#echo "$data_chunk_ID"
-		#$simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID $data_chunk_ID
-		sbatch $simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID $data_chunk_ID
-	    done
+            for Ebin in ${Ebin_arr[@]} ; do
+		for Thbin in ${Thbin_arr[@]} ; do
+		    for rbin in ${rbin_arr[@]} ; do
+			#echo "Ebin  = $Ebin"
+			#echo "Thbin = $Thbin"
+			#echo "rbin  = $rbin"
+			jobID=`printf "%04d" $counter`
+			((counter=counter+1))
+			echo "jobID = $jobID"
+			data_chunk_ID="-999"
+			#$simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID
+			sbatch $simHomeDir/run_trgA_job.sh -d $particletype $Ebin $Thbin $rbin $jobID $data_chunk_ID
+		    done
+		done
+	    done	
 	else
 	    printHelp
 	fi
