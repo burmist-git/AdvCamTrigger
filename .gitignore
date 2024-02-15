@@ -577,3 +577,7 @@ multiply_data_proton_nsb_1x.log
 hist_trgA_corsika_0000ID_test_live.log
 hist_trgA_test_live_proton_corsika_0000ID.log
 hist_trgA_test_live_proton_corsika_0000ID.root
+hist_dbscan.root.pdf
+plots_proton_diff_DBSCAN.pdf
+plots_proton_diff_DBSCAN_zoom.pdf
+

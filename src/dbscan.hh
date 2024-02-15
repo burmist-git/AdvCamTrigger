@@ -89,15 +89,17 @@ struct cluster_info {
   void get_number_of_pixels(){
     cluster_info::bubbleSort(pixel_id_v);
     Int_t npx = (Int_t)pixel_id_v.back() + 1;
-    Int_t *tmpint = new Int_t[npx];
-    //
-    for(Int_t i = 0;i<npx;i++)
-      tmpint[i] = 0;
-    //
-    for( unsigned int k = 0; k < pixel_id_v.size(); k++)
-      tmpint[pixel_id_v.at(k)] = 1;
-    for( Int_t i = 0; i < npx; i++)
-      number_of_pixels += tmpint[i];
+    if(npx>0){
+      Int_t *tmpint = new Int_t[npx];
+      //
+      for(Int_t i = 0;i<npx;i++)
+	tmpint[i] = 0;
+      //
+      for( unsigned int k = 0; k < pixel_id_v.size(); k++)
+	tmpint[pixel_id_v.at(k)] = 1;
+      for( Int_t i = 0; i < npx; i++)
+	number_of_pixels += tmpint[i];
+    }
   }
 };
 
@@ -151,7 +153,7 @@ public:
   Int_t run(unsigned int minPts, Double_t eps, vector<point> point_v);
   void set_points(vector<point> point_v);
 
-  vector<unsigned int> regionQuery(point p);
+  vector<unsigned int> regionQuery(const point &p);
   bool expandCluster(point &p, int clusterID);
 
   inline Double_t calculateDistance(const point& pointCore, const point& pointTarget);  
@@ -164,20 +166,23 @@ public:
   static void print_cluster_stats(vector<cluster_info> clusters_v);
   void print_cluster_stats() const;
   Int_t get_number_of_NOISE() const;
-
+  void print_single_point_info( const point& p) const;
+  
   inline const vector<point>& get_points_v() const {return _points_v;};
   inline const vector<cluster_info> get_clusters_v() const {return _clusters_v;};
 
   void clear();
 
   vector<Double_t> build_k_dist_graph(Int_t kk);
-  
+
 private:
 
   vector<point> _points_v;
   vector<cluster_info> _clusters_v;
   vector<point_kdis> _points_kdis_v;
   
+  bool erase_point_from_seeds(const point &p, vector<unsigned int> &seeds_v);
+
   unsigned int _minPts;
   Double_t _eps;
   

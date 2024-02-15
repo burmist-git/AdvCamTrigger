@@ -174,7 +174,8 @@ else
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    outHistF="./hist_trgA_corsika_"$jobID"ID_test_live.root"
 	    outlogF="./hist_trgA_corsika_"$jobID"ID_test_live.log"
-	    rndseed=`date +%N`
+	    #rndseed=`date +%N`
+	    rndseed=742827582
 	    echo "inRootFile $inRootFile"	
 	    echo "outHistF   $outHistF"
 	    echo "jobID      $jobID"

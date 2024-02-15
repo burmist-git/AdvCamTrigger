@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
   if(argc == 4 && atoi(argv[1])==0){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"rootFilesList : "<<rootFilesList<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     ana a(rootFilesList);
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==100){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     anaTrgA a( inRootFiles, 1);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==1){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     ana a( inRootFiles, atoi(argv[1]));
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==11){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     anaTrg a( inRootFiles, 1);
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]){
     Int_t nEv_max = atoi(argv[9]);
     Int_t rndseed = atoi(argv[10]);
     Int_t data_chunk_ID = atoi(argv[11]);
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl
 	<<"binE          : "<<binE<<endl
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]){
     Int_t npe_min = 1;
     Int_t npe_max = 100000;    
     Int_t data_chunk_ID = -999;
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl
 	<<"binE          : "<<binE<<endl
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==1111){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     //
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==2){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"rootFilesList : "<<rootFilesList<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     anashort a(rootFilesList);
@@ -144,7 +144,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==3){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     anashort a( inRootFiles, atoi(argv[1]));
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
     TString outRootFileF = argv[3];
     Long64_t evID = (Long64_t)atoi(argv[4]);
     TString particle_type_name = argv[5];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles        : "<<inRootFiles<<endl
 	<<"outRootFileF       : "<<outRootFileF<<endl
       	<<"evID               : "<<evID<<endl
@@ -166,7 +166,7 @@ int main(int argc, char *argv[]){
     a.save_wf_for_event(outRootFileF, evID);
   }
   else if(argc == 2 && atoi(argv[1])==5){
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"argv[1] : "<<atoi(argv[1])<<endl;
     //sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
     //sipm_cam->test();
@@ -233,7 +233,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==6){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"rootFilesList : "<<rootFilesList<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     anaPCA a(rootFilesList,"anaPCA.conf");
@@ -242,7 +242,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==61){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"rootFilesList : "<<rootFilesList<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
       //<<"phi0_shift    : "<<atof(argv[4])<<endl;
@@ -253,7 +253,7 @@ int main(int argc, char *argv[]){
   else if(argc == 4 && atoi(argv[1])==62){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"rootFilesList : "<<rootFilesList<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl;
     anaPCAp a(rootFilesList,"anaPCA.conf");
@@ -263,7 +263,7 @@ int main(int argc, char *argv[]){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
     TString conf_file = argv[4];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"rootFilesList : "<<rootFilesList<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl
     	<<"conf_file     : "<<conf_file<<endl;
@@ -276,7 +276,7 @@ int main(int argc, char *argv[]){
     TString conf_file = argv[4];
     TString simtel_all_dat = argv[5];
     TString flux_dat = argv[6];
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"rootFilesList  : "<<rootFilesList<<endl
 	<<"outRootFileF   : "<<outRootFileF<<endl
     	<<"conf_file      : "<<conf_file<<endl
@@ -333,7 +333,7 @@ int main(int argc, char *argv[]){
 				     val_Emin, val_Emax, val_N_bins_E,
 				     val_Thetamin, val_Thetamax, val_N_bins_t);
     //
-    cout<<"--> Parameter calculation from the WF <--"<<endl
+    cout<<"--> Parameters <--"<<endl
 	<<"particle_type    : "<<particle_type<<endl
 	<<"hist_file_prefix : "<<hist_file_prefix<<endl;
     //
@@ -346,6 +346,41 @@ int main(int argc, char *argv[]){
     }
     //
     rateCalculator r(rateCalc_name_title.Data(), rateCalc_name_title.Data(), hist_file_prefix, outRootFileF, evH_flux);
+  }
+  else if(argc == 6 && atoi(argv[1])==9999){
+    //
+    TString particle_type = argv[2];
+    TString hist_file_prefix = argv[3];
+    TString outRootFileF = argv[4];
+    Int_t n_jobs = atoi(argv[5]);
+    TString rateCalc_name_title = "rateCalc";
+    //
+    Double_t val_Emin = 1.0;      // GeV
+    Double_t val_Emax = 100000;   // GeV
+    Int_t val_N_bins_E = 25;      //
+    Double_t val_Thetamin = 0.0;  //deg
+    Double_t val_Thetamax = 10.0; //deg
+    Int_t val_N_bins_t = 10;
+    evstHist *evH_flux= new evstHist("evH_flux","evH_flux",
+				     val_Emin, val_Emax, val_N_bins_E,
+				     val_Thetamin, val_Thetamax, val_N_bins_t);
+    //
+    cout<<"--> Parameters: <--"<<endl
+	<<"particle_type    : "<<particle_type<<endl
+	<<"hist_file_prefix : "<<hist_file_prefix<<endl
+	<<"outRootFileF     : "<<outRootFileF<<endl
+	<<"n_jobs           : "<<n_jobs<<endl;
+    //
+    if(particle_type = "p"){
+      rateCalc_name_title += "_proton";
+      evH_flux->LoadBinContent("../cosmique_gamma_hadron_generator/flux_diff_protons.dat", true);
+    }
+    else{
+      assert(0);
+    }
+    //
+    bool disable_energy_theta_rcore_binwise_cuts = true;
+    rateCalculator r(rateCalc_name_title.Data(), rateCalc_name_title.Data(), hist_file_prefix, outRootFileF, evH_flux, n_jobs, disable_energy_theta_rcore_binwise_cuts);
   }
   else{
     cout<<" --> ERROR in input arguments "<<endl
@@ -407,10 +442,15 @@ int main(int argc, char *argv[]){
 	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 888 (execution ID number) test of evstHist"<<endl;
-    cout<<" runID [1] = 999 (execution ID number) rate calculator"<<endl
+    cout<<" runID [1] = 999 (execution ID number) rate calculator binwise"<<endl
 	<<"       [2] - particle type (g,gd,e,p)"<<endl
       	<<"       [3] - histogram file prefix"<<endl
     	<<"       [4] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 9999 (execution ID number) rate calculator"<<endl
+	<<"       [2] - particle type (g,gd,e,p)"<<endl
+      	<<"       [3] - histogram file prefix"<<endl
+    	<<"       [4] - name of root file with histograms"<<endl
+	<<"       [5] - n_jons"<<endl;
   }
   return 0;
 }
