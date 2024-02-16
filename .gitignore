@@ -580,4 +580,6 @@ hist_trgA_test_live_proton_corsika_0000ID.root
 hist_dbscan.root.pdf
 plots_proton_diff_DBSCAN.pdf
 plots_proton_diff_DBSCAN_zoom.pdf
-
+hist_k_dist_graph_0ev.root
+hist_k_dist_graph_1ev.root
+hist_trgA_corsika_k_dist_0000ID_test_live.log

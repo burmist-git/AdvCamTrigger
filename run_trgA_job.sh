@@ -70,23 +70,24 @@ source $simHomeDir/convert2root.sh --set_unlimited_mem
 
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] -d             : default"
-    echo " [1]                : particle type (g,gd,e,p)"
-    echo " [2]                : Ebin          - [0:24]"
-    echo " [3]                : Thbin         - [0:9]"
-    echo " [4]                : rbin          - [0:9]"
-    echo " [5]                : jobID         - [0:199]"
-    echo " [6]                : data_chunk_ID - [0:19]"
-    echo " [0] -NGB           : NGB"
-    echo " [1]                : jobID - [0:199] (ex: 0000  0001 ...)"
-    echo " [0] -test_live_NSB : test live (NSB)"
-    echo " [1]                : nEv"
-    echo " [0] -test_live     : test live"
-    echo " [1]                : nEv"
-    echo " [0] -test_srun     : test srun"
-    echo " [1]                : nEv"
-    echo " [0] -c             : recompile"
-    echo " [0] -h             : print help"
+    echo " [0] -d                    : default"
+    echo " [1]                       : particle type (g,gd,e,p)"
+    echo " [2]                       : Ebin          - [0:24]"
+    echo " [3]                       : Thbin         - [0:9]"
+    echo " [4]                       : rbin          - [0:9]"
+    echo " [5]                       : jobID         - [0:199]"
+    echo " [6]                       : data_chunk_ID - [0:19]"
+    echo " [0] -NGB                  : NGB"
+    echo " [1]                       : jobID - [0:199] (ex: 0000  0001 ...)"
+    echo " [0] -test_live_NSB        : test live (NSB)"
+    echo " [1]                       : nEv"
+    echo " [0] -test_live_NSB_k_dist : test live (NSB) k-dist plot"
+    echo " [0] -test_live            : test live"
+    echo " [1]                       : nEv"
+    echo " [0] -test_srun            : test srun"
+    echo " [1]                       : nEv"
+    echo " [0] -c                    : recompile"
+    echo " [0] -h                    : print help"
 }
 
 if [ $# -eq 0 ]; then
@@ -185,6 +186,26 @@ else
 	    echo "rndseed    $rndseed"
 	    #live
 	    ./runana 112 $inRootFile $outHistF $nEv_max $rndseed | tee $outlogF
+	else
+	    printHelp
+	fi
+    elif [ "$1" = "-test_live_NSB_k_dist" ]; then
+	if [ $# -eq 1 ]; then
+	    inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
+	    nEv_max=3
+	    jobID="0000"
+	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
+	    outHistF="./hist_trgA_corsika_k_dist_"$jobID"ID_test_live.root"
+	    outlogF="./hist_trgA_corsika_k_dist_"$jobID"ID_test_live.log"
+	    rndseed=`date +%N`
+	    #rndseed=742827582
+	    echo "inRootFile $inRootFile"	
+	    echo "outHistF   $outHistF"
+	    echo "jobID      $jobID"
+	    echo "nEv_max    $nEv_max"
+	    echo "rndseed    $rndseed"
+	    #live
+	    ./runana 113 $inRootFile $outHistF $nEv_max $rndseed | tee $outlogF
 	else
 	    printHelp
 	fi

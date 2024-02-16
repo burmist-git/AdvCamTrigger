@@ -18,7 +18,7 @@
 #include <iomanip>
 #include <stdlib.h>
 
-triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(2)
+triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(2), _k_dist_graph_flag(false)
 {
   //_dbs->print_cluster_stats();
 }
@@ -258,14 +258,17 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   _dbs->get_cluster_stats();
   _dbs->print_cluster_stats();
   //
-  //TString outrootFile;
-  //outrootFile = "hist_trg_counter_";
-  //outrootFile += _trg_counter;
-  //outrootFile += "ev";
-  //outrootFile += ".root";
-  //vector<Double_t> k_dist_graph;
-  //k_dist_graph = _dbs->build_k_dist_graph(10);
-  //plot_and_save_to_hist_root(outrootFile,k_dist_graph);
+  if(_k_dist_graph_flag){
+    TString outrootFile;
+    outrootFile = "hist_k_dist_graph_";
+    outrootFile += _trg_counter;
+    outrootFile += "ev";
+    outrootFile += ".root";
+    vector<Double_t> k_dist_graph;
+    k_dist_graph = _dbs->build_k_dist_graph(10);
+    plot_and_save_to_hist_root(outrootFile,k_dist_graph);
+    _trg_counter++;
+  }
   //
   std::vector<std::vector<unsigned int>> cam_trg_vector;
   std::vector<unsigned int> spatial_cluster;
@@ -292,7 +295,6 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   //
   //print_trigger_vec(cam_trg_vector);
   //
-  //_trg_counter++;
   return cam_trg_vector;
   //return trg_vector;
 }

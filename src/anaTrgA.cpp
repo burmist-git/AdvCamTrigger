@@ -268,6 +268,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //
   sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
   triggerSim *trg_sim = new triggerSim(sipm_cam);    
+  trg_sim->set_k_dist_graph_flag(_k_dist_graph_flag);
+  cout<<"_k_dist_graph_flag = "<<_k_dist_graph_flag<<endl;
   //
   finish = clock();
   cout<<"initialization time : "<<((finish - start)/CLOCKS_PER_SEC)<<" (sec)"<<endl;	

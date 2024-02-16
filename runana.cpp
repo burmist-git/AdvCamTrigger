@@ -122,6 +122,35 @@ int main(int argc, char *argv[]){
     anaTrgA a( inRootFiles, 1);
     a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, data_chunk_ID, true);
   }
+  else if(argc == 6 && atoi(argv[1])==113){
+    TString inRootFiles = argv[2];
+    TString outRootFileF = argv[3];
+    Int_t nEv_max = atoi(argv[4]);
+    Int_t rndseed = atoi(argv[5]);
+    Int_t binE = 9;
+    Int_t binTheta = 4;
+    Int_t binDist = 7;
+    Int_t npe_min = 1;
+    Int_t npe_max = 100000;    
+    Int_t data_chunk_ID = -999;
+    bool k_dist_graph_flag = true;
+    cout<<"--> Parameters <--"<<endl
+	<<"inRootFiles       : "<<inRootFiles<<endl
+	<<"outRootFileF      : "<<outRootFileF<<endl
+	<<"binE              : "<<binE<<endl
+	<<"binTheta          : "<<binTheta<<endl
+	<<"binDist           : "<<binDist<<endl
+	<<"npe_min           : "<<npe_min<<endl
+	<<"npe_max           : "<<npe_max<<endl
+	<<"nEv_max           : "<<nEv_max<<endl
+    	<<"rndseed           : "<<rndseed<<endl
+	<<"data_chunk_ID     : "<<data_chunk_ID<<endl
+      	<<"k_dist_graph_flag : "<<k_dist_graph_flag<<endl;
+    //
+    anaTrgA a( inRootFiles, 1);
+    a.set_k_dist_graph_flag(k_dist_graph_flag);
+    a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, data_chunk_ID, true);
+  }
   else if(argc == 4 && atoi(argv[1])==1111){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
@@ -434,7 +463,12 @@ int main(int argc, char *argv[]){
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl
 	<<"       [4] - nEv_max"<<endl
-	<<"       [10]- rndseed"<<endl;
+	<<"       [5]- rndseed"<<endl;
+    cout<<" runID [1] = 113 (execution ID number) TrgA NGB k-dist plots"<<endl
+      	<<"       [2] - in root file"<<endl
+	<<"       [3] - name of root file with histograms"<<endl
+	<<"       [4] - nEv_max"<<endl
+	<<"       [5]- rndseed"<<endl;
     cout<<" runID [1] = 1111 (execution ID number) test single pe amplitude generator "<<endl
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;

@@ -46,6 +46,8 @@ public :
   inline void set_n_skip_edge_points(unsigned int val){_n_skip_edge_points = val;};
 
   inline const Int_t get_dbscan_run_time_musec() const {return _dbscan_run_time_musec;};
+
+  inline void set_k_dist_graph_flag(bool val){_k_dist_graph_flag = val;};
   
 private:
 
@@ -66,6 +68,8 @@ private:
   Int_t _dbscan_run_time_musec;
 
   unsigned int _n_skip_edge_points;
+
+  bool _k_dist_graph_flag;
   
 };
 

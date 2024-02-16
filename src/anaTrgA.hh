@@ -17,11 +17,11 @@ class TBranch;
 class anaTrgA: public anabase {
 public:
 
-  anaTrgA(TString fileList) : anabase(fileList), _disable_energy_theta_rcore_binwise_cuts(false)
+  anaTrgA(TString fileList) : anabase(fileList), _disable_energy_theta_rcore_binwise_cuts(false), _k_dist_graph_flag(false)
   {
   }
 
-  anaTrgA(TString file, Int_t key) : anabase(file, key), _disable_energy_theta_rcore_binwise_cuts(false)
+  anaTrgA(TString file, Int_t key) : anabase(file, key), _disable_energy_theta_rcore_binwise_cuts(false), _k_dist_graph_flag(false)
   {
   }
 
@@ -34,7 +34,8 @@ public:
   void test_single_pe_amplitude_generator(TString histOut);
 
   inline void set_disable_energy_theta_rcore_binwise_cuts(bool val){_disable_energy_theta_rcore_binwise_cuts = val;};
-    
+  inline void set_k_dist_graph_flag(bool val){_k_dist_graph_flag = val;};
+  
 private:
   //
   Bool_t cut(Int_t nevsim, Double_t theta_p_t_deg, Double_t rcore);
@@ -54,6 +55,8 @@ private:
   const void print_cuts();
   //
   Double_t get_theta_p_t( const TVector3 &v_det, Double_t altitude_v, Double_t azimuth_v);
+
+  bool _k_dist_graph_flag;
   
 };
 
