@@ -144,7 +144,8 @@ else
     elif [ "$1" = "-NGB" ]; then
 	if [ $# -eq 2 ]; then
 	    inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
-	    outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA/"
+	    #outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA/"
+	    outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_386MHz/trgA/"
 	    mkdir -p $outHistFPref
 	    jobID=$2
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
@@ -175,8 +176,8 @@ else
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    outHistF="./hist_trgA_corsika_"$jobID"ID_test_live.root"
 	    outlogF="./hist_trgA_corsika_"$jobID"ID_test_live.log"
-	    #rndseed=`date +%N`
-	    rndseed=742827582
+	    rndseed=`date +%N`
+	    #rndseed=742827582
 	    echo "inRootFile $inRootFile"	
 	    echo "outHistF   $outHistF"
 	    echo "jobID      $jobID"
