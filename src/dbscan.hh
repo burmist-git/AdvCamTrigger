@@ -171,17 +171,21 @@ public:
   inline const vector<point>& get_points_v() const {return _points_v;};
   inline const vector<cluster_info> get_clusters_v() const {return _clusters_v;};
 
+  inline const Int_t get_dbscan_run_time_musec() const {return _dbscan_run_time_musec;};
+  
   void clear();
 
   vector<Double_t> build_k_dist_graph(Int_t kk);
 
+  Int_t _dbscan_run_time_musec;
+  
 private:
 
   vector<point> _points_v;
   vector<cluster_info> _clusters_v;
   vector<point_kdis> _points_kdis_v;
   
-  bool erase_point_from_seeds(const point &p, vector<unsigned int> &seeds_v);
+  void erase_point_from_seeds(const point &p, vector<unsigned int> &seeds_v);
 
   unsigned int _minPts;
   Double_t _eps;

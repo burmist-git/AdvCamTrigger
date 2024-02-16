@@ -145,6 +145,7 @@ else
 	if [ $# -eq 2 ]; then
 	    inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
 	    outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA/"
+	    mkdir -p $outHistFPref
 	    jobID=$2
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    outHistF=$outHistFPref"/hist_trgA_corsika_"$jobID"ID.root"

@@ -229,6 +229,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TGraph *gr_event_id_vs_jentry = new TGraph();
   gr_event_id_vs_jentry->SetNameTitle("gr_event_id_vs_jentry","gr_event_id_vs_jentry");
   //
+  TGraph *gr_dbscan_time_vs_npe = new TGraph();
+  gr_dbscan_time_vs_npe->SetNameTitle("gr_dbscan_time_vs_npe","gr_dbscan_time_vs_npe");  
+  //
   Int_t number_of_points_tot = 0;  
   //
   /////////////
@@ -324,6 +327,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 	    <<" "<<((finish_sim - start_sim)/(CLOCKS_PER_SEC/1000))<<" (msec)"
 	    <<" "<<((finish_trg - start_trg)/(CLOCKS_PER_SEC/1000))<<" (msec)"<<endl;
 	//
+	gr_dbscan_time_vs_npe->SetPoint(gr_dbscan_time_vs_npe->GetN(), n_pe, trg_sim->get_dbscan_run_time_musec());
+	//
 	h1_N_dbc->Fill(trg_sim->get_dbclusters().size());
 	number_of_points_tot = 0;
 	for(unsigned int k = 0; k<trg_sim->get_dbclusters().size(); k++){
@@ -395,6 +400,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //
   h2_dbc_number_of_points_vs_mean_time_ii->Write();
   gr_event_id_vs_jentry->Write();
+  gr_dbscan_time_vs_npe->Write();
   //h2_fadc_val_vs_time_ii->Write();
   //
   //cout<<"nevsim = "<<nevsim<<endl;

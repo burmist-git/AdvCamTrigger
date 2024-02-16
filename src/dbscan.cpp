@@ -10,10 +10,12 @@
 #include <assert.h>
 #include <iomanip>
 #include <stdlib.h>
+#include <time.h>
 
 dbscan::dbscan(){
   _minPts = 4;
   _eps = 0.1;
+  _dbscan_run_time_musec = 0;
 }
 
 dbscan::~dbscan(){;}
@@ -90,11 +92,12 @@ void dbscan::print_cluster_stats(vector<cluster_info> clusters_v) {
 }
 
 void dbscan::print_cluster_stats() const {
-  cout<<"N_points   : "<<_points_v.size()<<endl
-      <<"N_clusters : "<<_clusters_v.size()<<endl
-      <<"N_NOISE    : "<<get_number_of_NOISE()<<endl;
-  cout<<"_minPts    : "<<_minPts<<endl
-      <<"_eps       : "<<_eps<<endl;
+  cout<<"N_points               : "<<_points_v.size()<<endl
+      <<"N_clusters             : "<<_clusters_v.size()<<endl
+      <<"N_NOISE                : "<<get_number_of_NOISE()<<endl;
+  cout<<"_minPts                : "<<_minPts<<endl
+      <<"_eps                   : "<<_eps<<endl
+      <<"_dbscan_run_time_musec : "<<_dbscan_run_time_musec<<endl;
   if(_clusters_v.size()>0){
     _clusters_v.at(0).print_cluster_info_header();
     for(unsigned int i = 0; i<_clusters_v.size(); i++)
@@ -103,26 +106,21 @@ void dbscan::print_cluster_stats() const {
 }
 
 Int_t dbscan::run(unsigned int minPts, Double_t eps, vector<point> point_v){
+  //
+  clock_t start, finish;
+  start = clock();
+  _dbscan_run_time_musec = 0;
+  //
   _minPts = minPts;
   _eps = eps;
   _points_v.clear();
   _points_v = point_v;
-  //
-  //print_points_info();
   int clusterID = 0;
-  for(unsigned int i = 0; i<_points_v.size(); i++){
-    //cout<<"run"<<endl;
-    //print_single_point_info(_points_v.at(i));
-    if(_points_v.at(i).point_type == UNCLASSIFIED){
-      //cout<<"run and UNCLASSIFIED"<<endl;
-      //print_single_point_info(_points_v.at(i));
-      if(expandCluster(_points_v.at(i), clusterID)){
-	//cout<<"run and UNCLASSIFIED expandCluster"<<endl;
-	//print_single_point_info(_points_v.at(i));
-	clusterID++;
-      }
-    }
-  }
+  for(unsigned int i = 0; i<_points_v.size(); i++)
+    if(_points_v.at(i).point_type == UNCLASSIFIED && expandCluster(_points_v.at(i), clusterID))
+      clusterID++;
+  finish = clock();
+  _dbscan_run_time_musec = (finish - start)/(CLOCKS_PER_SEC/1000/1000);
   return 0;
 }
 
@@ -131,38 +129,27 @@ void dbscan::set_points(vector<point> point_v){
   _points_v = point_v;
 }
 
-bool dbscan::erase_point_from_seeds(const point &p, vector<unsigned int> &seeds_v){
+void dbscan::erase_point_from_seeds(const point &p, vector<unsigned int> &seeds_v){
   for(unsigned int k = 0; k < seeds_v.size(); k++){
     if(p.point_id == seeds_v.at(k)){
       seeds_v.erase(seeds_v.begin()+k);
-      return true;
     }    
   }
-  return false;
 }
 
 bool dbscan::expandCluster(point &p, int clusterID){
   vector<unsigned int> seeds_v = regionQuery(p);
-  //cout<<"regionQuery(p) => seeds_v.size() = "<<seeds_v.size()<<endl;
-  //print_single_point_info(p);
   if(seeds_v.size()<_minPts){
     p.point_type = NOISE;
-    //cout<<"(seeds_v.size()+1)<_minPts"<<endl;
-    //print_single_point_info(p);
     return false;
   }
   else{
     p.point_type = CORE_POINT;
     p.clusterID  = clusterID;
-    //cout<<"regionQuery(p) => seeds_v.size() = "<<seeds_v.size()<<endl;
-    //print_single_point_info(p);
-    if(!erase_point_from_seeds(p,seeds_v))
-      assert(0);
+    erase_point_from_seeds(p,seeds_v);
     while( seeds_v.size() != 0 ){
       point &seeds_p = _points_v.at(seeds_v.at(0));
       vector<unsigned int> neighbours_v = regionQuery(seeds_p);
-      //cout<<"seeds_v.size() != 0 neighbours_v "<<neighbours_v.size()<<endl;
-      //print_single_point_info(p);
       if(neighbours_v.size() >= _minPts){
 	for(unsigned int k = 0; k < neighbours_v.size(); k++){
 	  point &neighbour_p = _points_v.at(neighbours_v.at(k));	  
@@ -172,9 +159,6 @@ bool dbscan::expandCluster(point &p, int clusterID){
 	      seeds_v.push_back(neighbour_p.point_id);
 	    neighbour_p.point_type = CORE_POINT;
 	    neighbour_p.clusterID  = clusterID;
-	    //cout<<"internal "<<endl;
-	    //print_single_point_info(neighbour_p);
-	    //cout<<"neighbour_p.point_type "<<neighbour_p.point_type<<" neighbour_p.clusterID = "<<neighbour_p.clusterID<<" neighbour_p.point_id = "<<neighbour_p.point_id<<endl;
 	  }
 	}
       }
@@ -183,9 +167,6 @@ bool dbscan::expandCluster(point &p, int clusterID){
 	   seeds_p.point_type == NOISE){
 	  seeds_p.point_type = BORDER_POINT;
 	  seeds_p.clusterID  = clusterID;
-	  //cout<<"(neighbours_v.size()+1) < _minPts "<<endl;
-	  //print_single_point_info(seeds_p);
-	  //cout<<"seeds_p.point_type "<<seeds_p.point_type<<" seeds_p.clusterID = "<<seeds_p.clusterID<<" seeds_p.point_id = "<<seeds_p.point_id<<endl;
 	}
       }	
       seeds_v.erase(seeds_v.begin());
@@ -216,11 +197,9 @@ vector<Double_t> dbscan::build_k_dist_graph(Int_t kk){
 vector<unsigned int> dbscan::regionQuery(const point &p){
   vector<unsigned int> neighbours_index;
   for(unsigned int k = 0;k<_points_v.size();k++){
-    //if(p.point_id != _points_v.at(k).point_id){
     if(calculateDistance( p, _points_v.at(k)) <= _eps){
       neighbours_index.push_back(_points_v.at(k).point_id);
     }
-    //}
   }
   return neighbours_index;
 }

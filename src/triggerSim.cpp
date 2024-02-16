@@ -254,7 +254,7 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   }
   _dbs->run( minPts, eps, points);
   //print_trigger_vec(trg_vector);
-  _dbs->print_points_info();
+  //_dbs->print_points_info();
   _dbs->get_cluster_stats();
   _dbs->print_cluster_stats();
   //
@@ -286,6 +286,7 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   }
   _dbclusters_v.clear();
   _dbclusters_v = _dbs->get_clusters_v();
+  _dbscan_run_time_musec =  _dbs->get_dbscan_run_time_musec();
   _dbs->clear();
   //dbscan::print_cluster_stats(_dbclusters_v);
   //

@@ -44,6 +44,8 @@ public :
   
   unsigned int const get_n_skip_edge_points(unsigned int val) const {return _n_skip_edge_points;};
   inline void set_n_skip_edge_points(unsigned int val){_n_skip_edge_points = val;};
+
+  inline const Int_t get_dbscan_run_time_musec() const {return _dbscan_run_time_musec;};
   
 private:
 
@@ -60,6 +62,8 @@ private:
   vector<cluster_info> _dbclusters_v;
   
   Int_t _trg_counter;
+
+  Int_t _dbscan_run_time_musec;
 
   unsigned int _n_skip_edge_points;
   
