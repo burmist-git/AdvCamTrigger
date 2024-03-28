@@ -236,6 +236,61 @@ void anaPCAp::draw_principal(TString histOut){
   rootFile->Close();
 }
 
+void anaPCAp::draw_reco( TString histOut, Int_t nEv_max, TString recofile){
+  //
+  load_S_Vh_data("./S.cvs","./Vh.cvs");
+  //
+  std::vector<std::vector<Double_t>> reco_v;       //reco. shower
+  std::vector<std::vector<Double_t>> shower_v;     //initial shower
+  load_shower_data(recofile, nEv_max, reco_v);
+  load_shower_data("./data_non_normalized.csv", nEv_max, shower_v);
+  //
+  sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+  sipmCameraHistCropped *tmp_cam_hist = new sipmCameraHistCropped("tmp","tmp",sipm_cam,"sipmCameraHistCropped_pix.map");
+  //
+  std::vector<sipmCameraHistCropped*> sipm_cam_reco_hist_v;
+  std::vector<sipmCameraHistCropped*> sipm_cam_shower_hist_v;
+  tmp_cam_hist->Fill_reco( sipm_cam_reco_hist_v, reco_v);
+  tmp_cam_hist->Fill_reco( sipm_cam_shower_hist_v, shower_v);
+  //
+  TCanvas *c1_reco = NULL;
+  c1_reco = new TCanvas("c1_reco","c1_reco",10,10,1500,1000);
+  TString c1_reco_outfile = "c1_reco";
+  c1_reco_outfile += recofile;
+  c1_reco_outfile += ".gif";
+  TCanvas *c1_shower = NULL;
+  c1_shower = new TCanvas("c1_shower","c1_shower",10,10,1500,1000);
+  tmp_cam_hist->draw_crop_vector( 11, 3, sipm_cam_reco_hist_v, c1_reco);
+  tmp_cam_hist->draw_crop_vector( 11, 3, sipm_cam_shower_hist_v, c1_shower);
+  c1_reco->SaveAs(c1_reco_outfile.Data());
+  //
+  //cout<<"sipm_cam_reco_hist_v.size() = "<<sipm_cam_principal_hist_v.size()<<endl;
+  //
+  TGraph *gr_data_S = new TGraph();
+  gr_data_S->SetNameTitle("gr_data_S","gr_data_S");
+  for(Int_t i = 0;i<_dd_im;i++)
+    gr_data_S->SetPoint(i,i,_data_S[i]);
+  //
+  TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
+  rootFile->cd();
+  if (rootFile->IsZombie()){
+    cout<<"  ERROR ---> file "<<histOut.Data()<<" is zombi"<<endl;
+    assert(0);
+  }
+  else
+    cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
+  //
+  for(unsigned int ii = 0;ii<sipm_cam_reco_hist_v.size();ii++)
+    sipm_cam_reco_hist_v.at(ii)->Write();    
+  for(unsigned int ii = 0;ii<sipm_cam_shower_hist_v.size();ii++)
+    sipm_cam_shower_hist_v.at(ii)->Write();    
+  //
+  c1_reco->Write();
+  c1_shower->Write();
+  gr_data_S->Write();
+  rootFile->Close();
+}
+
 bool anaPCAp::cuts(){
   //
   if(_anaConf.disable_all_cuts)
@@ -309,4 +364,20 @@ void anaPCAp::load_S_Vh_data(TString name_S, TString name_Vh){
       for(Int_t j = 0; j <_dd_im; j++)
 	file_cvs_Vh>>_data_Vh[i][j];
   file_cvs_Vh.close();
+}
+
+void anaPCAp::load_shower_data(TString name_shower, Int_t nEv_max, std::vector<std::vector<Double_t>> &shower_v){
+  ifstream file_cvs_shower(name_shower);
+  Double_t val;
+  if(file_cvs_shower.is_open()){
+    for(Int_t j = 0; j <nEv_max; j++){
+      std::vector<Double_t> tmp_v;
+      for(Int_t i = 0; i <_dd_im; i++){
+	file_cvs_shower>>val;
+	tmp_v.push_back(val);
+      }
+      shower_v.push_back(tmp_v);
+    }
+  }
+  file_cvs_shower.close();
 }

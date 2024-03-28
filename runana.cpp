@@ -288,6 +288,19 @@ int main(int argc, char *argv[]){
     anaPCAp a(rootFilesList,"anaPCA.conf");
     a.draw_principal(outRootFileF);
   }
+  else if(argc == 6 && atoi(argv[1])==63){
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    Int_t nMaxEv = atoi(argv[4]);
+    TString recoFile = argv[5];
+    cout<<"--> Parameters <--"<<endl
+	<<"rootFilesList : "<<rootFilesList<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl
+    	<<"nMaxEv        : "<<nMaxEv<<endl
+	<<"recoFile      : "<<recoFile<<endl;
+    anaPCAp a(rootFilesList,"anaPCA.conf");
+    a.draw_reco(outRootFileF, nMaxEv, recoFile);
+  }  
   else if(argc == 5 && atoi(argv[1])==7){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
@@ -439,6 +452,11 @@ int main(int argc, char *argv[]){
     cout<<" runID [1] = 62 (execution ID number) draw principal"<<endl
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 63 (execution ID number) draw reco. shower (from SVD - principal)"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl
+	<<"       [4] - number of showers (max)"<<endl
+    	<<"       [5] - recoFile (ex: reco.csv)"<<endl;
     cout<<" runID [1] = 7 (execution ID number) short file format: fast"<<endl
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;

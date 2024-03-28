@@ -10,13 +10,13 @@
 ##inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
 ##outHistF="./hist_gamma_on_corsika_0000ID.root"
 ##
-inRootFile="gamma_on_nsb_1x.list"
-outHistF="./hist_gamma_on_tw.root"
+#inRootFile="gamma_on_nsb_1x.list"
+#outHistF="./hist_gamma_on_tw.root"
 #inRootFile="gamma_diffuse_nsb_1x.list"
 #inRootFile="gamma_diffuse_nsb_1x.listshort"
 #outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
-#inRootFile="proton_nsb_1x.list"
-#outHistF="./hist_proton_nsb_1x_tw.root"
+inRootFile="proton_nsb_1x.list"
+outHistF="./hist_proton_nsb_1x_tw.root"
 
 #short
 #'nightsky_background=all:0.001'
@@ -46,11 +46,14 @@ function printHelp {
     echo " [0] -fp    : fast proton"
     echo " [0] -fall  : fast all"
     echo " [0] -pg    : PCA gamma"
-    echo " [0] -pg_d  : Draw PCA gamma"
     echo " [0] -pgd   : PCA gamma diffuse"
-    echo " [0] -pgd_d : Draw PCA gamma diffuse"
     echo " [0] -pp    : PCA proton"
+    echo " [0] -pg_d  : Draw PCA gamma"
+    echo " [0] -pgd_d : Draw PCA gamma diffuse"
     echo " [0] -pp_d  : Draw PCA proton"
+    echo " [0] -pg_d_reco  : Draw reco. showers (PCA) gamma"
+    echo " [0] -pgd_d_reco : Draw reco. showers (PCA) gamma diffuse"
+    echo " [0] -pp_d_reco  : Draw reco. showers (PCA) proton"
     echo " [0] -trgp  : Trg proton"
     echo " [0] -trgg  : Trg gamma"
     echo " [0] -trggd : Trg gamma diffuse"
@@ -427,12 +430,32 @@ else
 	#./runana 4 $inRootFile $outHistF 4027 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 4727 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 6332 gamma   # n_pe 50 energy  GeV
-	./runana 4 $inRootFile $outHistF 7347 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 7347 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 7478 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 8142 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 9855 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 12409 gamma   # n_pe 50 energy  GeV
+
+	#./runana 4 $inRootFile $outHistF 380672 proton # n_pe 652779  energy 77215.1 GeV
+
+	#./runana 4 $inRootFile $outHistF 7014318 proton # n_pe 12438  energy 98388.8 GeV azi. 194.212 alt. 75.7073
+	#./runana 4 $inRootFile $outHistF 7105497 proton # n_pe 12693  energy 95500.4 GeV azi. 164.026 alt. 75.1417
+
+	./runana 4 $inRootFile $outHistF 7705579 proton # n_pe 12485  energy 80426.4 GeV azi. 169.65 alt. 74.0754
+	#./runana 4 $inRootFile $outHistF 16614505 proton # n_pe 12057  energy 76159.3 GeV azi. 164.719 alt. 71.2268
+	#./runana 4 $inRootFile $outHistF 10023276 proton # n_pe 12255  energy 84172.5 GeV azi. 171.875 alt. 76.0566
+	
+	#./runana 4 $inRootFile $outHistF 10087523 proton # n_pe 12741  energy 85425 GeV azi. 174.655 alt. 62.3514
+	#./runana 4 $inRootFile $outHistF 10336791 proton # n_pe 12561  energy 98093.2 GeV azi. 180.704 alt. 76.3203
+	#./runana 4 $inRootFile $outHistF 12762628 proton # n_pe 12098  energy 83020.6 GeV azi. 190.514 alt. 68.0341
+	#./runana 4 $inRootFile $outHistF 13362942 proton # n_pe 12211  energy 83828.8 GeV azi. 173.218 alt. 77.3532
+	#./runana 4 $inRootFile $outHistF 15055958 proton # n_pe 12114  energy 94013.5 GeV azi. 153.116 alt. 73.9085
+	#./runana 4 $inRootFile $outHistF 15539658 proton # n_pe 12065  energy 88918 GeV azi. 158.789 alt. 72.1095
+	#./runana 4 $inRootFile $outHistF 15792857 proton # n_pe 12090  energy 82888.4 GeV azi. 179.127 alt. 76.8714
+	#./runana 4 $inRootFile $outHistF 17010207 proton # n_pe 12775  energy 82958.2 GeV azi. 171.942 alt. 76.153
+	#./runana 4 $inRootFile $outHistF 17251109 proton # n_pe 12111  energy 77332.2 GeV azi. 179.034 alt. 68.5323
+	#./runana 4 $inRootFile $outHistF 19918811 proton # n_pe 12499  energy 76577.8 GeV azi. 198.538 alt. 66.4997
 	
     elif [ "$1" = "-th" ]; then
 	./runana 5
@@ -460,6 +483,16 @@ else
 	./runana 62 gamma_diffuse_nsb_1x.list hist_gamma_diffuse_nsb_1x_PCAp_component.root
     elif [ "$1" = "-pp_d" ]; then
 	./runana 62 proton_nsb_1x.list hist_proton_nsb_1x_PCAp_component.root
+    elif [ "$1" = "-pg_d_reco" ]; then
+	nEvMax=$(more reco.cvs | wc -l)
+	./runana 63 gamma_on_nsb_1x.list hist_gamma_on_nsb_1x_PCA_reco.root $nEvMax 'reco.cvs'
+    elif [ "$1" = "-pgd_d_reco" ]; then
+	nEvMax=$(more reco.cvs | wc -l)
+	nEvMax=50
+	./runana 63 gamma_diffuse_nsb_1x.list hist_gamma_diffuse_nsb_1x_PCA_reco.root $nEvMax 'reco.cvs'
+    elif [ "$1" = "-pp_d_reco" ]; then
+	nEvMax=$(more reco.cvs | wc -l)
+	./runana 63 proton_nsb_1x.list hist_proton_nsb_1x_PCA_reco.root $nEvMax 'reco.cvs'
     elif [ "$1" = "-fg" ]; then
 	#./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x.log
 	#./runana 7 gamma_on_nsb_1x.list hist_fast_gamma_on_nsb_1x_cut.root anaFast_g.conf | tee hist_fast_gamma_on_nsb_1x_cut.log

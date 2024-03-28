@@ -52,13 +52,14 @@ public:
   //
   void Fill_principal( std::vector<sipmCameraHistCropped*> &sipm_cam_hist_v, const TPrincipal *principal);
   void Fill_principal( std::vector<sipmCameraHistCropped*> &sipm_cam_principal_hist_v, Double_t data_Vh[_dd_im][_dd_im]);
-
+  void Fill_reco( std::vector<sipmCameraHistCropped*> &sipm_cam_reco_hist_v, std::vector<std::vector<Double_t>> &reco_v);
+  
   static void save_pixel_map( const std::vector<unsigned int> &pixel_map_v, TString out_map_file_name="sipmCameraHistCropped_pix.map");
   static void load_pixel_map( std::vector<unsigned int> &pixel_map_v, TString in_map_file_name="sipmCameraHistCropped_pix.map");
 
   void Save_to_csv(TString csvname, const std::vector<sipmCameraHistCropped*> simp_hist_crop_v);
 
-  void draw_crop_vector( Int_t nx, Int_t ny, const std::vector<sipmCameraHistCropped*> simp_hist_crop_v, TCanvas *c1);
+  void draw_crop_vector( Int_t nx, Int_t ny, const std::vector<sipmCameraHistCropped*> simp_hist_crop_v, TCanvas *c1, Int_t faceID_shift = 0);
   
 private:
 

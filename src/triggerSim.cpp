@@ -18,7 +18,7 @@
 #include <iomanip>
 #include <stdlib.h>
 
-triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(2), _k_dist_graph_flag(false)
+triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(0), _k_dist_graph_flag(false)
 {
   //_dbs->print_cluster_stats();
 }
@@ -201,7 +201,7 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
       //trg_chID.push_back(ch_i);
       //std::cout<<ch_i<<std::endl;
       //}
-      if(digital_sum_3ns>307){
+      if(digital_sum_3ns>310){
 	trg_chID.push_back(ch_i);
 	//std::cout<<ch_i<<std::endl;
       }
@@ -237,7 +237,7 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   points.clear();
   //
   Double_t i_time_todist=0.05;
-  unsigned int minPts = 13;
+  unsigned int minPts = 30;
   float eps = 0.1;
   //
   for(unsigned int i = 0;i<trg_vector.size();i++){

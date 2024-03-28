@@ -396,6 +396,19 @@ void sipmCameraHistCropped::Fill_principal( std::vector<sipmCameraHistCropped*> 
   }  
 }
 
+void sipmCameraHistCropped::Fill_reco( std::vector<sipmCameraHistCropped*> &sipm_cam_reco_hist_v, std::vector<std::vector<Double_t>> &reco_v){
+  TString name;
+  //
+  for(unsigned int i = 0;i<reco_v.size();i++){
+    name = "reco_";
+    name += i;
+    sipmCameraHistCropped* simp_hist_reco = new sipmCameraHistCropped(name.Data(),name.Data(), _sipm_cam, get_pixel_map());
+    for(Int_t j = 0;j<_dd_im;j++)
+      simp_hist_reco->SetBinContent(j+1,reco_v.at(i).at((unsigned int)j));
+    sipm_cam_reco_hist_v.push_back(simp_hist_reco);
+  }  
+}
+
 void sipmCameraHistCropped::Save_to_csv(TString csvname, const std::vector<sipmCameraHistCropped*> simp_hist_crop_v){
   std::ofstream csvfile;
   //
@@ -415,7 +428,7 @@ void sipmCameraHistCropped::Save_to_csv(TString csvname, const std::vector<sipmC
   csvfile.close();  
 }
 
-void sipmCameraHistCropped::draw_crop_vector( Int_t nx, Int_t ny, const std::vector<sipmCameraHistCropped*> simp_hist_crop_v, TCanvas *c1){
+void sipmCameraHistCropped::draw_crop_vector( Int_t nx, Int_t ny, const std::vector<sipmCameraHistCropped*> simp_hist_crop_v, TCanvas *c1, Int_t faceID_shift){
   c1->cd();
   //gStyle->SetPalette(kGreyScale);
   gStyle->SetFrameBorderMode(0);
@@ -424,7 +437,7 @@ void sipmCameraHistCropped::draw_crop_vector( Int_t nx, Int_t ny, const std::vec
   gStyle->SetOptStat(kFALSE);
   c1->Divide(nx,ny,0.0001,0.0001,0);
   Int_t padID = 1;
-  Int_t faceID = 0;
+  Int_t faceID = faceID_shift;
   for( Int_t i = 0; i<nx; i++){
     for( Int_t j = 0; j<ny; j++){
       c1->cd(padID);

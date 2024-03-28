@@ -640,6 +640,7 @@ void anaFast::Loop_scan( TString histOut, TString simtel_all_dat, TString flux_d
 
 void anaFast::Loop(TString histOut){
   //
+  cout<<"anaFast::Loop"<<endl;
   _anaConf.printInfo();
   //assert(0);
   //
@@ -842,7 +843,8 @@ void anaFast::Loop(TString histOut){
 	if(_anaConf.if_cout_jentry){
 	  //cout<<"jentry = "<<jentry<<"   "<<n_pe<<energy<<endl;
 	  //./runana 4 $inRootFile $outHistF  588 gamma  #   68
-	  cout<<"./runana 4 $inRootFile $outHistF "<<jentry<<" gamma # n_pe "<<n_pe<<"  energy "<<energy*1000.0<<" GeV"<<endl;
+	  //cout<<"./runana 4 $inRootFile $outHistF "<<jentry<<" gamma # n_pe "<<n_pe<<"  energy "<<energy*1000.0<<" GeV"<<" azi. "<<azimuth_deg<<" alt. "<<altitude_deg<<endl;
+	  cout<<"./runana 4 $inRootFile $outHistF "<<jentry<<" proton # n_pe "<<n_pe<<"  energy "<<energy*1000.0<<" GeV"<<" azi. "<<azimuth_deg<<" alt. "<<altitude_deg<<endl;
 	}
 	//
 	evH_E_cut->get_E_hist()->Fill(energy*1000.0);
@@ -1021,8 +1023,10 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //Double_t y0_LST01 = -52.07;
   //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //
-  //if(n_pe>=100)
-  //return true;
+  if(energy>=75.0)
+    if(n_pe>=12000)
+      if(n_pe<13000)
+	return true;
   //if(n_pe>=0)
   //return true;
   //if(n_pe>=500){
@@ -1042,10 +1046,10 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //if(r<=300)
   //return true;
   //proton
-  if(theta_p_t_deg<3.0)
-    if(energy>=3.98107)
-      if(r<=150)
-  	return true;     
+  //if(theta_p_t_deg<3.0)
+  //if(energy>=3.98107)
+  //if(r<=150)
+  //return true;     
   //gamma diff, gamma, electron
   //if(theta_p_t_deg<2.0)
   //if(energy>=0.20)
