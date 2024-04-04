@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
     anaTrg a( inRootFiles, 1);
     a.Loop(outRootFileF);
   }
-  else if(argc == 12 && atoi(argv[1])==111){
+  else if(argc == 13 && atoi(argv[1])==111){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
     Int_t binE = atoi(argv[4]);
@@ -80,6 +80,7 @@ int main(int argc, char *argv[]){
     Int_t nEv_max = atoi(argv[9]);
     Int_t rndseed = atoi(argv[10]);
     Int_t data_chunk_ID = atoi(argv[11]);
+    Double_t rsimulation = atof(argv[12]);
     cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl
@@ -90,10 +91,12 @@ int main(int argc, char *argv[]){
 	<<"npe_max       : "<<npe_max<<endl
 	<<"nEv_max       : "<<nEv_max<<endl
     	<<"rndseed       : "<<rndseed<<endl
-	<<"data_chunk_ID : "<<data_chunk_ID<<endl;
+	<<"data_chunk_ID : "<<data_chunk_ID<<endl
+      	<<"rsimulation   : "<<rsimulation<<endl;
     //
     anaTrgA a( inRootFiles, 1);
     a.set_disable_energy_theta_rcore_binwise_cuts(true);
+    a.set_rsimulation(rsimulation);
     a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, data_chunk_ID);
   }
   else if(argc == 6 && atoi(argv[1])==112){
@@ -389,12 +392,18 @@ int main(int argc, char *argv[]){
     //
     rateCalculator r(rateCalc_name_title.Data(), rateCalc_name_title.Data(), hist_file_prefix, outRootFileF, evH_flux);
   }
-  else if(argc == 6 && atoi(argv[1])==9999){
+  else if(argc == 9 && atoi(argv[1])==9999){
     //
     TString particle_type = argv[2];
     TString hist_file_prefix = argv[3];
     TString outRootFileF = argv[4];
     Int_t n_jobs = atoi(argv[5]);
+    //
+    Int_t n_jobs_NSB = atoi(argv[6]);
+    TString hist_file_dir_NSB = argv[7];
+    //
+    Double_t rsimulation = atof(argv[8]);
+    //
     TString rateCalc_name_title = "rateCalc";
     //
     Double_t val_Emin = 1.0;      // GeV
@@ -403,26 +412,38 @@ int main(int argc, char *argv[]){
     Double_t val_Thetamin = 0.0;  //deg
     Double_t val_Thetamax = 10.0; //deg
     Int_t val_N_bins_t = 10;
+    //
+    //
     evstHist *evH_flux= new evstHist("evH_flux","evH_flux",
 				     val_Emin, val_Emax, val_N_bins_E,
 				     val_Thetamin, val_Thetamax, val_N_bins_t);
     //
     cout<<"--> Parameters: <--"<<endl
-	<<"particle_type    : "<<particle_type<<endl
-	<<"hist_file_prefix : "<<hist_file_prefix<<endl
-	<<"outRootFileF     : "<<outRootFileF<<endl
-	<<"n_jobs           : "<<n_jobs<<endl;
+	<<"particle_type     : "<<particle_type<<endl
+	<<"hist_file_prefix  : "<<hist_file_prefix<<endl
+	<<"outRootFileF      : "<<outRootFileF<<endl
+	<<"n_jobs            : "<<n_jobs<<endl
+	<<"n_jobs_NSB        : "<<n_jobs_NSB<<endl
+	<<"hist_file_dir_NSB : "<<hist_file_dir_NSB<<endl
+	<<"rsimulation       : "<<rsimulation<<endl;
     //
-    if(particle_type = "p"){
+    if(particle_type == "p"){
       rateCalc_name_title += "_proton";
       evH_flux->LoadBinContent("../cosmique_gamma_hadron_generator/flux_diff_protons.dat", true);
     }
     else{
-      assert(0);
+      cout<<"--> Warning this is for gamma diffuse <--"<<endl
+	  <<"but we consider diffused proton flux "<<endl
+      	  <<"it is done for trigger effective area culculation only !!!"<<endl;
+      rateCalc_name_title += "_gamma";
+      evH_flux->LoadBinContent("../cosmique_gamma_hadron_generator/flux_diff_protons.dat", true);
+      //assert(0);
     }
     //
     bool disable_energy_theta_rcore_binwise_cuts = true;
-    rateCalculator r(rateCalc_name_title.Data(), rateCalc_name_title.Data(), hist_file_prefix, outRootFileF, evH_flux, n_jobs, disable_energy_theta_rcore_binwise_cuts);
+    rateCalculator r(rateCalc_name_title.Data(), rateCalc_name_title.Data(), hist_file_prefix, outRootFileF, evH_flux,
+		     n_jobs, disable_energy_theta_rcore_binwise_cuts,
+		     n_jobs_NSB, hist_file_dir_NSB, rsimulation);
   }
   else{
     cout<<" --> ERROR in input arguments "<<endl
@@ -476,7 +497,8 @@ int main(int argc, char *argv[]){
       	<<"       [8] - npe_max"<<endl
 	<<"       [9] - nEv_max"<<endl
     	<<"       [10]- rndseed"<<endl
-	<<"       [11]- data_chunk_ID"<<endl;
+	<<"       [11]- data_chunk_ID"<<endl
+    	<<"       [12]- rsimulation"<<endl;
     cout<<" runID [1] = 112 (execution ID number) TrgA NGB"<<endl
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl
@@ -502,7 +524,10 @@ int main(int argc, char *argv[]){
 	<<"       [2] - particle type (g,gd,e,p)"<<endl
       	<<"       [3] - histogram file prefix"<<endl
     	<<"       [4] - name of root file with histograms"<<endl
-	<<"       [5] - n_jons"<<endl;
+	<<"       [5] - n_jons"<<endl
+      	<<"       [6] - n_jobs_NSB"<<endl
+	<<"       [7] - hist_file_dir_NSB"<<endl
+	<<"       [8] - rsimulation"<<endl;
   }
   return 0;
 }

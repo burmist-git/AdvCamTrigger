@@ -69,6 +69,7 @@ function printHelp {
     echo " [0] -test_evstHist : test of evstHist"
     echo " [0] -rate_proton_binwise : calculate proton rate (binwise)"
     echo " [0] -rate_proton         : calculate proton rate"
+    echo " [0] -rate_gamma          : calculate gamma rate"
     echo " [0] -c     : recompile"
     echo " [0] -h     : print help"
 }
@@ -528,7 +529,14 @@ else
     elif [ "$1" = "-rate_proton_binwise" ]; then
 	./runana 999 p ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/ ./hist_rate_proton_diff.root
     elif [ "$1" = "-rate_proton" ]; then
-	./runana 9999 p ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA_20-10000pe/ ./hist_rate_proton_diff.root 1000
+	rsimulation=1500
+	#./runana 9999 p ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA_20-10000pe/ ./hist_rate_proton_diff.root 1000 100 ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA/ $rsimulation
+	#./runana 9999 p ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA_test/ ./hist_rate_proton_diff_test.root 15 15 ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/ $rsimulation
+	./runana 9999 p ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA_test_superwlower/ ./hist_rate_proton_diff_test_superwlower.root 15 15 ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/ $rsimulation
+    elif [ "$1" = "-rate_gamma" ]; then
+	rsimulation=800
+	./runana 9999 g ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/trgA_test_DBscan/ ./hist_rate_gamma_DBscan.root 10 15 ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/ $rsimulation
+	./runana 9999 g ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/trgA_test_superflower/ ./hist_rate_gamma_superflower.root 10 15 ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/ $rsimulation
     elif [ "$1" = "-c" ]; then
 	make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j		
     elif [ "$1" = "-h" ]; then

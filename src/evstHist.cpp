@@ -517,6 +517,32 @@ TCanvas* evstHist::Draw_hist_core(Int_t e_bin_i, TString fileName, TString frame
   return c1;
 }
 
+void evstHist::Divideh1(evstHist *evH_cut, evstHist *evH_all, Double_t normval){
+  //
+  Double_t nev;
+  Double_t nev_norm;
+  //
+  for(Int_t i = 1;i<=_h1_E->GetNbinsX();i++){
+    nev=evH_cut->get_E_hist()->GetBinContent(i);
+    nev_norm=evH_all->get_E_hist()->GetBinContent(i);
+    //    
+    if(nev_norm != 0.0)
+      _h1_E->SetBinContent(i,nev/nev_norm*normval);
+    else
+      _h1_E->SetBinContent(i,0.0);
+  }
+  //
+  for(Int_t i = 1;i<=_h1_theta->GetNbinsX();i++){
+    nev=evH_cut->get_theta_hist()->GetBinContent(i);
+    nev_norm=evH_all->get_theta_hist()->GetBinContent(i);
+    //    
+    if(nev_norm != 0.0)
+      _h1_theta->SetBinContent(i,nev/nev_norm*normval);
+    else
+      _h1_theta->SetBinContent(i,0.0);
+  }
+}
+
 void evstHist::Divide(evstHist *evH_cut, evstHist *evH_all, bool with_r_core){
   Double_t nev;
   Double_t nev_norm;

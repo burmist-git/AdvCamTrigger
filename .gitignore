@@ -608,3 +608,14 @@ ev_synthetic_7105497_1502106/
 ev_synthetic_7705579_7009805/
 ev_synthetic_trg_v_7705579ev.csv
 hist_gamma_diffuse_nsb_1x_PCA_reco.root
+ev_synthetic_12409_5636105/
+hist_rate_gamma.root
+hist_rate_gamma.root.txt
+hist_rate_gamma_DBscan.root
+hist_rate_gamma_DBscan.root.txt
+hist_rate_gamma_save.root
+hist_rate_gamma_superflower.root
+hist_rate_gamma_superflower.root.txt
+hist_rate_proton_diff_test.root
+hist_rate_proton_diff_test_superwlower.root
+hist_rate_proton_diff_test_superwlower.root.txt

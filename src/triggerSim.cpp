@@ -18,7 +18,7 @@
 #include <iomanip>
 #include <stdlib.h>
 
-triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(0), _k_dist_graph_flag(false)
+triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(2), _k_dist_graph_flag(false), _digital_sum_max_only(true)
 {
   //_dbs->print_cluster_stats();
 }
@@ -177,8 +177,9 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
   int digital_sum = 0;
   int digital_sum_3ns = 0;
   int digital_sum_5ns = 0;
+  int digital_sum_3ns_max = 0;
   int fadc_val;
-
+  //
   for(unsigned int wf_j = (0 + _n_skip_edge_points);wf_j<(wf.at(0).size() - _n_skip_edge_points);wf_j++){
     trg_chID.clear();
     for(unsigned int ch_i = 0;ch_i<wf.size();ch_i++){
@@ -186,22 +187,33 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
       //digital_sum_3ns = get_flower_digital_sum(ch_i,wf_j,wf,-1,1,true);
       //digital_sum_5ns = get_flower_digital_sum(ch_i,wf_j,wf,-2,2,true);
       //digital_sum     = get_digital_sum( ch_i, wf_j, wf,  0, 0, true, 0);
-      digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 0);
+      //
+      //digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 0);
+      digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 3);
+      if(digital_sum_3ns_max<digital_sum_3ns)
+	digital_sum_3ns_max = digital_sum_3ns;
+      //
       //digital_sum_5ns = get_digital_sum( ch_i, wf_j, wf, -2, 2, true, 0);
       fadc_val = wf.at(ch_i).at(wf_j);
-      if(h1_digital_sum != NULL)
-	h1_digital_sum->Fill(digital_sum);
-      if(h1_digital_sum_3ns != NULL)
-	h1_digital_sum_3ns->Fill(digital_sum_3ns);
-      if(h1_digital_sum_5ns != NULL)
-	h1_digital_sum_5ns->Fill(digital_sum_5ns);
+      if(!_digital_sum_max_only){
+	if(h1_digital_sum != NULL)
+	  h1_digital_sum->Fill(digital_sum);
+	if(h1_digital_sum_3ns != NULL)
+	  h1_digital_sum_3ns->Fill(digital_sum_3ns);
+	if(h1_digital_sum_5ns != NULL)
+	  h1_digital_sum_5ns->Fill(digital_sum_5ns);
+      }
       if(h1_fadc_val != NULL)
 	h1_fadc_val ->Fill(fadc_val);
       //if(digital_sum_5ns>308){
       //trg_chID.push_back(ch_i);
       //std::cout<<ch_i<<std::endl;
       //}
-      if(digital_sum_3ns>310){
+      //if(digital_sum_3ns>310){
+      //trg_chID.push_back(ch_i);
+      //std::cout<<ch_i<<std::endl;
+      //}
+      if(digital_sum_3ns>307){
 	trg_chID.push_back(ch_i);
 	//std::cout<<ch_i<<std::endl;
       }
@@ -209,10 +221,15 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
     }
     trg_vector.push_back(trg_chID);
   }
-  //return trg_vector;
+  if(_digital_sum_max_only){
+    h1_digital_sum_3ns->Fill(digital_sum_3ns_max);
+  }
+  _digital_sum_max = digital_sum_3ns_max;
+  //
+  return trg_vector;
   //print_trigger_vec(trg_vector);
   //return build_spatial_time_cluster(trg_vector);
-  return build_spatial_time_cluster_dbscan(trg_vector);
+  //return build_spatial_time_cluster_dbscan(trg_vector);
 }
 
 void triggerSim::plot_and_save_to_hist_root(TString outrootFile, vector<Double_t> &k_dist_graph){
@@ -237,7 +254,7 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   points.clear();
   //
   Double_t i_time_todist=0.05;
-  unsigned int minPts = 30;
+  unsigned int minPts = 13;
   float eps = 0.1;
   //
   for(unsigned int i = 0;i<trg_vector.size();i++){
@@ -289,7 +306,10 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   }
   _dbclusters_v.clear();
   _dbclusters_v = _dbs->get_clusters_v();
-  _dbscan_run_time_musec =  _dbs->get_dbscan_run_time_musec();
+  _dbscan_run_time_musec = _dbs->get_dbscan_run_time_musec();
+  _dbscan_N_points = _dbs->get_points_v().size();
+  //std::cout<<"_dbscan_N_points "<<_dbscan_N_points<<std::endl
+  //	   <<"points.size()    "<<points.size()<<std::endl;
   _dbs->clear();
   //dbscan::print_cluster_stats(_dbclusters_v);
   //

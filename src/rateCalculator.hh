@@ -15,7 +15,8 @@ public:
   
   rateCalculator();
   rateCalculator( const char* name, const char* title, TString hist_file_prefix, TString output_hist_file, evstHist* evH_flux,
-		  Int_t n_jobs = -999, bool disable_energy_theta_rcore_binwise_cuts = false);
+		  Int_t n_jobs = -999, bool disable_energy_theta_rcore_binwise_cuts = false,
+		  Int_t n_jobs_NSB = 100, TString hist_file_dir_NSB = "../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA/", Double_t rsimulation = 800);
   ~rateCalculator();
   
 private:
@@ -37,7 +38,8 @@ private:
   
   void copyHist(TH1D *h1, TH1D *h1_to_cp);
   void addHist(TH1D *h1, TH1D *h1_to_add);
-  
+  //
+  //
   TH1D *_h1_rate;
   TH1D *_h1_N_dbc;
   TH1D *_h1_N_dbc_mean;
@@ -50,6 +52,12 @@ private:
   TH1D *_h1_N_dbc_mean_NSB;
   TH1D *_h1_dbc_mean_time_ii;
   TH1D *_h1_dbc_mean_time_ii_NSB;
+  TH1D *__h1_energy_eff_r;
+  TH1D *_h1_energy_all;
+  TH1D *_h1_energy_trg;
+  TH1D *_h1_energy_eff_r;
+  //
+  //
   Double_t _n_ev_tot;
   Double_t _NSB_rate_lowth; 
   std::vector<TH1D*> _h1_dbc_number_of_points_w_v;
@@ -58,5 +66,9 @@ private:
   Int_t _n_jobs;
   
   void save_output();
+
+  Double_t _rsimulation;
+
+  void print_hist_to_csv(TH1D *h1, TString out_file_name);
   
 };

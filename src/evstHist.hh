@@ -39,6 +39,7 @@ class evstHist: public TH2Poly {
   
   void selfNorm();
   void Divide(evstHist *evH_cut, evstHist *evH_all, bool with_r_core = false);
+  void Divideh1(evstHist *evH_cut, evstHist *evH_all, Double_t normval = 1.0);
   void Multiply(evstHist *evH_eff, evstHist *evH_flux, bool with_r_core = false);
   void Multiply_core(evstHist *evH);
   void DumpBinContent(TString data_out, bool with_r_core = false);

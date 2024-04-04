@@ -172,7 +172,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
       <<"data_chunk_ID                            "<<data_chunk_ID<<endl
       <<"NGBsim                                   "<<NGBsim<<endl
       <<"_n_data_chunks                           "<<_n_data_chunks<<endl
-      <<"_disable_energy_theta_rcore_binwise_cuts "<<_disable_energy_theta_rcore_binwise_cuts<<endl;
+      <<"_disable_energy_theta_rcore_binwise_cuts "<<_disable_energy_theta_rcore_binwise_cuts<<endl
+      <<"_rsimulation                             "<<_rsimulation<<endl;
   //
   TVector3 v_det;
   v_det.SetXYZ(1.0*TMath::Sin(20.0/180.0*TMath::Pi()),0,1.0*TMath::Cos(20.0/180.0*TMath::Pi()));
@@ -201,10 +202,19 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns", "h1_digital_sum_5ns",1001,-0.5,1000.5);
   TH1D *h1_fadc_val        = new TH1D("h1_fadc_val",        "h1_fadc_val",       1001,-0.5,1000.5);
   //
+  evstHist *evH_h1_energy_all = new evstHist("evH_h1_energy_all","evH_h1_energy_all");
+  evstHist *evH_h1_energy_trg = new evstHist("evH_h1_energy_trg","evH_h1_energy_trg");
+  evstHist *evH_h1_energy_eff_r = new evstHist("evH_h1_energy_eff_r","evH_h1_energy_eff_r");
+  //
+  evH_h1_energy_all->get_E_hist()->SetNameTitle("_h1_energy_all","_h1_energy_all");
+  evH_h1_energy_trg->get_E_hist()->SetNameTitle("_h1_energy_trg","_h1_energy_trg");
+  evH_h1_energy_eff_r->get_E_hist()->SetNameTitle("_h1_energy_eff_r","_h1_energy_eff_r");
+  //
   TH1D *h1_energy = new TH1D("h1_energy","h1_energy", 100000, 0.0, 100000.0); 
   TH1D *h1_rcore = new TH1D("h1_rcore","h1_rcore", 1000, 0.0, 2000.0);
   TH1D *h1_theta_p_t_deg = new TH1D("h1_theta_p_t_deg","h1_theta_p_t_deg", 1000, 0.0, 10.0);
   TH1D *h1_npe = new TH1D("h1_npe","h1_npe", 1000, 0.0, 10000.0);
+  TH1D *h1_n_micro_clusters = new TH1D("h1_n_micro_clusters","h1_n_micro_clusters", 1000, 0.0, 10000.0);
   //
   TH1D *h1_N_dbc = new TH1D("h1_N_dbc","h1_N_dbc", 21, -0.5, 20.5);
   TH1D *h1_dbc_number_of_points = new TH1D("h1_dbc_number_of_points","h1_dbc_number_of_points", 1001, -0.5, 1000.5);
@@ -232,6 +242,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TGraph *gr_dbscan_time_vs_npe = new TGraph();
   gr_dbscan_time_vs_npe->SetNameTitle("gr_dbscan_time_vs_npe","gr_dbscan_time_vs_npe");  
   //
+  TGraph *gr_dbscan_time_vs_n_micro_clusters = new TGraph();
+  gr_dbscan_time_vs_n_micro_clusters->SetNameTitle("gr_dbscan_time_vs_n_micro_clusters","gr_dbscan_time_vs_n_micro_clusters");  
+  //
   Int_t number_of_points_tot = 0;  
   //
   /////////////
@@ -247,14 +260,19 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   Int_t fadc_offset = 300;
   Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
   Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
-  Float_t NGB_rate_in_MHz = 386.0;
-  //Float_t NGB_rate_in_MHz = 268.0;
+  //Float_t NGB_rate_in_MHz = 386.0;
+  Float_t NGB_rate_in_MHz = 268.0;
   //Float_t NGB_rate_in_MHz = 0.0;
   //Float_t fadc_electronic_noise_RMS = 3.94;
   //Float_t fadc_electronic_noise_RMS = 0.01;
   Float_t fadc_electronic_noise_RMS = 3.8436441; //takes into account 3.0/sqrt(12)
   //
+  bool if_dbc_trg = false;
+  bool if_digital_sum_trg = true;
+  //
   TRandom3 *rnd = new TRandom3(rndseed);
+  //
+  bool iftrg = false;
   //
   ////////////////////////////////////  
   //static const Int_t nChannels = 7987;
@@ -330,28 +348,54 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 	    <<" "<<((finish_trg - start_trg)/(CLOCKS_PER_SEC/1000))<<" (msec)"<<endl;
 	//
 	gr_dbscan_time_vs_npe->SetPoint(gr_dbscan_time_vs_npe->GetN(), n_pe, trg_sim->get_dbscan_run_time_musec());
+	gr_dbscan_time_vs_n_micro_clusters->SetPoint(gr_dbscan_time_vs_n_micro_clusters->GetN(), trg_sim->get_dbscan_N_points(), trg_sim->get_dbscan_run_time_musec());
+	//
+	h1_n_micro_clusters->Fill(trg_sim->get_dbscan_N_points());
 	//
 	h1_N_dbc->Fill(trg_sim->get_dbclusters().size());
 	number_of_points_tot = 0;
-	for(unsigned int k = 0; k<trg_sim->get_dbclusters().size(); k++){
-	  h1_dbc_number_of_points->Fill(trg_sim->get_dbclusters().at(k).number_of_points);
-	  number_of_points_tot += trg_sim->get_dbclusters().at(k).number_of_points;
-	  h1_dbc_number_of_points_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points, evstHist::get_Weight_ETeV(energy));
-	  h2_dbc_number_of_points_vs_npe->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe);
-	  h2_dbc_number_of_points_vs_npe_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe, evstHist::get_Weight_ETeV(energy));
-	  h1_dbc_number_of_points_npe_norm->Fill(n_pe);
-	  h1_dbc_number_of_CORE_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_CORE_POINT);
-	  h1_dbc_number_of_BORDER_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_BORDER_POINT);
+	if(if_dbc_trg){
+	  iftrg = false;
+	  for(unsigned int k = 0; k<trg_sim->get_dbclusters().size(); k++){
+	    h1_dbc_number_of_points->Fill(trg_sim->get_dbclusters().at(k).number_of_points);
+	    number_of_points_tot += trg_sim->get_dbclusters().at(k).number_of_points;
+	    h1_dbc_number_of_points_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points, evstHist::get_Weight_ETeV(energy));
+	    h2_dbc_number_of_points_vs_npe->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe);
+	    h2_dbc_number_of_points_vs_npe_w->Fill(trg_sim->get_dbclusters().at(k).number_of_points,n_pe, evstHist::get_Weight_ETeV(energy));
+	    h1_dbc_number_of_points_npe_norm->Fill(n_pe);
+	    h1_dbc_number_of_CORE_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_CORE_POINT);
+	    h1_dbc_number_of_BORDER_POINT->Fill(trg_sim->get_dbclusters().at(k).number_of_BORDER_POINT);
+	    //
+	    h1_dbc_mean_x->Fill(trg_sim->get_dbclusters().at(k).mean_x);
+	    h1_dbc_mean_y->Fill(trg_sim->get_dbclusters().at(k).mean_y);
+	    h1_dbc_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii);
+	    //
+	    h2_dbc_number_of_points_vs_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii,
+							  trg_sim->get_dbclusters().at(k).number_of_points);
+	    if(trg_sim->get_dbclusters().at(k).number_of_points >= 39)
+	      iftrg = true;
+	  }
+	  h1_dbc_number_of_points_tot->Fill(number_of_points_tot);
+	  h1_dbc_number_of_points_tot_w->Fill(number_of_points_tot, evstHist::get_Weight_ETeV(energy));
+	}
+	else if(if_digital_sum_trg){
+	  iftrg = false;
+	  if(trg_sim->get_digital_sum_max()>312)
+	    iftrg = true;
+	  h1_dbc_number_of_points->Fill(trg_sim->get_digital_sum_max());
+	  h1_dbc_number_of_points_w->Fill(trg_sim->get_digital_sum_max(), evstHist::get_Weight_ETeV(energy));
 	  //
-	  h1_dbc_mean_x->Fill(trg_sim->get_dbclusters().at(k).mean_x);
-	  h1_dbc_mean_y->Fill(trg_sim->get_dbclusters().at(k).mean_y);
-	  h1_dbc_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii);
-	  //
-	  h2_dbc_number_of_points_vs_mean_time_ii->Fill(trg_sim->get_dbclusters().at(k).mean_time_ii,
-							trg_sim->get_dbclusters().at(k).number_of_points);
-	}	
-	h1_dbc_number_of_points_tot->Fill(number_of_points_tot);
-	h1_dbc_number_of_points_tot_w->Fill(number_of_points_tot, evstHist::get_Weight_ETeV(energy));
+	  h1_dbc_number_of_points_tot->Fill(trg_sim->get_digital_sum_max());
+	  h1_dbc_number_of_points_tot_w->Fill(trg_sim->get_digital_sum_max(), evstHist::get_Weight_ETeV(energy));
+	}
+	//
+	//
+	//
+	evH_h1_energy_all->get_E_hist()->Fill(energy*1000);
+	if(iftrg)
+	  evH_h1_energy_trg->get_E_hist()->Fill(energy*1000);
+	//
+	//
 	//trg_sim->fill_fadc_val_vs_time(wfcam,h2_fadc_val_vs_time_ii);
 	//
 	nevsim++;
@@ -360,6 +404,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   }
   //
   //----------------------
+  evH_h1_energy_eff_r->Divideh1(evH_h1_energy_trg, evH_h1_energy_all, TMath::Pi()*_rsimulation*_rsimulation);
+  //----------------------
+  //
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
   if (rootFile->IsZombie()){
@@ -386,6 +433,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   h1_theta_p_t_deg->Write();
   h1_npe->Write();
   //
+  h1_n_micro_clusters->Write();
   h1_N_dbc->Write();
   h1_dbc_number_of_points->Write();
   h1_dbc_number_of_points_w->Write();
@@ -403,6 +451,12 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   h2_dbc_number_of_points_vs_mean_time_ii->Write();
   gr_event_id_vs_jentry->Write();
   gr_dbscan_time_vs_npe->Write();
+  gr_dbscan_time_vs_n_micro_clusters->Write();
+  //
+  evH_h1_energy_all->get_E_hist()->Write();
+  evH_h1_energy_trg->get_E_hist()->Write();
+  evH_h1_energy_eff_r->get_E_hist()->Write();
+  //
   //h2_fadc_val_vs_time_ii->Write();
   //
   //cout<<"nevsim = "<<nevsim<<endl;

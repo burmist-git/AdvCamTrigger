@@ -46,8 +46,11 @@ public :
   inline void set_n_skip_edge_points(unsigned int val){_n_skip_edge_points = val;};
 
   inline const Int_t get_dbscan_run_time_musec() const {return _dbscan_run_time_musec;};
-
+  inline const Int_t get_dbscan_N_points() const {return _dbscan_N_points;};
+  
   inline void set_k_dist_graph_flag(bool val){_k_dist_graph_flag = val;};
+
+  inline const Int_t get_digital_sum_max() const {return _digital_sum_max;};
   
 private:
 
@@ -66,10 +69,15 @@ private:
   Int_t _trg_counter;
 
   Int_t _dbscan_run_time_musec;
+  Int_t _dbscan_N_points;
 
   unsigned int _n_skip_edge_points;
 
   bool _k_dist_graph_flag;
+
+  bool _digital_sum_max_only;
+
+  Int_t _digital_sum_max;
   
 };
 

@@ -20,6 +20,7 @@
 #include <TList.h>
 #include <TSystemFile.h>
 #include <TFile.h>
+#include <TMath.h>
 
 using namespace std;
 
@@ -42,13 +43,18 @@ rateCalculator::rateCalculator():
   _h1_rate_tot_vs_th(NULL),
   _h1_dbc_mean_time_ii(NULL),
   _h1_dbc_mean_time_ii_NSB(NULL),
+  __h1_energy_eff_r(NULL),
+  _h1_energy_all(NULL),
+  _h1_energy_trg(NULL),
+  _h1_energy_eff_r(NULL),
   _n_ev_tot(0.0),
-  _n_jobs(-999)
+  _n_jobs(-999),
+  _rsimulation(801)
 {
 }
 
 rateCalculator::rateCalculator( const char* name, const char* title, TString hist_file_prefix, TString output_hist_file, evstHist* evH_flux,
-				Int_t n_jobs, bool disable_energy_theta_rcore_binwise_cuts):
+				Int_t n_jobs, bool disable_energy_theta_rcore_binwise_cuts, Int_t n_jobs_NSB, TString hist_file_dir_NSB, Double_t rsimulation):
   _name(name),
   _title(title),
   _hist_file_prefix(hist_file_prefix),
@@ -64,8 +70,13 @@ rateCalculator::rateCalculator( const char* name, const char* title, TString his
   _h1_rate_tot_vs_th(new TH1D),
   _h1_dbc_mean_time_ii(new TH1D),
   _h1_dbc_mean_time_ii_NSB(new TH1D),
+  __h1_energy_eff_r(new TH1D),
+  _h1_energy_all(new TH1D),
+  _h1_energy_trg(new TH1D),
+  _h1_energy_eff_r(new TH1D),
   _n_ev_tot(0.0),
-  _n_jobs(n_jobs)
+  _n_jobs(n_jobs),
+  _rsimulation(801)
 {
   TString h1_rate_name = "_h1_rate";
   h1_rate_name += "_";
@@ -89,15 +100,23 @@ rateCalculator::rateCalculator( const char* name, const char* title, TString his
   _h1_dbc_mean_time_ii->SetNameTitle("_h1_dbc_mean_time_ii","_h1_dbc_mean_time_ii");
   _h1_dbc_mean_time_ii_NSB->SetNameTitle("_h1_dbc_mean_time_ii_NSB","_h1_dbc_mean_time_ii_NSB");      
   //
+  __h1_energy_eff_r->SetNameTitle("__h1_energy_eff_r","__h1_energy_eff_r");
+  _h1_energy_all->SetNameTitle("_h1_energy_all","_h1_energy_all");
+  _h1_energy_trg->SetNameTitle("_h1_energy_trg","_h1_energy_trg");
+  _h1_energy_eff_r->SetNameTitle("_h1_energy_eff_r","_h1_energy_eff_r");  
+  //
   if(!_disable_energy_theta_rcore_binwise_cuts){
     calculate_rate_binwise();
   }
   else{
     calculate_rate();
-    calculate_rate_NSB();
+    calculate_rate_NSB( n_jobs_NSB, hist_file_dir_NSB);
     calculate_rate_tot();
   }
   save_output();
+}
+
+rateCalculator::~rateCalculator(){
 }
 
 void rateCalculator::save_output(){
@@ -127,6 +146,11 @@ void rateCalculator::save_output(){
   //
   _h1_dbc_mean_time_ii->Write();
   _h1_dbc_mean_time_ii_NSB->Write();
+  //
+  __h1_energy_eff_r->Write();
+  _h1_energy_all->Write();
+  _h1_energy_trg->Write();
+  _h1_energy_eff_r->Write();
   //
   rootFile->Close();  
   //
@@ -209,6 +233,7 @@ void rateCalculator::calculate_rate(){
   //
   for(Int_t i = 0;i<_n_jobs;i++){
     if(get_histogram_file_name(_hist_file_prefix, i_binE, i_binTheta, i_binDist, hist_file_name, i)){
+      cout<<hist_file_name<<endl;
       TH1D *h1 = new TH1D();
       TString h1_name_title = "h1_dbc_number_of_points_w_";
       h1_name_title += i; h1_name_title += "ID";
@@ -238,6 +263,21 @@ void rateCalculator::calculate_rate(){
       get_histogram(hist_file_name, htmp, "h1_dbc_mean_time_ii");
       append_histogram(_h1_dbc_mean_time_ii,htmp);
       delete htmp;      
+      //
+      htmp = new TH1D();
+      get_histogram(hist_file_name, htmp, "_h1_energy_eff_r");
+      append_histogram(__h1_energy_eff_r,htmp);
+      delete htmp;      
+      //
+      htmp = new TH1D();
+      get_histogram(hist_file_name, htmp, "_h1_energy_all");
+      append_histogram(_h1_energy_all,htmp);
+      delete htmp;      
+      //
+      htmp = new TH1D();
+      get_histogram(hist_file_name, htmp, "_h1_energy_trg");
+      append_histogram(_h1_energy_trg,htmp);
+      delete htmp;
     }
   } 
   //////////////////////
@@ -265,6 +305,36 @@ void rateCalculator::calculate_rate(){
     val_new = _h1_rate_vs_th->GetBinContent(i)/norm*rate_20ep;
     _h1_rate_vs_th->SetBinContent(i,val_new);
   }  
+  //////////////////////
+  //////////////////////
+  if(_n_jobs > 0){
+    for(Int_t i = 1;i<=__h1_energy_eff_r->GetNbinsX();i++){
+      val_new = __h1_energy_eff_r->GetBinContent(i)/_n_jobs;
+      __h1_energy_eff_r->SetBinContent(i,val_new);
+    }
+  }
+  //////////////////////
+  //////////////////////
+  copyHist( _h1_energy_eff_r, __h1_energy_eff_r);
+  Double_t n_all_ev;
+  Double_t n_trg_ev;
+  Double_t trf_eff_norm;
+  Double_t trf_eff_norm_err;
+  Double_t generation_area = TMath::Pi()*_rsimulation*_rsimulation;
+  for(Int_t i = 1;i<=_h1_energy_all->GetNbinsX();i++){
+    n_all_ev = _h1_energy_all->GetBinContent(i);
+    n_trg_ev = _h1_energy_trg->GetBinContent(i);
+    trf_eff_norm = 0.0;
+    if(n_all_ev>0){
+      trf_eff_norm = n_trg_ev/n_all_ev;
+      trf_eff_norm_err = TMath::Sqrt(trf_eff_norm*(1.0-trf_eff_norm)/n_trg_ev);
+      _h1_energy_eff_r->SetBinContent(i,trf_eff_norm*generation_area);
+      _h1_energy_eff_r->SetBinError(i,trf_eff_norm_err*generation_area);
+    }
+  }
+  TString out_file_name = _output_hist_file;
+  out_file_name += ".txt";
+  print_hist_to_csv(_h1_energy_eff_r, out_file_name);
   //////////////////////
 }
 
@@ -398,5 +468,31 @@ bool rateCalculator::get_histogram_file_name(TString hist_file_prefix, Int_t i_b
   return false;
 }
 
-rateCalculator::~rateCalculator(){
+void rateCalculator::print_hist_to_csv(TH1D *h1, TString out_file_name){
+  std::ofstream outfile;
+  outfile.open(out_file_name.Data());
+  //////////////////////
+  Double_t trf_eff_norm;
+  Double_t trf_eff_norm_err;
+  Double_t energy_min;
+  Double_t energy;
+  Double_t energy_max;
+  outfile<<setw(20)<<"E_min_GeV"
+	 <<setw(20)<<"E_GeV"
+	 <<setw(20)<<"E_max_GeV"
+	 <<setw(20)<<"Area_m2"
+	 <<setw(20)<<"Area_error_m2"<<endl;
+  for(Int_t i = 1;i<=h1->GetNbinsX();i++){
+    trf_eff_norm = h1->GetBinContent(i);
+    trf_eff_norm_err = h1->GetBinError(i);
+    energy_min = h1->GetBinLowEdge(i);
+    energy = h1->GetBinCenter(i);
+    energy_max = h1->GetBinLowEdge(i) + h1->GetBinWidth(i);
+    outfile<<setw(20)<<energy_min
+	   <<setw(20)<<energy
+      	   <<setw(20)<<energy_max
+	   <<setw(20)<<trf_eff_norm
+      	   <<setw(20)<<trf_eff_norm_err<<endl;
+  }
+  outfile.close();
 }
