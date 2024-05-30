@@ -18,7 +18,7 @@
 #include <iomanip>
 #include <stdlib.h>
 
-triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(2), _k_dist_graph_flag(false), _digital_sum_max_only(true)
+triggerSim::triggerSim(const sipmCameraHist* simphist) : _simphist(simphist), _dbs(new dbscan()), _trg_counter(0), _n_skip_edge_points(0), _k_dist_graph_flag(false), _digital_sum_max_only(true)
 {
   //_dbs->print_cluster_stats();
 }
@@ -188,8 +188,8 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
       //digital_sum_5ns = get_flower_digital_sum(ch_i,wf_j,wf,-2,2,true);
       //digital_sum     = get_digital_sum( ch_i, wf_j, wf,  0, 0, true, 0);
       //
-      //digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 0);
-      digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 3);
+      digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 0);
+      //digital_sum_3ns = get_digital_sum( ch_i, wf_j, wf, -1, 1, true, 3);
       if(digital_sum_3ns_max<digital_sum_3ns)
 	digital_sum_3ns_max = digital_sum_3ns;
       //
@@ -226,10 +226,11 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
   }
   _digital_sum_max = digital_sum_3ns_max;
   //
-  return trg_vector;
+  //return trg_vector;
   //print_trigger_vec(trg_vector);
+  //return build_spatial_cluster(trg_vector);
   //return build_spatial_time_cluster(trg_vector);
-  //return build_spatial_time_cluster_dbscan(trg_vector);
+  return build_spatial_time_cluster_dbscan(trg_vector);
 }
 
 void triggerSim::plot_and_save_to_hist_root(TString outrootFile, vector<Double_t> &k_dist_graph){
@@ -254,7 +255,7 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
   points.clear();
   //
   Double_t i_time_todist=0.05;
-  unsigned int minPts = 13;
+  unsigned int minPts = 22;
   float eps = 0.1;
   //
   for(unsigned int i = 0;i<trg_vector.size();i++){

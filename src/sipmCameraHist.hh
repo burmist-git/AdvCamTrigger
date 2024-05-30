@@ -500,6 +500,8 @@ public:
   void test03();
   void test04();
   void test05();
+  void test055();
+  void save_pixel_neighbors_to_csv(TString outfilename = "pixel_mapping_neighbors.csv", Int_t npix_neighbors = 6);
   void test_drawer_id();
   void test_pixel_neighbors_id();
   void test_pixel_neighbors_id(Int_t pix_id);
@@ -516,6 +518,7 @@ public:
   void test_pixel_neighbors_bubbleSort(Int_t pix_id);
   void Clean();
   void count_signal(Double_t th_val, Int_t &nch, Int_t &npe);
+  TCanvas *Draw_cam_pixID();
   void Draw_cam(TString settings, TString pdf_out_file);
   void Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const anabase *ab = NULL);
   void Draw_cam(TString settings, TString pdf_out_file, sipmCameraHist *simp_ref_hist, const std::vector<unsigned int> &pixel_line_flower_vec, const anabase *ab = NULL);

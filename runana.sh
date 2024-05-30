@@ -10,13 +10,13 @@
 ##inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
 ##outHistF="./hist_gamma_on_corsika_0000ID.root"
 ##
-#inRootFile="gamma_on_nsb_1x.list"
-#outHistF="./hist_gamma_on_tw.root"
+inRootFile="gamma_on_nsb_1x.list"
+outHistF="./hist_gamma_on_tw.root"
 #inRootFile="gamma_diffuse_nsb_1x.list"
 #inRootFile="gamma_diffuse_nsb_1x.listshort"
 #outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
-inRootFile="proton_nsb_1x.list"
-outHistF="./hist_proton_nsb_1x_tw.root"
+#inRootFile="proton_nsb_1x.list"
+#outHistF="./hist_proton_nsb_1x_tw.root"
 
 #short
 #'nightsky_background=all:0.001'
@@ -36,6 +36,7 @@ function printHelp {
     echo " [0] -ds    : single root file (short format)"
     echo " [0] -tw    : test waveforms"
     echo " [0] -th    : test cam sipmCameraHist"
+    echo " [0] -th_flowerpixID : flower pixID (out csv file with mapping out csv file with mapping)"
     echo " [0] -sg    : gamma"
     echo " [0] -sgd   : gamma diffuse"
     echo " [0] -se    : electron"
@@ -381,7 +382,7 @@ else
 	#
 	#./runana 4 $inRootFile $outHistF 1026 gamma   # n_pe 46  energy 14.9026 GeV
 	#./runana 4 $inRootFile $outHistF 1160 gamma   # n_pe 42  energy 15.0509 GeV
-	#./runana 4 $inRootFile $outHistF 1444 gamma   # n_pe 45  energy 12.0146 GeV
+	./runana 4 $inRootFile $outHistF 1444 gamma   # n_pe 45  energy 12.0146 GeV
 	#./runana 4 $inRootFile $outHistF 1456 gamma   # n_pe 96  energy 11.5971 GeV
 	#./runana 4 $inRootFile $outHistF 949715 gamma # n_pe 87  energy 12.5351 GeV
 	#./runana 4 $inRootFile $outHistF 950077 gamma # n_pe 44  energy 11.9362 GeV
@@ -443,7 +444,7 @@ else
 	#./runana 4 $inRootFile $outHistF 7014318 proton # n_pe 12438  energy 98388.8 GeV azi. 194.212 alt. 75.7073
 	#./runana 4 $inRootFile $outHistF 7105497 proton # n_pe 12693  energy 95500.4 GeV azi. 164.026 alt. 75.1417
 
-	./runana 4 $inRootFile $outHistF 7705579 proton # n_pe 12485  energy 80426.4 GeV azi. 169.65 alt. 74.0754
+	#./runana 4 $inRootFile $outHistF 7705579 proton # n_pe 12485  energy 80426.4 GeV azi. 169.65 alt. 74.0754
 	#./runana 4 $inRootFile $outHistF 16614505 proton # n_pe 12057  energy 76159.3 GeV azi. 164.719 alt. 71.2268
 	#./runana 4 $inRootFile $outHistF 10023276 proton # n_pe 12255  energy 84172.5 GeV azi. 171.875 alt. 76.0566
 	
@@ -460,6 +461,8 @@ else
 	
     elif [ "$1" = "-th" ]; then
 	./runana 5
+    elif [ "$1" = "-th_flowerpixID" ]; then
+	./runana 55
     elif [ "$1" = "-sg" ]; then
 	./runana 6 gamma_on_nsb_1x.list hist_gamma_on_nsb_1x.root
 	#./runana 6 gamma_on_nsb_1x_short.list hist_gamma_on_nsb_1x.root

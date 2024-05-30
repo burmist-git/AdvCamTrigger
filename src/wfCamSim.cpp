@@ -584,6 +584,13 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
   //gStyle->SetPalette(kCherry);
   //TColor::InvertPalette();
   //
+  std::vector<unsigned int> trg_vector_all;
+  for(Int_t i = 0;i<wf.at(0).size();i++){
+    for(Int_t k = 0;k<trg_vector.at(i).size();k++){
+      trg_vector_all.push_back(trg_vector.at(i).at(k));
+    }
+  }
+  //
   Bool_t pdf_out = false;
   //
   TString ev_dir_name = pathPref;
@@ -640,9 +647,11 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
     sipm_cam->set_wf_time_id(i);
     sipm_cam->set_anabase(ab);
     if(trg_vector.size()>0){
-      if(trg_vector.at(i).size()>0){
+      //if(trg_vector.at(i).size()>0){
+      if(trg_vector_all.size()>0){
 	//std::cout<<"rr"<<std::endl;
-	sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector.at(i), ab);
+	//sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector.at(i), ab);
+	sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector_all, ab);
 	if(pdf_out)
 	  sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(),sipm_cam_ref,trg_vector.at(i), ab);
       }
@@ -653,7 +662,7 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
       }
     }
     else{
-      sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(), sipm_cam_ref, ab);
+      //sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(), sipm_cam_ref, ab);
       if(pdf_out)
 	sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(), sipm_cam_ref, ab);
     }

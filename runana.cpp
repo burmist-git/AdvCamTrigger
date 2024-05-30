@@ -203,30 +203,30 @@ int main(int argc, char *argv[]){
     //sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
     //sipm_cam->test();
     //
-    //sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
-    //sipm_cam->test();
-    //sipmCameraHist *sipm_cam_form_simpHist = new sipmCameraHist("sipm_cam_form_simpHist","sipm_cam_form_simpHist",sipm_cam);
-    //sipm_cam_form_simpHist->test("sipmCameraHist_formSimpHist_test.pdf");
+    sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+    sipm_cam->test();
+    sipmCameraHist *sipm_cam_form_simpHist = new sipmCameraHist("sipm_cam_form_simpHist","sipm_cam_form_simpHist",sipm_cam);
+    sipm_cam_form_simpHist->test("sipmCameraHist_formSimpHist_test.pdf");
     //
-    //sipmCameraHist *sipm_cam_test02 = new sipmCameraHist("sipm_cam_test02","sipm_cam_test02","pixel_mapping.csv",0);
-    //sipm_cam_test02->test02();
+    sipmCameraHist *sipm_cam_test02 = new sipmCameraHist("sipm_cam_test02","sipm_cam_test02","pixel_mapping.csv",0);
+    sipm_cam_test02->test02();
     //
-    //sipmCameraHist *sipm_cam_test03 = new sipmCameraHist("sipm_cam_test03","sipm_cam_test03","pixel_mapping.csv",0);
-    //sipm_cam_test03->test03();
+    sipmCameraHist *sipm_cam_test03 = new sipmCameraHist("sipm_cam_test03","sipm_cam_test03","pixel_mapping.csv",0);
+    sipm_cam_test03->test03();
     //
-    //sipmCameraHist *sipm_cam_test04 = new sipmCameraHist("sipm_cam_test04","sipm_cam_test04","pixel_mapping.csv",0);
-    //sipm_cam_test04->test04();
+    sipmCameraHist *sipm_cam_test04 = new sipmCameraHist("sipm_cam_test04","sipm_cam_test04","pixel_mapping.csv",0);
+    sipm_cam_test04->test04();
     //
-    //sipmCameraHist *sipm_cam_test05 = new sipmCameraHist("sipm_cam_test05","sipm_cam_test05","pixel_mapping.csv",0);
-    //sipm_cam_test05->test05();
+    sipmCameraHist *sipm_cam_test05 = new sipmCameraHist("sipm_cam_test05","sipm_cam_test05","pixel_mapping.csv",0);
+    sipm_cam_test05->test05();
     //
-    //sipmCameraHist *sipm_cam_test06 = new sipmCameraHist("sipm_cam_test06","sipm_cam_test06","pixel_mapping.csv",0);
-    //sipm_cam_test06->test_drawer_id();
+    sipmCameraHist *sipm_cam_test06 = new sipmCameraHist("sipm_cam_test06","sipm_cam_test06","pixel_mapping.csv",0);
+    sipm_cam_test06->test_drawer_id();
     //
-    //sipmCameraHist *sipm_cam_test07 = new sipmCameraHist("sipm_cam_test07","sipm_cam_test07","pixel_mapping.csv",0);
-    //sipm_cam_test07->test_pixel_neighbors_id();
-    //sipmCameraHist *sipm_cam_test08 = new sipmCameraHist("sipm_cam_test08","sipm_cam_test08","pixel_mapping.csv",0);
-    //sipm_cam_test08->test_pixel_neighbors_id(1000);
+    sipmCameraHist *sipm_cam_test07 = new sipmCameraHist("sipm_cam_test07","sipm_cam_test07","pixel_mapping.csv",0);
+    sipm_cam_test07->test_pixel_neighbors_id();
+    sipmCameraHist *sipm_cam_test08 = new sipmCameraHist("sipm_cam_test08","sipm_cam_test08","pixel_mapping.csv",0);
+    sipm_cam_test08->test_pixel_neighbors_id(1000);
     //
     Int_t npix = 10;
     int *pix_id = new int[10];
@@ -240,14 +240,14 @@ int main(int argc, char *argv[]){
     pix_id[7] = 1000;
     pix_id[8] = 2000;
     pix_id[9] = 5000;
-    //sipmCameraHist *sipm_cam_test09 = new sipmCameraHist("sipm_cam_test09","sipm_cam_test09","pixel_mapping.csv",0);
-    //sipm_cam_test09->test_pixel_neighbors_id(npix, pix_id);
+    sipmCameraHist *sipm_cam_test09 = new sipmCameraHist("sipm_cam_test09","sipm_cam_test09","pixel_mapping.csv",0);
+    sipm_cam_test09->test_pixel_neighbors_id(npix, pix_id);
     //
-    //sipmCameraHist *sipm_cam_test10 = new sipmCameraHist("sipm_cam_test10","sipm_cam_test10","pixel_mapping.csv",0);
-    //sipm_cam_test10->test_pixel_neighbors_second_id(npix, pix_id);
+    sipmCameraHist *sipm_cam_test10 = new sipmCameraHist("sipm_cam_test10","sipm_cam_test10","pixel_mapping.csv",0);
+    sipm_cam_test10->test_pixel_neighbors_second_id(npix, pix_id);
     //
-    //sipmCameraHist *sipm_cam_test11 = new sipmCameraHist("sipm_cam_test11","sipm_cam_test11","pixel_mapping.csv",0);
-    //sipm_cam_test11->test_pixel_neighbors_third_id(npix, pix_id);
+    sipmCameraHist *sipm_cam_test11 = new sipmCameraHist("sipm_cam_test11","sipm_cam_test11","pixel_mapping.csv",0);
+    sipm_cam_test11->test_pixel_neighbors_third_id(npix, pix_id);
     //
     //TH1D *h1_distance_between_pixels = new TH1D("h1_distance_between_pixels","h1_distance_between_pixels",100000,-0.001,3.0);
     //sipmCameraHist *sipm_cam_test10 = new sipmCameraHist("sipm_cam_test10","sipm_cam_test10","pixel_mapping.csv",0,h1_distance_between_pixels);
@@ -261,6 +261,48 @@ int main(int argc, char *argv[]){
     sipm_cam_crop->test();
     sipm_cam_crop->test01(sipm_cam_test12);
     sipm_cam_crop->test02();
+  }
+  else if(argc == 2 && atoi(argv[1])==55){
+    cout<<"--> Parameters <--"<<endl
+	<<"argv[1] : "<<atoi(argv[1])<<endl;
+    //
+    sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+    sipm_cam->save_pixel_neighbors_to_csv();
+    sipm_cam->test055();
+    //
+    Int_t npix = 19;
+    int *pix_id = new int[19];
+    pix_id[0] = 0;
+    pix_id[1] = 287;
+    pix_id[2] = 6902;
+    pix_id[3] = 5579;
+    pix_id[4] = 4256;
+    pix_id[5] = 2933;
+    pix_id[6] = 1610;
+    pix_id[7] = 1353;
+    pix_id[8] = 7982;
+    pix_id[9] = 6649;
+    pix_id[10] = 5234;
+    pix_id[11] = 4008;
+    pix_id[12] = 2692;
+    pix_id[13] = 153;
+    pix_id[14] = 5449;
+    pix_id[15] = 5444;
+    pix_id[16] = 2820;
+    pix_id[17] = 1497;
+    pix_id[18] = 187;
+    //
+    sipmCameraHist *sipm_cam_test09 = new sipmCameraHist("sipm_cam_test09","sipm_cam_test09","pixel_mapping.csv",0);
+    sipm_cam_test09->test_pixel_neighbors_id(npix, pix_id);
+    //
+    sipmCameraHist *sipm_cam_test10 = new sipmCameraHist("sipm_cam_test10","sipm_cam_test10","pixel_mapping.csv",0);
+    sipm_cam_test10->test_pixel_neighbors_second_id(npix, pix_id);
+    //
+    sipmCameraHist *sipm_cam_test11 = new sipmCameraHist("sipm_cam_test11","sipm_cam_test11","pixel_mapping.csv",0);
+    sipm_cam_test11->test_pixel_neighbors_third_id(npix, pix_id);
+    //
+    sipmCameraHist *sipm_cam_test12 = new sipmCameraHist("sipm_cam_test12","sipm_cam_test12","pixel_mapping.csv",0);
+    sipm_cam_test12->test_pixel_super_flower(npix, pix_id);
   }
   else if(argc == 4 && atoi(argv[1])==6){
     TString rootFilesList = argv[2];

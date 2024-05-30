@@ -487,6 +487,60 @@ void sipmCameraHist::test05(){
   Draw_cam("text","sipmCameraHist_test05.pdf");
 }
 
+void sipmCameraHist::test055(){
+  std::cout<<"_pixel_vec.size() = "<<_pixel_vec.size()<<std::endl;
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    SetBinContent(i+1,_pixel_vec.at(i).pixel_id);
+  }
+  //Draw_cam("text","sipmCameraHist_test_pix_ID.pdf");
+  TCanvas *c1 = Draw_cam_pixID();
+  c1->SaveAs("sipmCameraHist_test_pix_ID.pdf");
+}
+
+
+/*
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    if(_pixel_vec.at(i).pixel_id == pix_id){
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors.at(j).pixel_id+1,10);
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors_second.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors_second.at(j).pixel_id+1,5);
+    }
+    //
+  }
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    if(_pixel_vec.at(i).pixel_id == pix_id){
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors.at(j).pixel_id+1,20);
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors_second.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors_second.at(j).pixel_id+1,10);
+      for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors_third.size();j++)
+	SetBinContent(_pixel_vec.at(i).v_pixel_neighbors_third.at(j).pixel_id+1,5);
+    }
+    //
+  }
+*/
+
+void sipmCameraHist::save_pixel_neighbors_to_csv(TString outfilename, Int_t npix_neighbors){
+  ofstream outfile;
+  outfile.open(outfilename.Data());
+  //
+  Int_t neighbors_counter = 0;
+  //
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    neighbors_counter = 0;
+    for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_neighbors.size();j++){
+      outfile<<std::setw(10)<<_pixel_vec.at(i).v_pixel_neighbors.at(j).pixel_id;
+      neighbors_counter++;
+    }
+    for(unsigned int i = neighbors_counter ; i < npix_neighbors ; i++){
+      outfile<<std::setw(10)<<"NAN";
+    }
+    outfile<<std::endl;
+  }
+  outfile.close();
+}
+
 void sipmCameraHist::test_drawer_id(){
   for(unsigned int i = 0;i<(unsigned int)GetNcells();i++){
     if(i<_pixel_vec.size()){
@@ -973,4 +1027,67 @@ void sipmCameraHist::simulateFlover_ideal_resp(Int_t pixelID, Int_t npixels_n,
       }
     }
   }
+}
+
+TCanvas *sipmCameraHist::Draw_cam_pixID(){
+  //
+  Double_t lx_camera = 2.5;
+  Double_t ly_camera = 2.5;
+  //Double_t lx_camera = 0.5;
+  //Double_t ly_camera = 0.5;
+  Double_t d_frame = 0.1;
+  //
+  gStyle->SetPalette(kRainBow);
+  //gStyle->SetPalette(kCool);
+  //gStyle->SetPalette(kIsland);
+  //gStyle->SetPalette(kCherry);
+  //TColor::InvertPalette();
+  //
+  //gStyle->SetPalette(kInvertedDarkBodyRadiator);
+  //
+  gStyle->SetOptStat(kFALSE);
+  SetTitle("");
+  SetName("");
+  //
+  TCanvas *c1 = new TCanvas("c1","c1",800,800);
+  gPad->SetRightMargin(0.12);
+  gPad->SetLeftMargin(0.12);
+  gPad->SetTopMargin(0.1);
+  gPad->SetBottomMargin(0.15);
+  //
+  //gStyle->SetBarWidth(0.05);
+  //
+  //gPad->SetGridx();
+  //gPad->SetGridy();
+  //gPad->SetLogz();
+  //
+  //SetMaximum(500.0);
+  //SetMinimum(300.0);
+  //SetMinimum(280.0);
+  //SetMinimum(299.0);
+  //SetMaximum(308.0);
+  //
+  /*
+  TH2F *frame = new TH2F( "h2", "h2", 40, -lx_camera/2.0-d_frame,lx_camera/2.0+d_frame,40, -ly_camera/2.0-d_frame,ly_camera/2.0+d_frame);
+  frame->SetTitle("");
+  frame->GetXaxis()->SetTitle("x, m");
+  frame->GetYaxis()->SetTitle("y, m");
+  frame->GetXaxis()->CenterTitle();
+  frame->GetYaxis()->CenterTitle();
+  frame->GetYaxis()->SetTitleOffset(1.5);
+  frame->SetStats(kFALSE);
+  frame->Draw();
+  */
+  //
+  SetMinimum(0);
+  SetMaximum(8000);
+  SetMarkerSize(0.1);
+  GetYaxis()->SetTickLength(0);
+  //SetLineColorAlpha(kBlack,0.1);
+  //SetLineWidth(0.01);
+  //
+  Draw("TEXT ZCOLOR");
+  //if(pdf_out_file != "")
+  //c1->SaveAs("sipmCameraHist_test_pix_ID_test.pdf");
+  return c1;
 }
