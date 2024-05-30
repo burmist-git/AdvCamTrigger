@@ -387,3 +387,9 @@ if __name__ == "__main__":
         #get_pixel_mapping(datafilein, outmap_csv = 'pixel_mapping.csv')
         toc = time.time()
         print('{:.2f} s'.format(toc - tic))
+    elif (len(sys.argv)==3):
+        if (str(sys.argv[1]=="-t")):
+            print("sys.argv[0] = ",str(sys.argv[0]))
+            print("sys.argv[1] = ",str(sys.argv[1]))
+            print("sys.argv[2] = ",str(sys.argv[2]))
+            test(datafilein = str(sys.argv[2]))
