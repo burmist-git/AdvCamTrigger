@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    apt-get -y update
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install -y python3 python3-dev python3-numpy python3-scipy python3-matplotlib python3-pip bc wget git gcc g++ cmake cmake-curses-gui qtbase5-dev qt5-qmake build-essential libexpat1-dev libxmu-dev
+    apt-get install -y git wget build-essential
+    export SSH_AUTH_SOCK=/tmp/ssh-gWjXTsZVDQ8d/agent.4065959
+    mkdir -p $HOME/.ssh
+    touch $HOME/.ssh/known_hosts
+    ssh-keyscan github.com >> $HOME/.ssh/known_hosts                  
+    #
+    mkdir /root_v6.28.12
+    cd /root_v6.28.12
+    wget https://root.cern/download/root_v6.28.12.Linux-ubuntu22-x86_64-gcc11.4.tar.gz 
+    tar -xzvf root_v6.28.12.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
+    rm -f root_v6.28.12.Linux-ubuntu22-x86_64-gcc11.4.tar.gz
+    cd root
+    . bin/thisroot.sh
+    cd /
+    git clone git@github.com:burmist-git/pyeventio_example.git /pyeventio_example
+    cd /pyeventio_example
+    pwd
+    ls
+    ls runana.sh
+    ./runana.sh -c
+    cd /
