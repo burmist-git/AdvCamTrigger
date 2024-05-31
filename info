@@ -1,0 +1,2 @@
+source setup.sh --conda
+source setup.sh --mc
