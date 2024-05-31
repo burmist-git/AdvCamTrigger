@@ -634,3 +634,8 @@ ev_synthetic_trg_v_1444ev.csv
 ev_synthetic_trg_v_1456ev.csv
 pixel_mapping_neighbors.csv
 sipmCameraHist_test_pix_ID.pdf
+greasy-53717040.log
+greasy_job/
+header.csv
+pe_info.csv
+run_greasy_sbatch.sh
