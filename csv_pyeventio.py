@@ -52,15 +52,14 @@ def loop_header_pe(datafilein = "./simtel_data/gamma/data/corsika_run307.simtel.
                          ev['photoelectrons'][0]['n_pe'],
                         (ev['photoelectrons'][0]['n_pixels']-np.sum(ev['photoelectrons'][0]['photoelectrons']==0))])
 
-
         it_cout = it_cout + 1
 
-        if(it_cout == 10000):
-            pkl.dump(np.array(tot_list), open(str(headrefilename + "_" +str(file_counter)), "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
-            pkl.dump(tot_arr, open(str(pefilename + "_" +str(file_counter)), "wb"), protocol=pkl.HIGHEST_PROTOCOL)
-            file_counter = file_counter + 1
-            #
-            it_cout = 0
+        #if(it_cout == 10000):
+        #    pkl.dump(np.array(tot_list), open(str(headrefilename + "_" +str(file_counter)), "wb"), protocol=pkl.HIGHEST_PROTOCOL)    
+        #    pkl.dump(tot_arr, open(str(pefilename + "_" +str(file_counter)), "wb"), protocol=pkl.HIGHEST_PROTOCOL)
+        #    file_counter = file_counter + 1
+        #
+        #    it_cout = 0
 
         
         if (it_cout>=max_ev) :

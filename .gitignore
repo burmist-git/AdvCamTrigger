@@ -639,3 +639,10 @@ greasy_job/
 header.csv
 pe_info.csv
 run_greasy_sbatch.sh
+greasy-53717262.log
+greasy_job_NSB/
+greasy_job_electron/
+greasy_job_gamma/
+greasy_job_gamma_diffuse/
+greasy_job_proton/
+node_1.joblist-undefined.rst

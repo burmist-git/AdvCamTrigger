@@ -2,11 +2,12 @@
 
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] -d         : default"
-    echo " [1]            : particle type (g,gd,e,p,NSB)"
-    echo " [2]            : Nnodes (1-...)"
-    echo " [0] -c         : clean"
-    echo " [0] -h         : print help"
+    echo " [0] -d                : default"
+    echo " [1]                   : particle type (g,gd,e,p,NSB)"
+    echo " [2]                   : Nnodes (1-...)"
+    echo " [0] --copyForAllTypes : make separate folders for all particle types"
+    echo " [0] -c                : clean"
+    echo " [0] -h                : print help"
 }
 
 nCPU_per_node=72
@@ -14,6 +15,30 @@ nCPU_idle=1
 nJOB_per_node=$(echo "$nCPU_per_node - $nCPU_idle" | bc -l)
 greasyJobDir="./greasy_job/"
 outGreasySbatch_sh="./run_greasy_sbatch.sh"
+
+function copyForAllTypes {
+    #
+    mkdir -p greasy_job_gamma/$greasyJobDir
+    mkdir -p greasy_job_gamma_diffuse/$greasyJobDir
+    mkdir -p greasy_job_electron/$greasyJobDir
+    mkdir -p greasy_job_proton/$greasyJobDir
+    mkdir -p greasy_job_NSB/$greasyJobDir
+    #
+    cp csv_pyeventio.py greasy_job_gamma/.
+    cp csv_pyeventio_greasy_job.sh greasy_job_gamma/.
+    #
+    cp csv_pyeventio.py greasy_job_gamma_diffuse/.
+    cp csv_pyeventio_greasy_job.sh greasy_job_gamma_diffuse/.
+    #
+    cp csv_pyeventio.py greasy_job_electron/.
+    cp csv_pyeventio_greasy_job.sh greasy_job_electron/.
+    #
+    cp csv_pyeventio.py greasy_job_proton/.
+    cp csv_pyeventio_greasy_job.sh greasy_job_proton/.
+    #
+    cp csv_pyeventio.py greasy_job_NSB/.
+    cp csv_pyeventio_greasy_job.sh greasy_job_NSB/.
+}
 
 if [ $# -eq 0 ]; then
     printHelp
@@ -103,6 +128,8 @@ else
 	else
 	    printHelp   
 	fi      
+    elif [ "$1" = "--copyForAllTypes" ]; then
+	copyForAllTypes	
     elif [ "$1" = "-c" ]; then
 	rm -rf $greasyJobDir/*
 	rm -rf $outGreasySbatch_sh
