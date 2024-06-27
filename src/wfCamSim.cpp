@@ -280,16 +280,6 @@ void wfCamSim::generate_wf_from_gr(std::vector<int> &wf, Float_t pe_time){
   }
 }
 
-void wfCamSim::generate_electronic_noise(std::vector<int> &wf){
-  for( unsigned int i = 0; i < wf.size(); i++)
-    wf.at(i) += (Int_t)_rnd->Gaus(0.0,_fadc_electronic_noise_RMS);
-}
-
-void wfCamSim::generate_electronic_noise_pedestal_removal(std::vector<int> &wf){
-  for( unsigned int i = 0; i < wf.size(); i++)
-    wf.at(i) += ((Int_t)_rnd->Gaus(0.0,_fadc_electronic_noise_RMS) + (Int_t)_rnd->Uniform(0,3)-1);
-}
-
 void wfCamSim::calculate_pedestal(){
   calculate_pedestal(NULL, NULL);
 }
@@ -301,7 +291,6 @@ void wfCamSim::calculate_pedestal(TH1D *h1_adc, TH1D *h1_dadc){
     generateNGB(wf_pedestal.at(i));
   }
   calculate_camera_ADC_mean_and_std( wf_pedestal, _NGB_pedestal_mean, _NGB_pedestal_std, h1_adc, h1_dadc);
-
 }
   
 void wfCamSim::calculate_camera_ADC_mean_and_std(const std::vector<std::vector<Int_t>> &wf, Float_t &meanv, Float_t &stdv){
@@ -361,6 +350,16 @@ Int_t wfCamSim::get_charge(const std::vector<int>& wf){
   return get_charge(wf, _fadc_offset);
 }
 
+void wfCamSim::generate_electronic_noise(std::vector<int> &wf){
+  for( unsigned int i = 0; i < wf.size(); i++)
+    wf.at(i) += (Int_t)_rnd->Gaus(0.0,_fadc_electronic_noise_RMS);
+}
+
+void wfCamSim::generate_electronic_noise_pedestal_removal(std::vector<int> &wf){
+  for( unsigned int i = 0; i < wf.size(); i++)
+    wf.at(i) += ((Int_t)_rnd->Gaus(0.0,_fadc_electronic_noise_RMS) + (Int_t)_rnd->Uniform(0,3.5)-1);
+}
+
 void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
 				  const Int_t nn_PMT_channels,
 				  std::vector<std::vector<int>>& wf){
@@ -376,7 +375,9 @@ void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
 void wfCamSim::simulate_cam_event_NGB(std::vector<std::vector<Int_t>> &wf){
   for( unsigned int i = 0; i < wf.size(); i++ ){
     generate_zero_wf(wf.at(i),(_fadc_offset-_NGB_pedestal_mean));
+    //generate_zero_wf(wf.at(i),_fadc_offset);
     generateNGB(wf.at(i));
+    generate_electronic_noise_pedestal_removal(wf.at(i));
   }
 }
 
@@ -581,6 +582,8 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
 				      const std::vector<std::vector<unsigned int>> &trg_vector,
 				      const anabase *ab){
   //
+  bool if_all_trig_superimposed = false;
+  //
   //gStyle->SetPalette(kCherry);
   //TColor::InvertPalette();
   //
@@ -650,8 +653,10 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
       //if(trg_vector.at(i).size()>0){
       if(trg_vector_all.size()>0){
 	//std::cout<<"rr"<<std::endl;
-	//sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector.at(i), ab);
-	sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector_all, ab);
+	if(!if_all_trig_superimposed)
+	  sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector.at(i), ab);
+	else
+	  sipm_cam->Draw_cam("ZCOLOR",gif_name.Data(),sipm_cam_ref,trg_vector_all, ab);
 	if(pdf_out)
 	  sipm_cam->Draw_cam("ZCOLOR",pdf_name.Data(),sipm_cam_ref,trg_vector.at(i), ab);
       }

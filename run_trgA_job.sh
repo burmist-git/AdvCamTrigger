@@ -100,19 +100,23 @@ else
 	if [ $# -eq 8 ]; then
 	    if [ "$2" = "g" ]; then
 		inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/"
-		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/trgA/"
+		#outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/trgA/"
+		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/trgA_test/"
 		rsimulation=800
 	    elif [ "$2" = "gd" ]; then
 		inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/root/"
-		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/trgA/"
+		#outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/trgA/"
+		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_diffuse_nsb_1x/trgA_test/"
 		rsimulation=1000
 	    elif [ "$2" = "e" ]; then
 		inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/root/"
-		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/trgA/"
+		#outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/trgA/"
+		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/electron_nsb_1x/trgA_test/"
 		rsimulation=1000
 	    elif [ "$2" = "p" ]; then
 		inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
-		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/"
+		#outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA/"
+		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/trgA_test/"
 		rsimulation=1500
 	    fi
 	    binE=$3
@@ -128,8 +132,9 @@ else
 	    npe_min=20
 	    npe_max=10000
 	    #nEv_max=15000
-	    nEv_max=10000
+	    nEv_max=10
 	    rndseed=`date +%N`
+	    trgSetup="trg_setup.conf"
 	    echo "inRootFile    $inRootFile"
 	    echo "outHistF      $outHistF"
 	    echo "binE          $binE"
@@ -142,6 +147,8 @@ else
 	    echo "rndseed       $rndseed"
 	    echo "data_chunk_ID $data_chunk_ID"
 	    echo "rsimulation   $rsimulation"
+	    echo "trgSetup      $trgSetup"	    
+	    #
 	    #live
 	    #./runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID
 	    #screen
@@ -151,13 +158,13 @@ else
 	    #srun
 	    #
 	    if [ "$typeJob" = "sbatch" ]; then
-		srun $simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID $rsimulation
+		srun $simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID $rsimulation $trgSetup
 	    elif [ "$typeJob" = "screen" ]; then
 		screenName='tr'$jobID
 		echo "$screenName"
-		screen -S $screenName -L -d -m $simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID $rsimulation
+		screen -S $screenName -L -d -m $simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID $rsimulation $trgSetup
 	    elif [ "$typeJob" = "live" ]; then
-		$simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID $rsimulation
+		$simHomeDir/runana 111 $inRootFile $outHistF $binE $binTheta $binDist $npe_min $npe_max $nEv_max $rndseed $data_chunk_ID $rsimulation $trgSetup
 	    else
 		printHelp
 	    fi
@@ -170,19 +177,22 @@ else
 	    #outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA/"
 	    #outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_386MHz/trgA/"
 	    outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/"
+	    #outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_386MHz/trgA_test/"
 	    mkdir -p $outHistFPref
 	    jobID=$2
 	    typeJob=$3
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    outHistF=$outHistFPref"/hist_trgA_corsika_"$jobID"ID.root"
-	    nEv_max=100
+	    nEv_max=10
 	    rndseed=`date +%N`
+	    trgSetup="trg_setup.conf"
 	    echo "inRootFile $inRootFile"	
 	    echo "outHistF   $outHistF"
 	    echo "jobID      $jobID"
 	    echo "nEv_max    $nEv_max"
 	    echo "rndseed    $rndseed"
-	    echo "typeJob    $typeJob"	
+	    echo "typeJob    $typeJob"
+	    echo "trgSetup   $trgSetup"
 	    #live
 	    #./runana 112 $inRootFile $outHistF $nEv_max $rndseed
 	    #screen
@@ -192,13 +202,13 @@ else
 	    #srun
 	    #srun $simHomeDir/runana 112 $inRootFile $outHistF $nEv_max $rndseed
 	    if [ "$typeJob" = "sbatch" ]; then
-		srun $simHomeDir/runana 112 $inRootFile $outHistF $nEv_max $rndseed
+		srun $simHomeDir/runana 112 $inRootFile $outHistF $nEv_max $rndseed $trgSetup
 	    elif [ "$typeJob" = "screen" ]; then
 		screenName='tr'$jobID
 		echo "$screenName"
-		screen -S $screenName -L -d -m $simHomeDir/runana 112 $inRootFile $outHistF $nEv_max $rndseed
+		screen -S $screenName -L -d -m $simHomeDir/runana 112 $inRootFile $outHistF $nEv_max $rndseed $trgSetup
 	    elif [ "$typeJob" = "live" ]; then
-		$simHomeDir/runana 112 $inRootFile $outHistF $nEv_max $rndseed
+		$simHomeDir/runana 112 $inRootFile $outHistF $nEv_max $rndseed $trgSetup
 	    else
 		printHelp
 	    fi

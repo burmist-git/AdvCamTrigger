@@ -11,7 +11,6 @@
 #include "src/evstHist.hh"
 #include "src/rateCalculator.hh"
 
-
 //root
 #include "TROOT.h"
 #include "TString.h"
@@ -69,7 +68,7 @@ int main(int argc, char *argv[]){
     anaTrg a( inRootFiles, 1);
     a.Loop(outRootFileF);
   }
-  else if(argc == 13 && atoi(argv[1])==111){
+  else if(argc == 14 && atoi(argv[1])==111){
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
     Int_t binE = atoi(argv[4]);
@@ -81,6 +80,7 @@ int main(int argc, char *argv[]){
     Int_t rndseed = atoi(argv[10]);
     Int_t data_chunk_ID = atoi(argv[11]);
     Double_t rsimulation = atof(argv[12]);
+    TString trgSetup = argv[13];
     cout<<"--> Parameters <--"<<endl
 	<<"inRootFiles   : "<<inRootFiles<<endl
 	<<"outRootFileF  : "<<outRootFileF<<endl
@@ -92,18 +92,25 @@ int main(int argc, char *argv[]){
 	<<"nEv_max       : "<<nEv_max<<endl
     	<<"rndseed       : "<<rndseed<<endl
 	<<"data_chunk_ID : "<<data_chunk_ID<<endl
-      	<<"rsimulation   : "<<rsimulation<<endl;
+      	<<"rsimulation   : "<<rsimulation<<endl
+	<<"trgSetup      : "<<trgSetup<<endl;
     //
     anaTrgA a( inRootFiles, 1);
     a.set_disable_energy_theta_rcore_binwise_cuts(true);
     a.set_rsimulation(rsimulation);
+    a.set_trg_conf_file(trgSetup);
     a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, data_chunk_ID);
   }
-  else if(argc == 6 && atoi(argv[1])==112){
+  else if(argc == 7 && atoi(argv[1])==112){
+    //
+    cout<<" runID = "<<atoi(argv[1])<<endl
+	<<" runID = 112 --> TrgA NGB "<<endl;
+    //
     TString inRootFiles = argv[2];
     TString outRootFileF = argv[3];
     Int_t nEv_max = atoi(argv[4]);
     Int_t rndseed = atoi(argv[5]);
+    TString trgSetup = argv[6];
     Int_t binE = 9;
     Int_t binTheta = 4;
     Int_t binDist = 7;
@@ -120,9 +127,11 @@ int main(int argc, char *argv[]){
 	<<"npe_max       : "<<npe_max<<endl
 	<<"nEv_max       : "<<nEv_max<<endl
     	<<"rndseed       : "<<rndseed<<endl
-	<<"data_chunk_ID : "<<data_chunk_ID<<endl;
+	<<"data_chunk_ID : "<<data_chunk_ID<<endl
+      	<<"trgSetup      : "<<trgSetup<<endl;    
     //
     anaTrgA a( inRootFiles, 1);
+    a.set_trg_conf_file(trgSetup);
     a.Loop(outRootFileF, binE, binTheta, binDist, npe_min, npe_max, nEv_max, rndseed, data_chunk_ID, true);
   }
   else if(argc == 6 && atoi(argv[1])==113){
@@ -540,12 +549,14 @@ int main(int argc, char *argv[]){
 	<<"       [9] - nEv_max"<<endl
     	<<"       [10]- rndseed"<<endl
 	<<"       [11]- data_chunk_ID"<<endl
-    	<<"       [12]- rsimulation"<<endl;
+    	<<"       [12]- rsimulation"<<endl
+    	<<"       [13]- trgSetup"<<endl;
     cout<<" runID [1] = 112 (execution ID number) TrgA NGB"<<endl
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl
 	<<"       [4] - nEv_max"<<endl
-	<<"       [5]- rndseed"<<endl;
+	<<"       [5]- rndseed"<<endl
+    	<<"       [6]- trgSetup"<<endl;
     cout<<" runID [1] = 113 (execution ID number) TrgA NGB k-dist plots"<<endl
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl

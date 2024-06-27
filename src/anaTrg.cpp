@@ -56,7 +56,9 @@ void anaTrg::Loop(TString histOut){
   TH1D *h1_digital_sum     = new TH1D("h1_digital_sum","h1_digital_sum",1001,-0.5,1000.5);
   TH1D *h1_digital_sum_3ns = new TH1D("h1_digital_sum_3ns","h1_digital_sum_3ns",1001,-0.5,1000.5);
   TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns","h1_digital_sum_5ns",1001,-0.5,1000.5);
-  TH1D *h1_fadc_val        = new TH1D("h1_fadc_val","h1_fadc_val",1001,-0.5,1000.5);
+  TH1D *h1_fadc_val      = new TH1D("h1_fadc_val","h1_fadc_val",1001,-0.5,1000.5);
+  //TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val", 249.5, 400.5, (Int_t)(400.5-249.5));
+  //
   //
   TH1D *h1_n_pe_vs_chID    = new TH1D("h1_n_pe_vs_chID","h1_n_pe_vs_chID",nChannels+1,-0.5,nChannels+0.5);
   //

@@ -17,11 +17,11 @@ class TBranch;
 class anaTrgA: public anabase {
 public:
 
-  anaTrgA(TString fileList) : anabase(fileList), _disable_energy_theta_rcore_binwise_cuts(false), _k_dist_graph_flag(false), _rsimulation(801)
+  anaTrgA(TString fileList) : anabase(fileList), _disable_energy_theta_rcore_binwise_cuts(false), _k_dist_graph_flag(false), _rsimulation(801), _trg_conf_file("trg_setup.conf")
   {
   }
 
-  anaTrgA(TString file, Int_t key) : anabase(file, key), _disable_energy_theta_rcore_binwise_cuts(false), _k_dist_graph_flag(false), _rsimulation(801)
+  anaTrgA(TString file, Int_t key) : anabase(file, key), _disable_energy_theta_rcore_binwise_cuts(false), _k_dist_graph_flag(false), _rsimulation(801), _trg_conf_file("trg_setup.conf")
   {
   }
 
@@ -37,6 +37,7 @@ public:
   
   inline void set_disable_energy_theta_rcore_binwise_cuts(bool val){_disable_energy_theta_rcore_binwise_cuts = val;};
   inline void set_k_dist_graph_flag(bool val){_k_dist_graph_flag = val;};
+  inline void set_trg_conf_file(TString trgf){_trg_conf_file = trgf;};
   
 private:
   //
@@ -61,6 +62,8 @@ private:
   bool _k_dist_graph_flag;
 
   Double_t _rsimulation;
+
+  TString _trg_conf_file;
 };
 
 #endif

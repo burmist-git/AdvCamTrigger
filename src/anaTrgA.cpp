@@ -200,7 +200,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   TH1D *h1_digital_sum     = new TH1D("h1_digital_sum",     "h1_digital_sum",    1001,-0.5,1000.5);
   TH1D *h1_digital_sum_3ns = new TH1D("h1_digital_sum_3ns", "h1_digital_sum_3ns",1001,-0.5,1000.5);
   TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns", "h1_digital_sum_5ns",1001,-0.5,1000.5);
-  TH1D *h1_fadc_val        = new TH1D("h1_fadc_val",        "h1_fadc_val",       1001,-0.5,1000.5);
+  //TH1D *h1_fadc_val        = new TH1D("h1_fadc_val",        "h1_fadc_val",       1001,-0.5,1000.5);
+  //
+  TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val", (Int_t)(400.5-249.5), 249.5, 400.5);
   //
   evstHist *evH_h1_energy_all = new evstHist("evH_h1_energy_all","evH_h1_energy_all");
   evstHist *evH_h1_energy_trg = new evstHist("evH_h1_energy_trg","evH_h1_energy_trg");
@@ -262,13 +264,16 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
   //Float_t NGB_rate_in_MHz = 386.0;
   Float_t NGB_rate_in_MHz = 268.0;
+  //Float_t NGB_rate_in_MHz = 10.0;
   //Float_t NGB_rate_in_MHz = 0.0;
+  //Float_t fadc_electronic_noise_RMS = 4.5;
   //Float_t fadc_electronic_noise_RMS = 3.94;
   //Float_t fadc_electronic_noise_RMS = 0.01;
-  Float_t fadc_electronic_noise_RMS = 3.8436441; //takes into account 3.0/sqrt(12)
+  //Float_t fadc_electronic_noise_RMS = 3.8436441; //takes into account 3.0/sqrt(12)
+  Float_t fadc_electronic_noise_RMS = 3.8082498; //takes into account 3.5/sqrt(12)
   //
-  bool if_dbc_trg = false;
-  bool if_digital_sum_trg = true;
+  bool if_dbc_trg = true;
+  bool if_digital_sum_trg = false;
   //
   TRandom3 *rnd = new TRandom3(rndseed);
   //
@@ -286,6 +291,11 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //
   sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
   triggerSim *trg_sim = new triggerSim(sipm_cam);    
+  cout<<"trg_sim->_trg_setup.load_trg_setup"<<endl
+      <<"_trg_conf_file = "<<_trg_conf_file<<endl;
+  trg_sim->_trg_setup.load_trg_setup(_trg_conf_file.Data());
+  //cout<<"trg_sim->_trg_setup.trg_setup_info()"<<endl;
+  //trg_sim->_trg_setup.trg_setup_info();
   trg_sim->set_k_dist_graph_flag(_k_dist_graph_flag);
   cout<<"_k_dist_graph_flag = "<<_k_dist_graph_flag<<endl;
   //
@@ -341,6 +351,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 	  cout<<"---------------------"<<endl<<"n_pe = "<<0<<endl;
 	else
 	  cout<<"---------------------"<<endl<<"n_pe = "<<n_pe<<endl;
+	//cout<<"get_trigger"<<endl;
 	trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
 	finish_trg = clock();
 	cout<<nevsim
@@ -465,17 +476,24 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 }
 
 Bool_t anaTrgA::cut( Int_t nevsim, Double_t theta_p_t_deg, Double_t rcore){
+  //cout<<"nevsim                                   "<<nevsim<<endl
+  //  <<"theta_p_t_deg                            "<<theta_p_t_deg<<endl
+  //  <<"rcore                                    "<<rcore<<endl
+  //  <<"_disable_energy_theta_rcore_binwise_cuts "<<_disable_energy_theta_rcore_binwise_cuts<<endl
+  //  <<"_nEv_max                                 "<<_nEv_max<<endl;
   if(nevsim<_nEv_max){
     if((energy>=_E_min/1000.0 && energy<_E_max/1000.0) || _disable_energy_theta_rcore_binwise_cuts){
       if((rcore>=_dist_min && rcore<_dist_max) || _disable_energy_theta_rcore_binwise_cuts){
 	if((theta_p_t_deg>=_theta_deg_min && theta_p_t_deg<_theta_deg_max) || _disable_energy_theta_rcore_binwise_cuts){
 	  if(n_pe>=_npe_min && n_pe<_npe_max){
+	    //cout<<" return true "<<endl;
 	    return true;
 	  }
 	}
       }
     }
   }
+  //cout<<" return false "<<endl;
   return false;
 }
 
