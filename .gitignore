@@ -647,3 +647,5 @@ greasy_job_gamma_diffuse/
 greasy_job_proton/
 node_1.joblist-undefined.rst
 pyeventio_example_singularity.sif
+gamma_on_nsb_1x_ev78_out.bin
+gr_test.root

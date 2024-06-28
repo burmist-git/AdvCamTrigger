@@ -87,10 +87,10 @@ void anaEvPerEv::save_event_to_bin_file(TString binFileOut, Int_t event_ID, Int_
   Int_t fadc_offset = 300;
   Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
   Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
-  //Float_t NGB_rate_in_MHz = 268.0;
-  Float_t NGB_rate_in_MHz = 0.1;
-  //Float_t fadc_electronic_noise_RMS = 3.8082498; //takes into account 3.5/sqrt(12)
-  Float_t fadc_electronic_noise_RMS = 0.01;
+  Float_t NGB_rate_in_MHz = 268.0;
+  //Float_t NGB_rate_in_MHz = 0.1;
+  Float_t fadc_electronic_noise_RMS = 3.8082498; //takes into account 3.5/sqrt(12)
+  //Float_t fadc_electronic_noise_RMS = 0.01;
   //
   TRandom3 *rnd = new TRandom3(rndseed);
   //
@@ -133,8 +133,12 @@ void anaEvPerEv::save_event_to_bin_file(TString binFileOut, Int_t event_ID, Int_
   float fadc_sample_in_ns_float = (float)fadc_sample_in_ns;
   float NGB_rate_in_MHz_float = (float)NGB_rate_in_MHz;
   float fadc_electronic_noise_RMS_float = (float)fadc_electronic_noise_RMS;  
+  //  
   //
-  
+  //int(4 bytes)    event_ID_int
+  //float(4 bytes)  energy_float
+  //int(4 bytes)    n_pe_int
+  //int(4 bytes)    n_pixels_int
   //
   //int(4 bytes)   nn_PMT_channels_int
   //int(4 bytes)   nn_fadc_point_int
