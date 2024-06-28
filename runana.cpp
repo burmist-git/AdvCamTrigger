@@ -2,6 +2,7 @@
 #include "src/ana.hh"
 #include "src/anaTrg.hh"
 #include "src/anaTrgA.hh"
+#include "src/anaEvPerEv.hh"
 #include "src/anashort.hh"
 #include "src/anaPCA.hh"
 #include "src/anaPCAp.hh"
@@ -496,6 +497,32 @@ int main(int argc, char *argv[]){
 		     n_jobs, disable_energy_theta_rcore_binwise_cuts,
 		     n_jobs_NSB, hist_file_dir_NSB, rsimulation);
   }
+  else if(argc == 6 && atoi(argv[1])==333){
+    TString inRootFiles = argv[2];
+    Int_t event_ID = atoi(argv[3]);
+    TString binFileOut = argv[4];
+    Int_t rndseed = atoi(argv[5]);
+    //
+    cout<<"--> Parameters <--"<<endl
+	<<"inRootFiles : "<<inRootFiles<<endl
+      	<<"event_ID    : "<<event_ID<<endl
+	<<"binFileOut  : "<<binFileOut<<endl
+    	<<"rndseed     : "<<rndseed<<endl;
+    //
+    anaEvPerEv a( inRootFiles, 1);
+    a.save_event_to_bin_file(binFileOut, event_ID, rndseed);
+  }
+  else if(argc == 4 && atoi(argv[1])==3333){
+    TString inRootFiles = argv[2];
+    TString txtFileOut = argv[3];
+    //
+    cout<<"--> Parameters <--"<<endl
+	<<"inRootFiles : "<<inRootFiles<<endl
+	<<"txtFileOut  : "<<txtFileOut<<endl;
+    //
+    anaEvPerEv a( inRootFiles, 1);
+    a.get_events_map(txtFileOut);
+  }
   else{
     cout<<" --> ERROR in input arguments "<<endl
 	<<" runID [1] = 0 (execution ID number)"<<endl
@@ -581,6 +608,14 @@ int main(int argc, char *argv[]){
       	<<"       [6] - n_jobs_NSB"<<endl
 	<<"       [7] - hist_file_dir_NSB"<<endl
 	<<"       [8] - rsimulation"<<endl;
+    cout<<" runID [1] = 333 (execution ID number) anaEvPerEv"<<endl
+      	<<"       [2] - in root file"<<endl
+      	<<"       [3] - event ID"<<endl
+	<<"       [4] - name of the binary file with event"<<endl
+    	<<"       [5]- rndseed"<<endl;
+    cout<<" runID [1] = 3333 (execution ID number) anaEvPerEv to build get_events_map"<<endl
+      	<<"       [2] - in root file"<<endl
+	<<"       [3] - name of txt file with event map"<<endl;
   }
   return 0;
 }

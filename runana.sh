@@ -71,6 +71,8 @@ function printHelp {
     echo " [0] -rate_proton_binwise : calculate proton rate (binwise)"
     echo " [0] -rate_proton         : calculate proton rate"
     echo " [0] -rate_gamma          : calculate gamma rate"
+    echo " [0] -EvPerEv             : event per event analysis"
+    echo " [0] -evMAP               : event map"
     echo " [0] -c     : recompile"
     echo " [0] -h     : print help"
 }
@@ -540,6 +542,17 @@ else
 	rsimulation=800
 	./runana 9999 g ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/trgA_test_DBscan/ ./hist_rate_gamma_DBscan.root 10 15 ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/ $rsimulation
 	./runana 9999 g ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/trgA_test_superflower/ ./hist_rate_gamma_superflower.root 10 15 ../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/ $rsimulation
+    elif [ "$1" = "-EvPerEv" ]; then
+	inRootFiles="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
+	#event_ID="0" #43
+	event_ID="78" #3424
+	binFileOut="gamma_on_nsb_1x_ev"$event_ID"_out.bin"
+	rndseed="1312312"	
+	./runana 333 $inRootFiles $event_ID $binFileOut $rndseed
+    elif [ "$1" = "-evMAP" ]; then
+	inRootFiles="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
+	txtFileOut="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/gamma_on_nsb_1x_0000_event_map.txt"
+	./runana 3333 $inRootFiles $txtFileOut
     elif [ "$1" = "-c" ]; then
 	make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j		
     elif [ "$1" = "-h" ]; then

@@ -17,7 +17,7 @@ OUTLIB = ./obj/
 
 all: runana run_dbscan
 
-runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o
+runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o obj/anaEvPerEv.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 run_dbscan: run_dbscan.cpp obj/dbscan.o
@@ -37,6 +37,9 @@ obj/anaTrg.o: src/anaTrg.cpp src/anaTrg.hh obj/anabase.o obj/ana.o obj/sipmCamer
 
 obj/anaTrgA.o: src/anaTrgA.cpp src/anaTrgA.hh obj/anabase.o obj/ana.o obj/sipmCameraHist.o obj/wfCamSim.o obj/triggerSim.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anaTrgA.o $<
+
+obj/anaEvPerEv.o: src/anaEvPerEv.cpp src/anaEvPerEv.hh obj/anabase.o obj/ana.o obj/sipmCameraHist.o obj/wfCamSim.o
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anaEvPerEv.o $<
 
 obj/anashort.o: src/anashort.cpp src/anashort.hh obj/sipmCameraHist.o obj/wfCamSim.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anashort.o $<
