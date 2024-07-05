@@ -616,7 +616,8 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   TH1D *h1_digital_sum_3ns = new TH1D("h1_digital_sum_3ns","h1_digital_sum_3ns",1000,0.0,1000);
   TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns","h1_digital_sum_5ns",1000,0.0,1000);
   TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val",1000,0.0,1000);
-  std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger( wfcam_real, h1_digital_sum, h1_digital_sum_3ns, h1_digital_sum_5ns, h1_fadc_val);
+  //std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger( wfcam_real, h1_digital_sum, h1_digital_sum_3ns, h1_digital_sum_5ns, h1_fadc_val);
+  std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger( wfcam_real, h1_digital_sum, h1_fadc_val);
   triggerSim::print_trigger_vec(trg_vec);
   //std::cout<<"trg_sim->get_DBSCAN()->print_points_info()"<<std::endl;
   //trg_sim->get_DBSCAN()->print_points_info();

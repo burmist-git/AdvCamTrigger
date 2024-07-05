@@ -196,8 +196,6 @@ class triggerSim {
   std::vector<std::vector<int>> get_trigger_test();
   std::vector<std::vector<unsigned int>> get_trigger(const std::vector<std::vector<int>> &wf,
 						     TH1D *h1_digital_sum = NULL,
-						     TH1D *h1_digital_sum_3ns = NULL,
-						     TH1D *h1_digital_sum_5ns = NULL,
 						     TH1D *h1_fadc_val = NULL);
   static void print_trigger_vec(const std::vector<std::array<int, 2>> &trg_vector);
   static void print_trigger_vec(const std::vector<std::vector<unsigned int>> &trg_vector);
@@ -214,6 +212,7 @@ class triggerSim {
 
   inline const Int_t get_dbscan_run_time_musec() const {return _dbscan_run_time_musec;};
   inline const Int_t get_dbscan_N_points() const {return _dbscan_N_points;};
+  inline const Int_t get_n_digital_sum_micro_clusters() const {return _n_digital_sum_micro_clusters;};
   
   inline void set_k_dist_graph_flag(bool val){_k_dist_graph_flag = val;};
 
@@ -225,12 +224,10 @@ class triggerSim {
   
 private:
 
-  int get_flower_digital_sum(const unsigned int ch_i, const unsigned int wf_j, const std::vector<std::vector<int>> &wf, Int_t w_l, Int_t w_r, Bool_t norm_yes);
-  int get_digital_sum(const unsigned int ch_i, const unsigned int wf_j, const std::vector<std::vector<int>> &wf, Int_t w_l, Int_t w_r, Bool_t norm_yes, Int_t sum_type);
+  int get_flower_digital_sum(const unsigned int ch_i, const unsigned int wf_j, const std::vector<std::vector<int>> &wf, Bool_t norm_yes);
+  int get_digital_sum(const unsigned int ch_i, const unsigned int wf_j, const std::vector<std::vector<int>> &wf, Bool_t norm_yes, Int_t sum_type);
 
   std::vector<std::vector<unsigned int>> build_spatial_cluster(const std::vector<std::vector<unsigned int>> &trg_vector);
-  std::vector<std::vector<unsigned int>> build_spatial_time_cluster(const std::vector<std::vector<unsigned int>> &trg_vector);
-  std::vector<std::vector<unsigned int>> build_time_cluster(const std::vector<std::vector<unsigned int>> &trg_vector);
   std::vector<std::vector<unsigned int>> build_spatial_time_cluster_dbscan(const std::vector<std::vector<unsigned int>> &trg_vector);
   
   const sipmCameraHist* _simphist;
@@ -242,7 +239,8 @@ private:
 
   Int_t _dbscan_run_time_musec;
   Int_t _dbscan_N_points;
-
+  Int_t _n_digital_sum_micro_clusters;
+  
   unsigned int _n_skip_edge_points;
 
   bool _k_dist_graph_flag;
@@ -252,14 +250,6 @@ private:
   Int_t _digital_sum_max;
 
   vector<unsigned int> _trg_channel_mask;
-
-  //channel digital filter
-  Int_t _channel_filter_nn;
-  Double_t *_channel_filter_wights;
-
-  //filter on digital sum
-  Int_t _digital_sum_filter_nn;
-  Double_t *_digital_sum_filter_wights;
 
 };
 

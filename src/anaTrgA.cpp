@@ -197,9 +197,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   clock_t start_sim, finish_sim;
   start = clock();
   //
-  TH1D *h1_digital_sum     = new TH1D("h1_digital_sum",     "h1_digital_sum",    1001,-0.5,1000.5);
-  TH1D *h1_digital_sum_3ns = new TH1D("h1_digital_sum_3ns", "h1_digital_sum_3ns",1001,-0.5,1000.5);
-  TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns", "h1_digital_sum_5ns",1001,-0.5,1000.5);
+  TH1D *h1_digital_sum     = new TH1D("h1_digital_sum",     "h1_digital_sum",    10001,-0.5,10000.5);
+  //TH1D *h1_digital_sum_3ns = new TH1D("h1_digital_sum_3ns", "h1_digital_sum_3ns",1001,-0.5,1000.5);
+  //TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns", "h1_digital_sum_5ns",1001,-0.5,1000.5);
   //TH1D *h1_fadc_val        = new TH1D("h1_fadc_val",        "h1_fadc_val",       1001,-0.5,1000.5);
   //
   TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val", (Int_t)(400.5-249.5), 249.5, 400.5);
@@ -352,7 +352,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 	else
 	  cout<<"---------------------"<<endl<<"n_pe = "<<n_pe<<endl;
 	//cout<<"get_trigger"<<endl;
-	trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
+	//trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
+	trg_sim->get_trigger(wfcam,h1_digital_sum,h1_fadc_val);
 	finish_trg = clock();
 	cout<<nevsim
 	    <<" "<<((finish_sim - start_sim)/(CLOCKS_PER_SEC/1000))<<" (msec)"
@@ -435,8 +436,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   wfc->get_h1_dadc_NGB_pedestal()->Write();
   //
   h1_digital_sum->Write();
-  h1_digital_sum_3ns->Write();
-  h1_digital_sum_5ns->Write();
+  //h1_digital_sum_3ns->Write();
+  //h1_digital_sum_5ns->Write();
   h1_fadc_val->Write();
   //
   h1_energy->Write();

@@ -173,7 +173,8 @@ void anaTrg::Loop(TString histOut){
 	  //
 	  //std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger(wfcam);
 	  //triggerSim::print_trigger_vec(trg_vec);
-	  trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
+	  //trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
+	  trg_sim->get_trigger(wfcam,h1_digital_sum,h1_fadc_val);
 	  finish_trg = clock();
 	  cout<<nevsim
 	      <<" "<<((finish_sim - start_sim)/(CLOCKS_PER_SEC/1000))<<" (msec)"

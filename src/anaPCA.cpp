@@ -300,7 +300,8 @@ void anaPCA::Loop(TString histOut){
 			       pe_chID,
 			       pe_time);
 	//
-	trg_sim->get_trigger( wfcam, h1_digital_sum, h1_digital_sum_3ns, h1_digital_sum_5ns, h1_fadc_val);
+	//trg_sim->get_trigger( wfcam, h1_digital_sum, h1_digital_sum_3ns, h1_digital_sum_5ns, h1_fadc_val);
+	trg_sim->get_trigger( wfcam, h1_digital_sum, h1_fadc_val);
 	//
 	//sipm_cam->Fill_pe_center(n_pe, pe_chID);
 	//sipm_cam->Fill_pe(n_pe, pe_chID);

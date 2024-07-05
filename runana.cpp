@@ -2,6 +2,7 @@
 #include "src/ana.hh"
 #include "src/anaTrg.hh"
 #include "src/anaTrgA.hh"
+#include "src/anaTrgB.hh"
 #include "src/anaEvPerEv.hh"
 #include "src/anashort.hh"
 #include "src/anaPCA.hh"
@@ -523,6 +524,47 @@ int main(int argc, char *argv[]){
     anaEvPerEv a( inRootFiles, 1);
     a.get_events_map(txtFileOut);
   }
+  else if(argc == 14 && atoi(argv[1])==222){
+    TString inRootFile = argv[2];
+    TString outRootFileHist = argv[3];
+    Float_t NGB_rate_in_MHz = (Float_t)atof(argv[4]);
+    Float_t fadc_electronic_noise_RMS = (Float_t)atof(argv[5]);
+    Int_t npe_min = atoi(argv[6]);
+    Int_t npe_max = atoi(argv[7]);
+    Int_t nEvSim_max = atoi(argv[8]);
+    Int_t nEv_max = atoi(argv[9]);
+    Int_t rndseed = atoi(argv[10]);
+    bool NGBsim;
+    Int_t NGBsim_val = atoi(argv[11]);
+    if(NGBsim_val == 1)
+      NGBsim = true;
+    else
+      NGBsim = false;
+    TString trgSetup = argv[12];
+    TString name_ana_conf_file = argv[13];
+    //
+    cout<<"--> Parameters <--"<<endl
+	<<"inRootFile                "<<inRootFile<<endl
+	<<"outRootFileHist           "<<outRootFileHist<<endl
+	<<"NGB_rate_in_MHz           "<<NGB_rate_in_MHz<<endl
+	<<"fadc_electronic_noise_RMS "<<fadc_electronic_noise_RMS<<endl
+	<<"npe_min                   "<<npe_min<<endl
+	<<"npe_max                   "<<npe_max<<endl
+	<<"nEvSim_max                "<<nEvSim_max<<endl
+	<<"nEv_max                   "<<nEv_max<<endl
+	<<"rndseed                   "<<rndseed<<endl
+	<<"NGBsim                    "<<NGBsim<<endl
+	<<"trgSetup                  "<<trgSetup<<endl
+    	<<"name_ana_conf_file        "<<name_ana_conf_file<<endl;    
+    //
+    anaTrgB a( inRootFile, 1);
+    a.set_trg_conf_file(trgSetup);
+    a.set_ana_conf_file(name_ana_conf_file);
+    a.Loop(outRootFileHist,
+	   NGB_rate_in_MHz, fadc_electronic_noise_RMS,
+	   npe_min, npe_max, nEvSim_max, nEv_max,
+	   rndseed, NGBsim);
+  }
   else{
     cout<<" --> ERROR in input arguments "<<endl
 	<<" runID [1] = 0 (execution ID number)"<<endl
@@ -616,6 +658,18 @@ int main(int argc, char *argv[]){
     cout<<" runID [1] = 3333 (execution ID number) anaEvPerEv to build get_events_map"<<endl
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of txt file with event map"<<endl;
+    cout<<" runID [1] = 222 (execution ID number) TrgB "<<endl
+      	<<"       [2] - in root file"<<endl
+	<<"       [3] - name of root file with histograms"<<endl
+      	<<"       [4] - NGB_rate_in_MHz"<<endl
+      	<<"       [5] - fadc_electronic_noise_RMS"<<endl
+	<<"       [6] - npe_min"<<endl
+      	<<"       [7] - npe_max"<<endl
+	<<"       [8] - nEvSim_max"<<endl
+	<<"       [9] - nEv_max"<<endl
+    	<<"       [10]- rndseed"<<endl
+      	<<"       [11]- NGBsim"<<endl
+    	<<"       [12]- trgSetup"<<endl;
   }
   return 0;
 }
