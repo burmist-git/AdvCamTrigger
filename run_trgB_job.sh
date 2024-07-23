@@ -70,7 +70,7 @@ else
 	    nEvSim_max=-1
 	    #nEv_max=15000
 	    nEv_max=-1
-            NGB_rate_in_MHz="268.0"
+            NGB_rate_in_MHz="1.0"
 	    fadc_electronic_noise_RMS="3.8082498"
 	    #
 	    #

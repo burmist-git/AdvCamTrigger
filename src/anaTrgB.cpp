@@ -37,6 +37,21 @@
 
 using namespace std;
 
+Double_t anaTrgB::get_n_tot_ev_after_cuts(){
+  Double_t n_tot_ev_after_cuts = 0.0;
+  Long64_t nentries = fChain->GetEntriesFast();
+  Long64_t nbytes = 0, nb = 0;
+  for (Long64_t jentry=0; jentry<nentries;jentry++) {
+    Long64_t ientry = LoadTree(jentry);
+    if (ientry < 0) break;
+    nb = fChain->GetEntry(jentry); nbytes += nb;
+    //
+    if(cut())
+      n_tot_ev_after_cuts++;
+  }
+  return n_tot_ev_after_cuts;
+}
+
 void anaTrgB::Loop(TString histOut,
 		   Float_t NGB_rate_in_MHz, Float_t fadc_electronic_noise_RMS,
 		   Int_t npe_min, Int_t npe_max, Int_t nEvSim_max, Int_t nEv_max,
@@ -75,6 +90,9 @@ void anaTrgB::Loop(TString histOut,
   //
   print_cuts();
   //
+  _n_tot_ev_after_cuts = get_n_tot_ev_after_cuts();
+  //
+  //
   Int_t nevsim = 0;
   Int_t nevcut = 0;
   Double_t x0_LST01 = -70.93;
@@ -101,6 +119,8 @@ void anaTrgB::Loop(TString histOut,
   TH1D *h1_N_dbc = new TH1D("h1_N_dbc","h1_N_dbc", 21, -0.5, 20.5);
   TH1D *h1_dbc_number_of_points = new TH1D("h1_dbc_number_of_points","h1_dbc_number_of_points", 1001, -0.5, 1000.5);
   TH1D *h1_dbc_number_of_points_w = new TH1D("h1_dbc_number_of_points_w","h1_dbc_number_of_points_w", 1001, -0.5, 1000.5);
+  TH1D *h1_rate_vs_dbc_number_of_points = new TH1D("h1_rate_vs_dbc_number_of_points","h1_rate_vs_dbc_number_of_points", 1001, -0.5, 1000.5);
+  //  
   TH1D *h1_dbc_nsb_rate = new TH1D("h1_dbc_nsb_rate","h1_dbc_nsb_rate", 1001, -0.5, 1000.5);
   //
   TH1D *h1_dbc_mean_x = new TH1D("h1_dbc_mean_x","h1_dbc_mean_x", 300, -2.0, 2.0);
@@ -143,6 +163,8 @@ void anaTrgB::Loop(TString histOut,
     if((nevsim >= _nEvSim_max) && (_nEvSim_max > -1))
       break;
     if(nevcut >= _nEv_max && (_nEv_max > -1))
+      break;
+    if(nevcut >= _anaConf.n_ev_cuts_max && (_anaConf.n_ev_cuts_max > -1))
       break;
     //
     if(cut()){
@@ -189,9 +211,13 @@ void anaTrgB::Loop(TString histOut,
 	    <<" "<<((finish_trg - start_trg)/(CLOCKS_PER_SEC/1000))<<" (msec)"<<endl;
       }
       //
+      //
       h1_dbscan_N_points->Fill(trg_sim->get_dbscan_N_points());
       h1_n_micro_clusters->Fill(trg_sim->get_n_digital_sum_micro_clusters());      
       h1_N_dbc->Fill(trg_sim->get_dbclusters().size());
+      //cout<<"trg_sim->get_dbscan_N_points()              "<<trg_sim->get_dbscan_N_points()<<endl
+      //  <<"trg_sim->get_n_digital_sum_micro_clusters() "<<trg_sim->get_n_digital_sum_micro_clusters()<<endl      
+      //  <<"trg_sim->get_dbclusters().size()            "<<trg_sim->get_dbclusters().size()<<endl;
       //      
       if(trg_sim->get_dbclusters().size() == 1){
 	//
@@ -222,15 +248,25 @@ void anaTrgB::Loop(TString histOut,
 	//
       }
       //
+      _n_tot_ev_after_cuts_processed++;
       nevcut++;
     }
     nevsim++;
   }
   //
+  //
+  cout<<"nentries                       = "<<nentries<<endl
+      <<"_n_tot_ev_after_cuts           = "<<_n_tot_ev_after_cuts<<endl
+      <<"_n_tot_ev_after_cuts_processed = "<<_n_tot_ev_after_cuts_processed<<endl;
+  //
+  //
+  //
   // rate culculations
   anaTrgB::digital_sum_rate_calculations( h1_digital_sum_rate, h1_digital_sum, h1_npe, nn_fadc_point, fadc_sample_in_ns);
   anaTrgB::dbc_nsb_rate_calculations( h1_dbc_nsb_rate, h1_dbc_number_of_points, h1_npe, nn_fadc_point, fadc_sample_in_ns);
-  anaTrgB::npe_rate_calculations( h1_rate_vs_npe, h1_npe_w, tot_flux, tot_number_of_sim_events);
+  anaTrgB::rate_calculations( h1_rate_vs_npe, h1_npe_w, tot_flux, tot_number_of_sim_events, _n_tot_ev_after_cuts, _n_tot_ev_after_cuts_processed);
+  anaTrgB::rate_calculations( h1_rate_vs_dbc_number_of_points, h1_dbc_number_of_points_w, tot_flux, tot_number_of_sim_events, _n_tot_ev_after_cuts, _n_tot_ev_after_cuts_processed);
+  //
   //
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
@@ -259,32 +295,13 @@ void anaTrgB::Loop(TString histOut,
   //
   h1_dbc_number_of_points->Write();
   h1_dbc_number_of_points_w->Write();
+  h1_rate_vs_dbc_number_of_points->Write();
   //
   h1_dbc_nsb_rate->Write();
   //
   h1_dbc_mean_x->Write();
   h1_dbc_mean_y->Write();
   h1_dbc_mean_time_ii->Write();
-  /*
-  h1_dbc_number_of_points->Write();
-  h1_dbc_number_of_points_w->Write();
-  h1_dbc_number_of_points_tot->Write();
-  h1_dbc_number_of_points_tot_w->Write();
-  h2_dbc_number_of_points_vs_npe->Write();
-  h1_dbc_number_of_points_npe_norm->Write();
-  h1_dbc_number_of_CORE_POINT->Write();
-  h1_dbc_number_of_BORDER_POINT->Write();
-  //
-  h1_dbc_mean_x->Write();
-  h1_dbc_mean_y->Write();
-  h1_dbc_mean_time_ii->Write();
-  //
-  h2_dbc_number_of_points_vs_mean_time_ii->Write();
-  gr_event_id_vs_jentry->Write();
-  gr_dbscan_time_vs_npe->Write();
-  gr_dbscan_time_vs_n_micro_clusters->Write();
-  //
-  */
   //
   rootFile->Close();
 }
@@ -331,13 +348,22 @@ void anaTrgB::dbc_nsb_rate_calculations( TH1D *h1_dbc_nsb_rate, TH1D *h1_dbc_num
   }
 }
 
-void anaTrgB::npe_rate_calculations( TH1D *h1_rate_vs_npe, TH1D *h1_npe_w, Double_t tot_flux, Double_t tot_number_of_sim_events){
+void anaTrgB::rate_calculations( TH1D *h1_rate_vs_th, TH1D *h1_w, Double_t tot_flux, Double_t tot_number_of_sim_events,
+				 Double_t n_tot_ev_after_cuts, Double_t n_tot_ev_after_cuts_processed){
   Double_t integral_val;
   Double_t rate;
-  for( Int_t i = 1; i <= h1_npe_w->GetNbinsX(); i++){
-    integral_val = h1_npe_w->Integral(i,h1_npe_w->GetNbinsX());
-    rate = integral_val/tot_number_of_sim_events*tot_flux;
-    h1_rate_vs_npe->SetBinContent(i,rate);
+  Double_t tot_number_of_sim_events_correction_factor = 1.0;
+  if(n_tot_ev_after_cuts>0)
+    tot_number_of_sim_events_correction_factor = n_tot_ev_after_cuts_processed/n_tot_ev_after_cuts;
+  for( Int_t i = 1; i <= h1_w->GetNbinsX(); i++){
+    integral_val = h1_w->Integral(i,h1_w->GetNbinsX());
+    if(tot_number_of_sim_events>0 && tot_number_of_sim_events_correction_factor>0){
+      rate = integral_val/(tot_number_of_sim_events*tot_number_of_sim_events_correction_factor)*tot_flux;
+    }
+    else{
+      rate = 0.0;
+    }
+    h1_rate_vs_th->SetBinContent(i,rate);
   }
 }
 
