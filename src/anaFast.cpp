@@ -1023,10 +1023,15 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //Double_t y0_LST01 = -52.07;
   //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //
-  if(energy>=75.0)
+  if(energy>=1.0)
     if(n_pe>=12000)
-      if(n_pe<13000)
-	return true;
+      if(azimuth>=azimuth_min && azimuth<=azimuth_max)
+	if(altitude>=altitude_min && altitude<=altitude_max)
+	  return true;
+  //if(energy>=75.0)
+  //if(n_pe>=12000)
+  //if(n_pe<13000)
+  //return true;
   //if(n_pe>=0)
   //return true;
   //if(n_pe>=500){

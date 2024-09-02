@@ -612,10 +612,10 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
   Int_t nChannels =wf.size();
   sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
   sipm_cam->SetMinimum(299.0);
-  sipm_cam->SetMaximum(308.0);
+  sipm_cam->SetMaximum(500.0);
   sipmCameraHist *sipm_cam_ref = new sipmCameraHist("sipm_cam_ref","sipm_cam_ref","pixel_mapping.csv",0);
   sipm_cam_ref->SetMinimum(299.0);
-  sipm_cam_ref->SetMaximum(308.0);
+  sipm_cam_ref->SetMaximum(500.0);
   for(Int_t i = 0;i<nn_fadc_point;i++){
     TString sipm_cam_name = "sipm_cam_";
     TString gif_name = ev_dir_name;
