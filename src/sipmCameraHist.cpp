@@ -149,6 +149,39 @@ void sipmCameraHist::dump_mapping_info(){
 sipmCameraHist::~sipmCameraHist(){
 }
 
+std::vector<Int_t> sipmCameraHist::get_trigger_channel_mask_isolated_flower(){
+  //
+  std::vector<Int_t> isolated_flower_chID;
+  std::vector<Int_t> black_list_chID;
+  //
+  for(unsigned int i = 0;i<_pixel_vec.size();i++){
+    //if(_pixel_vec.at(i).pixel_id == 0){
+    if(isolated_flower_chID.size() == 0){
+      isolated_flower_chID.push_back(_pixel_vec.at(i).pixel_id);
+      for(unsigned int kk = 0;kk<_pixel_vec.at(i).v_pixel_flower.size();kk++){
+	black_list_chID.push_back(_pixel_vec.at(i).v_pixel_flower.at(kk).pixel_id);
+      }
+    }
+    else{
+      bool isOk = true;
+      for(unsigned int jj = 0;jj<black_list_chID.size();jj++){
+	if(black_list_chID.at(jj) == _pixel_vec.at(i).pixel_id){
+	  isOk = false;	  
+	  break;
+	}
+      }
+      if(isOk){
+	isolated_flower_chID.push_back(_pixel_vec.at(i).pixel_id);
+	for(unsigned int kk = 0;kk<_pixel_vec.at(i).v_pixel_flower.size();kk++){
+	  black_list_chID.push_back(_pixel_vec.at(i).v_pixel_flower.at(kk).pixel_id);
+	}
+      }
+    }
+  }
+  //
+  return isolated_flower_chID;
+}
+
 void sipmCameraHist::count_signal(Double_t th_val, Int_t &nch, Int_t &npe){
   /*
   nch = 0;
@@ -442,6 +475,41 @@ void sipmCameraHist::Draw_cam( TString settings,
 			       TString pdf_out_file,
 			       const std::vector<unsigned int> &pixel_line_flower_vec){
   Draw_cam( settings, pdf_out_file, "NONE", -999, -999, -999.0, -999.0, -999.0, -999.0, -999, -999, -999, pixel_line_flower_vec, NULL);
+}
+
+void sipmCameraHist::save_trigger_channel_mask_isolated_flower(TString file_out_name){
+  std::vector<Int_t> isolated_flower_seeds = get_trigger_channel_mask_isolated_flower(); 
+  std::cout<<"isolated_flower_seeds.size() = "<<isolated_flower_seeds.size()<<std::endl;  
+  //
+  ofstream outfile;
+  outfile.open(file_out_name.Data());
+  //
+  for(unsigned int i = 0;i<isolated_flower_seeds.size();i++)
+    outfile<<std::setw(10)<<isolated_flower_seeds.at(i)<<std::endl;
+  //
+  outfile.close();
+}
+
+void sipmCameraHist::save_trigger_channel_mask_all_pixels(TString file_out_name){
+  //
+  ofstream outfile;
+  outfile.open(file_out_name.Data());
+  //
+  for(unsigned int i = 0;i<_pixel_vec.size();i++)
+    outfile<<std::setw(10)<<_pixel_vec.at(i).pixel_id<<std::endl;
+  //
+  outfile.close();
+}
+
+void sipmCameraHist::test_trigger_channel_mask_isolated_flower(TString pdf_out_name){
+  std::vector<Int_t> isolated_flower_seeds = get_trigger_channel_mask_isolated_flower(); 
+  //
+  std::cout<<"isolated_flower_seeds.size() = "<<isolated_flower_seeds.size()<<std::endl;  
+  //
+  for(unsigned int i = 0;i<isolated_flower_seeds.size();i++)
+      SetBinContent(isolated_flower_seeds.at(i)+1,1);
+  //
+  Draw_cam("ZCOLOR",pdf_out_name.Data());
 }
 
 void sipmCameraHist::test(TString pdf_out_name){

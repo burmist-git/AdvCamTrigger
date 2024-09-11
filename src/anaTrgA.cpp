@@ -294,6 +294,12 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   cout<<"trg_sim->_trg_setup.load_trg_setup"<<endl
       <<"_trg_conf_file = "<<_trg_conf_file<<endl;
   trg_sim->_trg_setup.load_trg_setup(_trg_conf_file.Data());
+  cout<<"trg_sim->_trg_setup.trigger_channel_mask_file_list "
+      <<trg_sim->_trg_setup.trigger_channel_mask_file_list<<endl;
+  if(trg_sim->_trg_setup.trigger_channel_mask_file_list.Sizeof()>1)
+    trg_sim->fill_trg_channel_mask_from_file(trg_sim->_trg_setup.trigger_channel_mask_file_list);
+  trg_sim->print_trg_channel_mask(0);
+  //      
   //cout<<"trg_sim->_trg_setup.trg_setup_info()"<<endl;
   //trg_sim->_trg_setup.trg_setup_info();
   trg_sim->set_k_dist_graph_flag(_k_dist_graph_flag);

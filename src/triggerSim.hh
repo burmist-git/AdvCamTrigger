@@ -40,6 +40,8 @@ struct trg_setup {
   unsigned int dbscan_minPts = 22;
   float dbscan_eps = 0.1;
   //
+  TString trigger_channel_mask_file_list;
+  //
   trg_setup(){
     //
     nFilterPerChannel = 0;
@@ -63,6 +65,8 @@ struct trg_setup {
     dbscan_time_todist = 0.05;
     dbscan_minPts = 22;
     dbscan_eps = 0.1;
+    //
+    trigger_channel_mask_file_list="";
   }
   //
   void trg_setup_info(){
@@ -95,6 +99,7 @@ struct trg_setup {
 	     <<std::setw(20)<<dbscan_minPts
 	     <<std::setw(20)<<dbscan_eps
 	     <<std::endl;
+    std::cout<<"trigger_channel_mask_file_list"<<trigger_channel_mask_file_list<<std::endl;
   }
   //
   void load_trg_setup(const char* in_file){
@@ -178,6 +183,10 @@ struct trg_setup {
 	  dbscan_eps = (float)val_tmp;
 	  cout<<"---> dbscan_eps "<<dbscan_eps<<endl;
 	}
+	else if(mot == "trigger_channel_mask_file_list:"){
+	  fFile>>trigger_channel_mask_file_list;
+	  cout<<"---> trigger_channel_mask_file_list "<<trigger_channel_mask_file_list<<endl;
+	}	
       }
       fFile.close();
     }
@@ -219,7 +228,9 @@ class triggerSim {
   inline const Int_t get_digital_sum_max() const {return _digital_sum_max;};
 
   void autofill_trg_channel_mask(unsigned int nch_max = 8000, unsigned int ival = 1);
-
+  void fill_trg_channel_mask_from_file(TString mask_file);
+  void print_trg_channel_mask(int verbosity = 0);
+  
   trg_setup _trg_setup;
   
 private:

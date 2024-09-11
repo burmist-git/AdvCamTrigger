@@ -8,6 +8,7 @@
 #include "src/anaPCA.hh"
 #include "src/anaPCAp.hh"
 #include "src/anaFast.hh"
+#include "src/anaSuperFast.hh"
 #include "src/sipmCameraHist.hh"
 #include "src/sipmCameraHistCropped.hh"
 #include "src/evstHist.hh"
@@ -315,6 +316,21 @@ int main(int argc, char *argv[]){
     sipmCameraHist *sipm_cam_test12 = new sipmCameraHist("sipm_cam_test12","sipm_cam_test12","pixel_mapping.csv",0);
     sipm_cam_test12->test_pixel_super_flower(npix, pix_id);
   }
+  else if(argc == 2 && atoi(argv[1])==555){
+    cout<<"--> Parameters <--"<<endl
+	<<"argv[1] : "<<atoi(argv[1])<<endl;
+    //
+    sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+    sipm_cam->test_trigger_channel_mask_isolated_flower();
+  }
+  else if(argc == 2 && atoi(argv[1])==5550){
+    cout<<"--> Parameters <--"<<endl
+	<<"argv[1] : "<<atoi(argv[1])<<endl;
+    //
+    sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+    sipm_cam->save_trigger_channel_mask_isolated_flower();
+    sipm_cam->save_trigger_channel_mask_all_pixels();
+  }
   else if(argc == 4 && atoi(argv[1])==6){
     TString rootFilesList = argv[2];
     TString outRootFileF = argv[3];
@@ -366,6 +382,17 @@ int main(int argc, char *argv[]){
 	<<"outRootFileF  : "<<outRootFileF<<endl
     	<<"conf_file     : "<<conf_file<<endl;
     anaFast a(rootFilesList, conf_file.Data());
+    a.Loop(outRootFileF);
+  }
+  else if(argc == 5 && atoi(argv[1])==77){
+    TString rootFilesList = argv[2];
+    TString outRootFileF = argv[3];
+    TString conf_file = argv[4];
+    cout<<"--> Parameters <--"<<endl
+	<<"rootFilesList : "<<rootFilesList<<endl
+	<<"outRootFileF  : "<<outRootFileF<<endl
+    	<<"conf_file     : "<<conf_file<<endl;
+    anaSuperFast a(rootFilesList, conf_file.Data());
     a.Loop(outRootFileF);
   }
   else if(argc == 7 && atoi(argv[1])==8){
@@ -583,7 +610,10 @@ int main(int argc, char *argv[]){
       	<<"       [2] - in root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl
     	<<"       [4] - evID"<<endl;
-    cout<<" runID [1] = 5 (execution ID number) test of camera hist."<<endl;
+    cout<<" runID [1] = 5    (execution ID number) test of camera hist."<<endl;
+    cout<<" runID [1] = 55   (execution ID number) test of camera hist: flower pixID (out csv file with mapping out csv file with mapping)."<<endl;
+    cout<<" runID [1] = 555  (execution ID number) test of camera hist: test_trigger_channel_mask_isolated_flower."<<endl;
+    cout<<" runID [1] = 5550 (execution ID number) save trigger channel mask isolated flower and all pixes."<<endl;
     cout<<" runID [1] = 6 (execution ID number) short file format"<<endl
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
@@ -599,6 +629,9 @@ int main(int argc, char *argv[]){
 	<<"       [4] - number of showers (max)"<<endl
     	<<"       [5] - recoFile (ex: reco.csv)"<<endl;
     cout<<" runID [1] = 7 (execution ID number) short file format: fast"<<endl
+      	<<"       [2] - file with list of the root files"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 77 (execution ID number) short file format: super fast"<<endl
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 8 (execution ID number) short file format: fast npe scan"<<endl

@@ -307,6 +307,21 @@ void anabase::TH2D_divide( TH2D *h2_w, TH2D *h2, TH2D *h2_norm){
   }
 }
 
+void anabase::TH1D_divide( TH1D *h1_w, TH1D *h1, TH1D *h1_norm){
+  Double_t val;
+  Double_t norm;
+  Double_t val_norm;
+  for(Int_t i = 1;i<=h1_w->GetNbinsX();i++){
+    val = h1_w->GetBinContent(i);
+    norm = h1->GetBinContent(i);
+    if(norm>0)
+      val_norm = val/norm;
+    else
+      val_norm = 0.0;
+    h1_norm->SetBinContent(i,val_norm);
+  }
+}
+
 void anabase::getCore_rel_R_theta(const Double_t x0, const Double_t y0, const Double_t xx, const Double_t yy, Double_t &rr, Double_t &theta){
   TVector2 vv(xx-x0,yy-y0);
   rr = vv.Mod();

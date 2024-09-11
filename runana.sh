@@ -36,7 +36,9 @@ function printHelp {
     echo " [0] -ds    : single root file (short format)"
     echo " [0] -tw    : test waveforms"
     echo " [0] -th    : test cam sipmCameraHist"
-    echo " [0] -th_flowerpixID : flower pixID (out csv file with mapping out csv file with mapping)"
+    echo " [0] -th_flowerpixID     : flower pixID (out csv file with mapping out csv file with mapping)"
+    echo " [0] -th_isolated_flower : test of camera hist: test_trigger_channel_mask_isolated_flower"
+    echo " [0] -get_isolated_flower_mask : save trigger channel mask isolated flower"
     echo " [0] -sg    : gamma"
     echo " [0] -sgd   : gamma diffuse"
     echo " [0] -se    : electron"
@@ -46,6 +48,7 @@ function printHelp {
     echo " [0] -fe    : fast electron"
     echo " [0] -fp    : fast proton"
     echo " [0] -fall  : fast all"
+    echo " [0] -sfall : super fast all"
     echo " [0] -pg    : PCA gamma"
     echo " [0] -pgd   : PCA gamma diffuse"
     echo " [0] -pp    : PCA proton"
@@ -485,6 +488,10 @@ else
 	./runana 5
     elif [ "$1" = "-th_flowerpixID" ]; then
 	./runana 55
+    elif [ "$1" = "-th_isolated_flower" ]; then
+	./runana 555
+    elif [ "$1" = "-get_isolated_flower_mask" ]; then
+	./runana 5550
     elif [ "$1" = "-sg" ]; then
 	./runana 6 gamma_on_nsb_1x.list hist_gamma_on_nsb_1x.root
 	#./runana 6 gamma_on_nsb_1x_short.list hist_gamma_on_nsb_1x.root
@@ -541,6 +548,11 @@ else
 	./runana 7 gamma_diffuse_nsb_1x.list hist_fast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_fast_gamma_diffuse_nsb_1x.log
 	./runana 7 electron_nsb_1x.list hist_fast_electron_nsb_1x.root anaFast_e.conf | tee hist_fast_electron_nsb_1x.log
 	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
+    elif [ "$1" = "-sfall" ]; then
+	time ./runana 77 gamma_on_nsb_1x.list hist_superfast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_superfast_gamma_on_nsb_1x.log
+	time ./runana 77 gamma_diffuse_nsb_1x.list hist_superfast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_superfast_gamma_diffuse_nsb_1x.log
+	#time ./runana 77 electron_nsb_1x.list hist_superfast_electron_nsb_1x.root anaFast_e.conf | tee hist_superfast_electron_nsb_1x.log
+	time ./runana 77 proton_nsb_1x.list hist_superfast_proton_nsb_1x.root anaFast_p.conf | tee hist_superfast_proton_nsb_1x.log
     elif [ "$1" = "-fscang" ]; then
 	time ./runana 8 gamma_on_nsb_1x.list hist_fast_scan_gamma_on_nsb_1x.root anaFast_g.conf ../cosmique_gamma_hadron_generator/gamma_on_axis_simtel.dat ../cosmique_gamma_hadron_generator/flux_gamma_crab.dat | tee hist_fast_scan_gamma_on_nsb_1x.log
     elif [ "$1" = "-fscangd" ]; then

@@ -17,7 +17,7 @@ OUTLIB = ./obj/
 
 all: runana run_dbscan
 
-runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaTrgB.o obj/anaFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o obj/anaEvPerEv.o
+runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaTrgB.o obj/anaFast.o obj/anaSuperFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o obj/anaEvPerEv.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 run_dbscan: run_dbscan.cpp obj/dbscan.o
@@ -55,6 +55,9 @@ obj/anaPCAp.o: src/anaPCAp.cpp src/anaPCAp.hh src/anaConf.hh obj/anashort.o obj/
 
 obj/anaFast.o: src/anaFast.cpp src/anaFast.hh src/anaConf.hh obj/anashort.o obj/sipmCameraHist.o obj/wfCamSim.o obj/sipmCameraHistCropped.o obj/evstHist.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anaFast.o $<
+
+obj/anaSuperFast.o: src/anaSuperFast.cpp src/anaSuperFast.hh src/anaConf.hh obj/anashort.o obj/sipmCameraHist.o obj/wfCamSim.o obj/sipmCameraHistCropped.o obj/evstHist.o
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anaSuperFast.o $<
 
 obj/anabase.o: src/anabase.cpp src/anabase.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anabase.o $<

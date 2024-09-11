@@ -34,6 +34,39 @@ void triggerSim::autofill_trg_channel_mask( unsigned int nch_max, unsigned int i
     _trg_channel_mask.push_back(ival);
 }
 
+void triggerSim::fill_trg_channel_mask_from_file(TString mask_file){
+  int val_chID;
+  if(_trg_channel_mask.size()>0)
+    _trg_channel_mask.clear();
+  autofill_trg_channel_mask(8000,0);
+  //
+  ifstream fFile(mask_file.Data());
+  //
+  if(fFile.is_open()){
+    while(fFile>>val_chID){
+      _trg_channel_mask.at((unsigned int)val_chID) = 1;
+    }
+    fFile.close();
+  }
+  else{
+    std::cout<<" ERROR --> file : "<<mask_file<<std::endl
+             <<" does not exist."<<std::endl;
+    assert(0);
+  }
+}
+
+void triggerSim::print_trg_channel_mask(int verbosity){
+  std::cout<<"Trigger channel mask file : "<<_trg_setup.trigger_channel_mask_file_list<<std::endl
+	   <<"_trg_channel_mask.size()  : "<<_trg_channel_mask.size()<<std::endl;
+  if(_trg_setup.trigger_channel_mask_file_list.Sizeof()<=1)
+    std::cout<<"The trigger channel mask file is not specified - the autofill function is executed."<<std::endl;
+  if(verbosity>1){
+    std::cout<<"channel list "<<std::endl;
+    for( unsigned int ii = 0; ii < _trg_channel_mask.size(); ii++)
+      std::cout<<_trg_channel_mask.at(ii)<<std::endl;
+  }
+}
+
 int triggerSim::get_flower_digital_sum( const unsigned int ch_i, const unsigned int wf_j, const std::vector<std::vector<int>> &wf, Bool_t norm_yes = true){
   return get_digital_sum( ch_i, wf_j, wf, norm_yes, 0);
 }
