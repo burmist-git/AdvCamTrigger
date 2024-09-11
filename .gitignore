@@ -716,3 +716,10 @@ test_trigger_channel_mask_isolated_flower.pdf
 timing_cuts_x_y_10mxm.pdf
 timing_gamma_gamma_diff_proton.pdf
 timing_gamma_gamma_diff_proton_zoom.pdf
+greasy_job_proton_st/
+pe_info_LST1.csv
+pe_info_LST2.csv
+pe_info_LST3.csv
+pe_info_LST4.csv
+pe_info_tmp.tar.gz
+pe_info_tmp/

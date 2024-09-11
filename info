@@ -1,2 +1,7 @@
+#pyeventio
 source setup.sh --conda
+source setup.sh --mc
+
+#convert2root
+source setup.sh --singularity
 source setup.sh --mc

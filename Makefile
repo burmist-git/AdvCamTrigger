@@ -22,7 +22,7 @@ OUTLIB = ./obj/
 
 #----------------------------------------------------#
 
-all: makedir convert2root
+all: makedir convert2root convert2rootstereo
 
 makedir:
 	mkdir -p $(OUTLIB);
@@ -39,6 +39,9 @@ printmakehelp_and_reminder: convert2root.cpp Makefile
 convert2root: convert2root.cpp
 	$(CXX) -o $@ $^ $(CXXFLAGS)
 
+convert2rootstereo: convert2rootstereo.cpp
+	$(CXX) -o $@ $^ $(CXXFLAGS)
+
 install: makedir obj/libconvert2root.so
 	mkdir -p $(INSTALLDIR);
 	cp $(OUTLIB)libconvert2root.so $(INSTALLDIR)libconvert2root.so
@@ -49,6 +52,7 @@ cleaninstall:
 
 clean:
 	rm -f convert2root
+	rm -f convert2rootstereo
 	rm -f *~
 	rm -f .*~
 	rm -f $(OUTLIB)*.o
