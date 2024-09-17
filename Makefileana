@@ -15,10 +15,13 @@ OUTLIB = ./obj/
 
 #----------------------------------------------------#
 
-all: runana run_dbscan
+all: runana runanastereo run_dbscan
 
 runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaTrgB.o obj/anaFast.o obj/anaSuperFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o obj/anaEvPerEv.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+runanastereo: runanastereo.cpp obj/anastereo.o 
+	$(CXX) -o runanastereo runanastereo.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 run_dbscan: run_dbscan.cpp obj/dbscan.o
 	$(CXX) -o run_dbscan run_dbscan.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
@@ -31,6 +34,9 @@ obj/dbscan.o: src/dbscan.cpp src/dbscan.hh
 
 obj/ana.o: src/ana.cpp src/ana.hh obj/anabase.o obj/sipmCameraHist.o obj/wfCamSim.o obj/triggerSim.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)ana.o $<
+
+obj/anastereo.o: src/anastereo.cpp src/anastereo.hh obj/anabasestereo.o obj/sipmCameraHist.o
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anastereo.o $<
 
 obj/anaTrg.o: src/anaTrg.cpp src/anaTrg.hh obj/anabase.o obj/ana.o obj/sipmCameraHist.o obj/wfCamSim.o obj/triggerSim.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anaTrg.o $<
@@ -62,6 +68,9 @@ obj/anaSuperFast.o: src/anaSuperFast.cpp src/anaSuperFast.hh src/anaConf.hh obj/
 obj/anabase.o: src/anabase.cpp src/anabase.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anabase.o $<
 
+obj/anabasestereo.o: src/anabasestereo.cpp src/anabasestereo.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anabasestereo.o $<
+
 obj/sipmCameraHist.o: src/sipmCameraHist.cpp src/sipmCameraHist.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $@ $<
 
@@ -80,6 +89,14 @@ obj/evstHist.o: src/evstHist.cpp src/evstHist.hh
 clean:
 	rm -f runana
 	rm -f run_dbscan
+	rm -f runanastereo
 	rm -f *~
 	rm -f src/*~
 	rm -f $(OUTLIB)*.o
+
+cleanstereo:
+	rm -f runanastereo
+	rm -f *~
+	rm -f src/*~
+	rm -f rm -f anabasestereo.o
+	rm -f anastereo.o

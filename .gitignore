@@ -723,3 +723,7 @@ pe_info_LST3.csv
 pe_info_LST4.csv
 pe_info_tmp.tar.gz
 pe_info_tmp/
+convert2rootstereo
+runanastereo
+corsika_proton_run1.root
+hist_corsika_proton_run1.root

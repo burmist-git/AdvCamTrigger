@@ -585,6 +585,8 @@ public:
   void Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha, const Double_t x_shift, const Double_t y_shift);
   void Fill_pe(const Int_t npixels_n, const Int_t *pix_id, const Double_t alpha, TH1D *h1_theta = NULL, TH1D *h1_theta_deg = NULL, TH1D *h1_r = NULL);
   void Fill_pe_center(const Int_t npixels_n, const Int_t *pix_id);
+  void Fill_pix_x_y_hist( const Int_t npixels_n, const Int_t *pix_id, TH1D *h1_x, TH1D *h1_y);
+  void Fill_pix_hist2D_y_vs_x( const Int_t npixels_n, const Int_t *pix_id, TH2D *h2_y_vs_x);
   void get_pix_mean( const Int_t npixels_n, const Int_t *pix_id, Double_t &x_mean, Double_t &y_mean);
   //
   void get_pix_density_info(const Int_t npixels_n, const Int_t *pix_id,

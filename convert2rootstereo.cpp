@@ -24,6 +24,7 @@
 const Int_t nn_max = 1000000;
 const Int_t nn_fadc_point = 75;
 const Int_t nn_PMT_channels = 7987;
+const Int_t nn_LST = 4;
 
 struct wfheaderStr {
   Int_t event_id;
@@ -132,7 +133,10 @@ int main(int argc, char *argv[]){
 void read_header( TString file_name, std::vector<wfheaderStr> &header_v){
   //
   std::ifstream fFile(file_name.Data());
+  std::cout<<"read_header"<<std::endl;
   std::cout<<file_name<<std::endl;
+  //
+  Int_t npe_LST[nn_LST] = {0,0,0,0};
   //
   std::string mot;       //0
   Float_t event_id;      //1
@@ -254,10 +258,30 @@ void read_header( TString file_name, std::vector<wfheaderStr> &header_v){
       tmp.n_pixels_LST2=n_pixels_LST2;
       tmp.n_pixels_LST3=n_pixels_LST3;
       tmp.n_pixels_LST4=n_pixels_LST4;
-      //std::cout<<tmp.event_id<<std::endl;
+      if(n_pe_LST1>0)
+	npe_LST[0] = npe_LST[0]+1;
+      if(n_pe_LST2>0)
+	npe_LST[1] = npe_LST[1]+1;
+      if(n_pe_LST3>0)
+	npe_LST[2] = npe_LST[2]+1;
+      if(n_pe_LST4>0)
+	npe_LST[3] = npe_LST[3]+1;
+      //std::cout<<std::setw(10)<<tmp.event_id
+      //       <<std::setw(10)<<n_pe_LST1
+      //       <<std::setw(10)<<n_pe_LST2
+      //       <<std::setw(10)<<n_pe_LST3
+      //       <<std::setw(10)<<n_pe_LST4
+      //       <<std::endl;
       //assert(0);
       header_v.push_back(tmp);
     }
+    //
+    std::cout<<"NTOT EV  : "<<std::setw(10)<<header_v.size()<<std::endl
+	     <<"NEV LST1 : "<<std::setw(10)<<npe_LST[0]<<std::endl
+      	     <<"NEV LST2 : "<<std::setw(10)<<npe_LST[1]<<std::endl
+      	     <<"NEV LST3 : "<<std::setw(10)<<npe_LST[2]<<std::endl
+      	     <<"NEV LST4 : "<<std::setw(10)<<npe_LST[3]<<std::endl;
+    //
     fFile.close();
   }  
 }
@@ -265,6 +289,7 @@ void read_header( TString file_name, std::vector<wfheaderStr> &header_v){
 void read_pe_info( TString file_name, const std::vector<wfheaderStr> &header_v, Int_t LST_ID, std::vector<pe_info_str> &pe_info_vec){
   //
   std::ifstream fFile(file_name.Data());
+  std::cout<<"read_pe_info"<<std::endl;
   std::cout<<file_name<<std::endl;
   //
   Int_t verbosity = 0;
@@ -294,30 +319,32 @@ void read_pe_info( TString file_name, const std::vector<wfheaderStr> &header_v, 
 	assert(0);
       //
       //
-      for(unsigned int j = 0; j < npe_lst; j++){
-	fFile>>id>>event_id>>ch_id>>pe_time;
-	//std::cout<<std::setw(10)<<"id       "<<std::setw(10)<<id
-	//	 <<std::setw(10)<<"event_id "<<std::setw(10)<<event_id
-	//	 <<std::setw(10)<<"ch_id    "<<std::setw(10)<<ch_id
-	//	 <<std::setw(10)<<"pe_time  "<<std::setw(10)<<pe_time<<std::endl;
-	if(verbosity>1){
-	  if(j%1000000==0)
-	    std::cout<<std::setw(10)<<"id       "<<std::setw(10)<<id
-		     <<std::setw(10)<<"event_id "<<std::setw(10)<<event_id
-		     <<std::setw(10)<<"ch_id    "<<std::setw(10)<<ch_id
-		     <<std::setw(10)<<"pe_time  "<<std::setw(10)<<pe_time<<std::endl;
+      if(npe_lst>0){
+	for(unsigned int j = 0; j < npe_lst; j++){
+	  fFile>>id>>event_id>>ch_id>>pe_time;
+	  //std::cout<<std::setw(10)<<"id       "<<std::setw(10)<<id
+	  //	 <<std::setw(10)<<"event_id "<<std::setw(10)<<event_id
+	  //	 <<std::setw(10)<<"ch_id    "<<std::setw(10)<<ch_id
+	  //	 <<std::setw(10)<<"pe_time  "<<std::setw(10)<<pe_time<<std::endl;
+	  if(verbosity>1){
+	    if(j%1000000==0)
+	      std::cout<<std::setw(10)<<"id       "<<std::setw(10)<<id
+		       <<std::setw(10)<<"event_id "<<std::setw(10)<<event_id
+		       <<std::setw(10)<<"ch_id    "<<std::setw(10)<<ch_id
+		       <<std::setw(10)<<"pe_time  "<<std::setw(10)<<pe_time<<std::endl;
+	  }
+	  if((Int_t)event_id != header_v.at(i).event_id){
+	    std::cout<<" ERROR ---> (Int_t)event_id != header_v.at(i).event_id "<<std::endl
+		     <<"            (Int_t)event_id "<<(Int_t)event_id<<std::endl
+		     <<"  header_vec.at(i).event_id "<<header_v.at(i).event_id<<std::endl
+		     <<"  header_vec.at(0).event_id "<<header_v.at(0).event_id<<std::endl;
+	    assert(0);
+	  }
+	  pe_info.chID.push_back((Int_t)ch_id);
+	  pe_info.time.push_back(pe_time);
 	}
-	if((Int_t)event_id != header_v.at(i).event_id){
-	  std::cout<<" ERROR ---> (Int_t)event_id != header_v.at(i).event_id "<<std::endl
-		   <<"            (Int_t)event_id "<<(Int_t)event_id<<std::endl
-		   <<"  header_vec.at(i).event_id "<<header_v.at(i).event_id<<std::endl
-		   <<"  header_vec.at(0).event_id "<<header_v.at(0).event_id<<std::endl;
-	  assert(0);
-	}
-	pe_info.chID.push_back((Int_t)ch_id);
-	pe_info.time.push_back(pe_time);
+	pe_info_vec.push_back(pe_info);
       }
-      pe_info_vec.push_back(pe_info);
     }
     fFile.close();
   }
@@ -348,6 +375,7 @@ void convert2root(const std::vector<TString> &header_file_v,
   ///////////////////////////////////////////////////////
   //
   unsigned int npe_current = 0;
+  unsigned int pe_info_k = 0;
   //
   Int_t event_id;
   Float_t energy;
@@ -360,7 +388,11 @@ void convert2root(const std::vector<TString> &header_file_v,
   Float_t cmax;
   Float_t xcore;
   Float_t ycore;
-  Float_t ev_time;
+  //
+  Float_t ev_time_LST1;
+  Float_t ev_time_LST2;
+  Float_t ev_time_LST3;
+  Float_t ev_time_LST4;
   //
   Int_t nphotons_LST1;
   Int_t nphotons_LST2;
@@ -491,10 +523,17 @@ void convert2root(const std::vector<TString> &header_file_v,
       n_pe_LST3 = header_vec.at(i).n_pe_LST3;
       n_pe_LST4 = header_vec.at(i).n_pe_LST4;
       //
+      //std::cout<<"n_pe LST : "
+      //       <<std::setw(10)<<n_pe_LST1
+      //       <<std::setw(10)<<n_pe_LST2
+      //       <<std::setw(10)<<n_pe_LST3
+      //       <<std::setw(10)<<n_pe_LST4
+      //       <<std::endl;
+      //
       n_pixels_LST1 = header_vec.at(i).n_pixels_LST1;
       n_pixels_LST2 = header_vec.at(i).n_pixels_LST2;
       n_pixels_LST3 = header_vec.at(i).n_pixels_LST3;
-      n_pixels_LST4 = header_vec.at(i).n_pixels_LST4;
+      n_pixels_LST4 = header_vec.at(i).n_pixels_LST4;   
       //
       for(int j = 0; j < nn_max; j++){
 	//
@@ -512,131 +551,140 @@ void convert2root(const std::vector<TString> &header_file_v,
 	//
       }
       ////////////////////
-      /*
-      if(pe_info_vec.at(i).event_id != event_id){
-	std::cout<<" --> ERROR : pe_info_vec.at(i).event_id != event_id "<<std::endl
-		 <<"             pe_info_vec.at(i).event_id  = "<<pe_info_vec.at(i).event_id<<std::endl
-		 <<"                               event_id  = "<<event_id<<std::endl;
-	assert(0);
-      }
-      //
-      if(pe_info_vec.at(i).chID.size() != (unsigned int)n_pe ||
-	 pe_info_vec.at(i).time.size() != (unsigned int)n_pe){
-	std::cout<<" --> ERROR : pe_info_vec.at(i).chID.size() != (unsigned int)n_pe || "<<std::endl
-		 <<"             pe_info_vec.at(i).time.size() != (unsigned int)n_pe"<<std::endl
-		 <<"             pe_info_vec.at(i).chID.size()  = "<<pe_info_vec.at(i).chID.size()<<std::endl
-		 <<"             pe_info_vec.at(i).time.size()  = "<<pe_info_vec.at(i).time.size()<<std::endl
-		 <<"                                      n_pe  = "<<n_pe<<std::endl;
-	assert(0);
-      }
-      */
-      ////////////////////
       //LST1
       if(n_pe_LST1>0){
-	npe_current = pe_info_vec_LST1.at(i).chID.size();
+	//std::cout<<"n_pe_LST1 = "<<n_pe_LST1<<std::endl;
+	pe_info_k = 0;
+	for(pe_info_k = 0; pe_info_k<pe_info_vec_LST1.size();pe_info_k++)
+	  if(pe_info_vec_LST1.at(pe_info_k).event_id == event_id)
+	    break;
 	//
-	if(pe_info_vec_LST1.at(i).event_id != event_id){
-	  std::cout<<" --> ERROR : pe_info_vec_LST1.at(i).event_id != event_id "<<std::endl
-		   <<"             pe_info_vec_LST1.at(i).event_id  = "<<pe_info_vec_LST1.at(i).event_id<<std::endl
-		   <<"                                    event_id  = "<<event_id<<std::endl;
+	npe_current = pe_info_vec_LST1.at(pe_info_k).chID.size();
+	//std::cout<<"npe_current = "<<npe_current<<std::endl;
+	//
+	if(pe_info_vec_LST1.at(pe_info_k).event_id != event_id){
+	  std::cout<<" --> ERROR : pe_info_vec_LST1.at(pe_info_k).event_id != event_id "<<std::endl
+		   <<"             pe_info_vec_LST1.at(pe_info_k).event_id  = "<<pe_info_vec_LST1.at(pe_info_k).event_id<<std::endl
+		   <<"                                            event_id  = "<<event_id<<std::endl;
 	  assert(0);
 	}
 	//
-	if(pe_info_vec_LST1.at(i).chID.size() != (unsigned int)n_pe_LST1 ||
-	   pe_info_vec_LST1.at(i).time.size() != (unsigned int)n_pe_LST1){
-	  std::cout<<" --> ERROR : pe_info_vec_LST1.at(i).chID.size() != (unsigned int)n_pe_LST1 || "<<std::endl
-		   <<"             pe_info_vec_LST1.at(i).time.size() != (unsigned int)n_pe_LST1"<<std::endl
-		   <<"             pe_info_vec_LST1.at(i).chID.size()  = "<<pe_info_vec_LST1.at(i).chID.size()<<std::endl
-		   <<"             pe_info_vec_LST1.at(i).time.size()  = "<<pe_info_vec_LST1.at(i).time.size()<<std::endl
-		   <<"                                           n_pe  = "<<n_pe_LST1<<std::endl;
+	if(pe_info_vec_LST1.at(pe_info_k).chID.size() != (unsigned int)n_pe_LST1 ||
+	   pe_info_vec_LST1.at(pe_info_k).time.size() != (unsigned int)n_pe_LST1){
+	  std::cout<<" --> ERROR : pe_info_vec_LST1.at(pe_info_k).chID.size() != (unsigned int)n_pe_LST1 || "<<std::endl
+		   <<"             pe_info_vec_LST1.at(pe_info_k).time.size() != (unsigned int)n_pe_LST1"<<std::endl
+		   <<"             pe_info_vec_LST1.at(pe_info_k).chID.size()  = "<<pe_info_vec_LST1.at(pe_info_k).chID.size()<<std::endl
+		   <<"             pe_info_vec_LST1.at(pe_info_k).time.size()  = "<<pe_info_vec_LST1.at(pe_info_k).time.size()<<std::endl
+		   <<"                                                   n_pe  = "<<n_pe_LST1<<std::endl;
 	  assert(0);
 	}
-	if(npe_current<nn_max)
+	if(npe_current>nn_max)
 	  npe_current = nn_max;
 	for(unsigned int j = 0; j < npe_current; j++){
-	  pe_chID_LST1[j] = pe_info_vec_LST1.at(i).chID.at(j);
-	  pe_time_LST1[j] = pe_info_vec_LST1.at(i).time.at(j);
+	  pe_chID_LST1[j] = pe_info_vec_LST1.at(pe_info_k).chID.at(j);
+	  pe_time_LST1[j] = pe_info_vec_LST1.at(pe_info_k).time.at(j);
 	}
       }
       //LST2
       if(n_pe_LST2>0){
-	npe_current = pe_info_vec_LST2.at(i).chID.size();
+	//std::cout<<"n_pe_LST2 = "<<n_pe_LST2<<std::endl;
+	pe_info_k = 0;
+	for(pe_info_k = 0; pe_info_k<pe_info_vec_LST2.size();pe_info_k++)
+	  if(pe_info_vec_LST2.at(pe_info_k).event_id == event_id)
+	    break;
 	//
-	if(pe_info_vec_LST2.at(i).event_id != event_id){
-	  std::cout<<" --> ERROR : pe_info_vec_LST2.at(i).event_id != event_id "<<std::endl
-		   <<"             pe_info_vec_LST2.at(i).event_id  = "<<pe_info_vec_LST2.at(i).event_id<<std::endl
-		   <<"                                    event_id  = "<<event_id<<std::endl;
+	npe_current = pe_info_vec_LST2.at(pe_info_k).chID.size();
+	//std::cout<<"npe_current = "<<npe_current<<std::endl;
+	//
+	if(pe_info_vec_LST2.at(pe_info_k).event_id != event_id){
+	  std::cout<<" --> ERROR : pe_info_vec_LST2.at(pe_info_k).event_id != event_id "<<std::endl
+		   <<"             pe_info_vec_LST2.at(pe_info_k).event_id  = "<<pe_info_vec_LST2.at(pe_info_k).event_id<<std::endl
+		   <<"                                            event_id  = "<<event_id<<std::endl;
 	  assert(0);
 	}
 	//
-	if(pe_info_vec_LST2.at(i).chID.size() != (unsigned int)n_pe_LST2 ||
-	   pe_info_vec_LST2.at(i).time.size() != (unsigned int)n_pe_LST2){
-	  std::cout<<" --> ERROR : pe_info_vec_LST2.at(i).chID.size() != (unsigned int)n_pe_LST2 || "<<std::endl
-		   <<"             pe_info_vec_LST2.at(i).time.size() != (unsigned int)n_pe_LST2"<<std::endl
-		   <<"             pe_info_vec_LST2.at(i).chID.size()  = "<<pe_info_vec_LST2.at(i).chID.size()<<std::endl
-		   <<"             pe_info_vec_LST2.at(i).time.size()  = "<<pe_info_vec_LST2.at(i).time.size()<<std::endl
-		   <<"                                           n_pe  = "<<n_pe_LST2<<std::endl;
+	if(pe_info_vec_LST2.at(pe_info_k).chID.size() != (unsigned int)n_pe_LST2 ||
+	   pe_info_vec_LST2.at(pe_info_k).time.size() != (unsigned int)n_pe_LST2){
+	  std::cout<<" --> ERROR : pe_info_vec_LST2.at(pe_info_k).chID.size() != (unsigned int)n_pe_LST2 || "<<std::endl
+		   <<"             pe_info_vec_LST2.at(pe_info_k).time.size() != (unsigned int)n_pe_LST2"<<std::endl
+		   <<"             pe_info_vec_LST2.at(pe_info_k).chID.size()  = "<<pe_info_vec_LST2.at(pe_info_k).chID.size()<<std::endl
+		   <<"             pe_info_vec_LST2.at(pe_info_k).time.size()  = "<<pe_info_vec_LST2.at(pe_info_k).time.size()<<std::endl
+		   <<"                                                   n_pe  = "<<n_pe_LST2<<std::endl;
 	  assert(0);
 	}
-	if(npe_current<nn_max)
+	if(npe_current>nn_max)
 	  npe_current = nn_max;
 	for(unsigned int j = 0; j < npe_current; j++){
-	  pe_chID_LST2[j] = pe_info_vec_LST2.at(i).chID.at(j);
-	  pe_time_LST2[j] = pe_info_vec_LST2.at(i).time.at(j);
+	  pe_chID_LST2[j] = pe_info_vec_LST2.at(pe_info_k).chID.at(j);
+	  pe_time_LST2[j] = pe_info_vec_LST2.at(pe_info_k).time.at(j);
 	}
       }
       //LST3
       if(n_pe_LST3>0){
-	npe_current = pe_info_vec_LST3.at(i).chID.size();
+	//std::cout<<"n_pe_LST3 = "<<n_pe_LST3<<std::endl;
+	pe_info_k = 0;
+	for(pe_info_k = 0; pe_info_k<pe_info_vec_LST3.size();pe_info_k++)
+	  if(pe_info_vec_LST3.at(pe_info_k).event_id == event_id)
+	    break;
 	//
-	if(pe_info_vec_LST3.at(i).event_id != event_id){
-	  std::cout<<" --> ERROR : pe_info_vec_LST3.at(i).event_id != event_id "<<std::endl
-		   <<"             pe_info_vec_LST3.at(i).event_id  = "<<pe_info_vec_LST3.at(i).event_id<<std::endl
-		   <<"                                    event_id  = "<<event_id<<std::endl;
+	npe_current = pe_info_vec_LST3.at(pe_info_k).chID.size();
+	//std::cout<<"npe_current = "<<npe_current<<std::endl;
+	//
+	if(pe_info_vec_LST3.at(pe_info_k).event_id != event_id){
+	  std::cout<<" --> ERROR : pe_info_vec_LST3.at(pe_info_k).event_id != event_id "<<std::endl
+		   <<"             pe_info_vec_LST3.at(pe_info_k).event_id  = "<<pe_info_vec_LST3.at(pe_info_k).event_id<<std::endl
+		   <<"                                            event_id  = "<<event_id<<std::endl;
 	  assert(0);
 	}
 	//
-	if(pe_info_vec_LST3.at(i).chID.size() != (unsigned int)n_pe_LST3 ||
-	   pe_info_vec_LST3.at(i).time.size() != (unsigned int)n_pe_LST3){
-	  std::cout<<" --> ERROR : pe_info_vec_LST3.at(i).chID.size() != (unsigned int)n_pe_LST3 || "<<std::endl
-		   <<"             pe_info_vec_LST3.at(i).time.size() != (unsigned int)n_pe_LST3"<<std::endl
-		   <<"             pe_info_vec_LST3.at(i).chID.size()  = "<<pe_info_vec_LST3.at(i).chID.size()<<std::endl
-		   <<"             pe_info_vec_LST3.at(i).time.size()  = "<<pe_info_vec_LST3.at(i).time.size()<<std::endl
-		   <<"                                           n_pe  = "<<n_pe_LST3<<std::endl;
+	if(pe_info_vec_LST3.at(pe_info_k).chID.size() != (unsigned int)n_pe_LST3 ||
+	   pe_info_vec_LST3.at(pe_info_k).time.size() != (unsigned int)n_pe_LST3){
+	  std::cout<<" --> ERROR : pe_info_vec_LST3.at(pe_info_k).chID.size() != (unsigned int)n_pe_LST3 || "<<std::endl
+		   <<"             pe_info_vec_LST3.at(pe_info_k).time.size() != (unsigned int)n_pe_LST3"<<std::endl
+		   <<"             pe_info_vec_LST3.at(pe_info_k).chID.size()  = "<<pe_info_vec_LST3.at(pe_info_k).chID.size()<<std::endl
+		   <<"             pe_info_vec_LST3.at(pe_info_k).time.size()  = "<<pe_info_vec_LST3.at(pe_info_k).time.size()<<std::endl
+		   <<"                                                   n_pe  = "<<n_pe_LST3<<std::endl;
 	  assert(0);
 	}
-	if(npe_current<nn_max)
+	if(npe_current>nn_max)
 	  npe_current = nn_max;
 	for(unsigned int j = 0; j < npe_current; j++){
-	  pe_chID_LST3[j] = pe_info_vec_LST3.at(i).chID.at(j);
-	  pe_time_LST3[j] = pe_info_vec_LST3.at(i).time.at(j);
+	  pe_chID_LST3[j] = pe_info_vec_LST3.at(pe_info_k).chID.at(j);
+	  pe_time_LST3[j] = pe_info_vec_LST3.at(pe_info_k).time.at(j);
 	}
       }
       //LST4
       if(n_pe_LST4>0){
-	npe_current = pe_info_vec_LST4.at(i).chID.size();
+	//std::cout<<"n_pe_LST4 = "<<n_pe_LST4<<std::endl;
+	pe_info_k = 0;
+	for(pe_info_k = 0; pe_info_k<pe_info_vec_LST4.size();pe_info_k++)
+	  if(pe_info_vec_LST4.at(pe_info_k).event_id == event_id)
+	    break;
 	//
-	if(pe_info_vec_LST4.at(i).event_id != event_id){
-	  std::cout<<" --> ERROR : pe_info_vec_LST4.at(i).event_id != event_id "<<std::endl
-		   <<"             pe_info_vec_LST4.at(i).event_id  = "<<pe_info_vec_LST4.at(i).event_id<<std::endl
-		   <<"                                    event_id  = "<<event_id<<std::endl;
+	npe_current = pe_info_vec_LST4.at(pe_info_k).chID.size();
+	//std::cout<<"npe_current = "<<npe_current<<std::endl;
+	//
+	if(pe_info_vec_LST4.at(pe_info_k).event_id != event_id){
+	  std::cout<<" --> ERROR : pe_info_vec_LST4.at(pe_info_k).event_id != event_id "<<std::endl
+		   <<"             pe_info_vec_LST4.at(pe_info_k).event_id  = "<<pe_info_vec_LST4.at(pe_info_k).event_id<<std::endl
+		   <<"                                            event_id  = "<<event_id<<std::endl;
 	  assert(0);
 	}
 	//
-	if(pe_info_vec_LST4.at(i).chID.size() != (unsigned int)n_pe_LST4 ||
-	   pe_info_vec_LST4.at(i).time.size() != (unsigned int)n_pe_LST4){
-	  std::cout<<" --> ERROR : pe_info_vec_LST4.at(i).chID.size() != (unsigned int)n_pe_LST4 || "<<std::endl
-		   <<"             pe_info_vec_LST4.at(i).time.size() != (unsigned int)n_pe_LST4"<<std::endl
-		   <<"             pe_info_vec_LST4.at(i).chID.size()  = "<<pe_info_vec_LST4.at(i).chID.size()<<std::endl
-		   <<"             pe_info_vec_LST4.at(i).time.size()  = "<<pe_info_vec_LST4.at(i).time.size()<<std::endl
-		   <<"                                           n_pe  = "<<n_pe_LST4<<std::endl;
+	if(pe_info_vec_LST4.at(pe_info_k).chID.size() != (unsigned int)n_pe_LST4 ||
+	   pe_info_vec_LST4.at(pe_info_k).time.size() != (unsigned int)n_pe_LST4){
+	  std::cout<<" --> ERROR : pe_info_vec_LST4.at(pe_info_k).chID.size() != (unsigned int)n_pe_LST4 || "<<std::endl
+		   <<"             pe_info_vec_LST4.at(pe_info_k).time.size() != (unsigned int)n_pe_LST4"<<std::endl
+		   <<"             pe_info_vec_LST4.at(pe_info_k).chID.size()  = "<<pe_info_vec_LST4.at(pe_info_k).chID.size()<<std::endl
+		   <<"             pe_info_vec_LST4.at(pe_info_k).time.size()  = "<<pe_info_vec_LST4.at(pe_info_k).time.size()<<std::endl
+		   <<"                                                   n_pe  = "<<n_pe_LST4<<std::endl;
 	  assert(0);
 	}
-	if(npe_current<nn_max)
+	if(npe_current>nn_max)
 	  npe_current = nn_max;
 	for(unsigned int j = 0; j < npe_current; j++){
-	  pe_chID_LST4[j] = pe_info_vec_LST4.at(i).chID.at(j);
-	  pe_time_LST4[j] = pe_info_vec_LST4.at(i).time.at(j);
+	  pe_chID_LST4[j] = pe_info_vec_LST4.at(pe_info_k).chID.at(j);
+	  pe_time_LST4[j] = pe_info_vec_LST4.at(pe_info_k).time.at(j);
 	}
       }
       //
