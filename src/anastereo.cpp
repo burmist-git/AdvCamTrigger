@@ -206,6 +206,7 @@ void anastereo::Loop(TString histOut){
       dr_LST1_LST2 = TMath::Sqrt((x_mean_LST1 - x_mean_LST2)*(x_mean_LST1 - x_mean_LST2) +
 				 (y_mean_LST1 - y_mean_LST2)*(y_mean_LST1 - y_mean_LST2));
       dalpha_LST1_LST2 = TMath::ATan(dr_LST1_LST2/28.0)*180.0/TMath::Pi();
+      h1_dr_LST1_LST2->Fill(dr_LST1_LST2);
       h1_dalpha_LST1_LST2->Fill(dalpha_LST1_LST2);
     }
     //LST1 and LST3
@@ -219,7 +220,7 @@ void anastereo::Loop(TString histOut){
       h1_dalpha_LST1_LST3->Fill(dalpha_LST1_LST3);
     }
     //LST1 and LST4
-    if(n_pe_LST1 > 0 && n_pe_LST4 > 0 && n_pe_LST2==0 && n_pe_LST3==0){
+    if(n_pe_LST1 > 0 && n_pe_LST4 > 0){
       sipm_cam->get_pix_mean( n_pe_LST1, pe_chID_LST1, x_mean_LST1, y_mean_LST1);
       sipm_cam->get_pix_mean( n_pe_LST4, pe_chID_LST4, x_mean_LST4, y_mean_LST4);
       //
