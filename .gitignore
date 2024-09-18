@@ -727,3 +727,5 @@ convert2rootstereo
 runanastereo
 corsika_proton_run1.root
 hist_corsika_proton_run1.root
+csv_pyeventio_stereo_greasy_job/
+greasy-56585804.log
