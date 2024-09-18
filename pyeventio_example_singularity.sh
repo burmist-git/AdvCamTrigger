@@ -6,7 +6,6 @@ function printHelp {
     echo " [0] -h  : print help"
 }
 
-
 if [ $# -eq 0 ] 
 then    
     printHelp
