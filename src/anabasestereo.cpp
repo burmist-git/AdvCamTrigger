@@ -372,8 +372,10 @@ Bool_t anabasestereo::if_four_LST(Int_t &coincidenceID){
     if(tel_npe[i]>0)
       n_sig_tel++;
   }
-  if(n_sig_tel == 4)
+  if(n_sig_tel == 4){
+    coincidenceID = 0;
     return true;
+  }
   //
   return false;
 }

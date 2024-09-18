@@ -25,4 +25,5 @@ From: ubuntu:22.04
     ls
     ls runana.sh
     ./runana.sh -c
+    ./runanastereo.sh -c
     cd /
