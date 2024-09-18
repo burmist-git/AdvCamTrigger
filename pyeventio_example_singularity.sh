@@ -13,9 +13,10 @@ else
     if [ "$1" = "-d" ]; then
 	#
 	singularity --version
+	echo "SSH_AUTH_SOCK_USER  = $SSH_AUTH_SOCK" 
 	#
 	rm -rf pyeventio_example_singularity.sif
-	singularity build pyeventio_example_singularity.sif pyeventio_example_singularity.def
+	singularity build --build-arg SSH_AUTH_SOCK_USER=$SSH_AUTH_SOCK pyeventio_example_singularity.sif pyeventio_example_singularity.def
 	#
     elif [ "$1" = "-h" ]; then
         printHelp
