@@ -751,3 +751,10 @@ total_fake_rate_in4LSTs_vs_L0_trigger_rate_per_LST.pdf
 total_fake_rate_in4LSTs_vs_L0_trigger_rate_per_LST_three.pdf
 total_fake_rate_in4LSTs_vs_L0_trigger_rate_per_LST_three_ecc.pdf
 trg_rate_mono_stereo_PMT.pdf
+convert2rootstereo_greasy_job/
+greasy-56589298.log
+greasy-56589518.log
+greasy-56589616.log
+greasy-56589863.log
+run_convert2rootstereo_greasy_sbatch.sh
+	
