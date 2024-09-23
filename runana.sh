@@ -38,6 +38,7 @@ function printHelp {
     echo " [0] -th    : test cam sipmCameraHist"
     echo " [0] -th_flowerpixID     : flower pixID (out csv file with mapping out csv file with mapping)"
     echo " [0] -th_isolated_flower : test of camera hist: test_trigger_channel_mask_isolated_flower"
+    echo " [0] -th_isolated_flower_plus_super : test of camera hist: test_trigger_channel_mask_isolated_flower_plus_super"
     echo " [0] -get_isolated_flower_mask : save trigger channel mask isolated flower"
     echo " [0] -sg    : gamma"
     echo " [0] -sgd   : gamma diffuse"
@@ -490,6 +491,8 @@ else
 	./runana 55
     elif [ "$1" = "-th_isolated_flower" ]; then
 	./runana 555
+    elif [ "$1" = "-th_isolated_flower_plus_super" ]; then
+	./runana 556
     elif [ "$1" = "-get_isolated_flower_mask" ]; then
 	./runana 5550
     elif [ "$1" = "-sg" ]; then

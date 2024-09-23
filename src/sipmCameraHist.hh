@@ -504,6 +504,8 @@ public:
   void save_pixel_neighbors_to_csv(TString outfilename = "pixel_mapping_neighbors.csv", Int_t npix_neighbors = 6);
   void save_trigger_channel_mask_isolated_flower(TString file_out_name = "trigger_channel_mask_isolated_flower.list");
   void save_trigger_channel_mask_all_pixels(TString file_out_name="trigger_channel_mask_all_pixels.list");
+  void save_isolated_flower_seed_flower(TString file_out_name = "isolated_flower_seed_flower.list");
+  void save_isolated_flower_seed_super_flower(TString file_out_name = "isolated_flower_seed_super_flower.list");
   void test_drawer_id();
   void test_pixel_neighbors_id();
   void test_pixel_neighbors_id(Int_t pix_id);
@@ -519,6 +521,7 @@ public:
   void test_pixel_super_flower(Int_t npixels_n, Int_t *pix_id);
   void test_pixel_neighbors_bubbleSort(Int_t pix_id);
   void test_trigger_channel_mask_isolated_flower(TString pdf_out_name = "test_trigger_channel_mask_isolated_flower.pdf");
+  void test_trigger_channel_mask_isolated_flower_plus_super_flower(TString pdf_out_name = "test_trigger_channel_mask_isolated_flower_plus_super_flower.pdf", unsigned int seedID = 0);
   void Clean();
   void count_signal(Double_t th_val, Int_t &nch, Int_t &npe);
   //

@@ -323,6 +323,24 @@ int main(int argc, char *argv[]){
     sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
     sipm_cam->test_trigger_channel_mask_isolated_flower();
   }
+  else if(argc == 2 && atoi(argv[1])==556){
+    cout<<"--> Parameters <--"<<endl
+	<<"argv[1] : "<<atoi(argv[1])<<endl;
+    //
+    sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
+    std::vector<Int_t> isolated_flower_seeds = sipm_cam->get_trigger_channel_mask_isolated_flower();
+    TString gif_out_name_preff = "test_trigger_channel_mask_isolated_flower_plus_super_flower";
+    TString gif_out_name;
+    unsigned int seedID;
+    for(unsigned int i = 0;i<100;i++){
+      seedID = isolated_flower_seeds.at(i);
+      gif_out_name = gif_out_name_preff;
+      gif_out_name += seedID;
+      gif_out_name += ".gif";
+      sipm_cam->Clean();
+      sipm_cam->test_trigger_channel_mask_isolated_flower_plus_super_flower(gif_out_name,seedID);
+    }
+  }
   else if(argc == 2 && atoi(argv[1])==5550){
     cout<<"--> Parameters <--"<<endl
 	<<"argv[1] : "<<atoi(argv[1])<<endl;
@@ -330,6 +348,9 @@ int main(int argc, char *argv[]){
     sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
     sipm_cam->save_trigger_channel_mask_isolated_flower();
     sipm_cam->save_trigger_channel_mask_all_pixels();
+    sipm_cam->save_isolated_flower_seed_flower();
+    sipm_cam->save_isolated_flower_seed_super_flower();
+    //
   }
   else if(argc == 4 && atoi(argv[1])==6){
     TString rootFilesList = argv[2];
@@ -613,7 +634,8 @@ int main(int argc, char *argv[]){
     cout<<" runID [1] = 5    (execution ID number) test of camera hist."<<endl;
     cout<<" runID [1] = 55   (execution ID number) test of camera hist: flower pixID (out csv file with mapping out csv file with mapping)."<<endl;
     cout<<" runID [1] = 555  (execution ID number) test of camera hist: test_trigger_channel_mask_isolated_flower."<<endl;
-    cout<<" runID [1] = 5550 (execution ID number) save trigger channel mask isolated flower and all pixes."<<endl;
+    cout<<" runID [1] = 556  (execution ID number) test of camera hist: test_trigger_channel_mask_isolated_flower_plus_super_flower."<<endl;
+    cout<<" runID [1] = 5550 (execution ID number) save trigger channel mask isolated flower, all pixes, isolated flower seed flower and isolated flower seed super flower "<<endl;
     cout<<" runID [1] = 6 (execution ID number) short file format"<<endl
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
