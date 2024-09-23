@@ -20,7 +20,7 @@ all: runana runanastereo run_dbscan
 runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaTrgB.o obj/anaFast.o obj/anaSuperFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o obj/anaEvPerEv.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
-runanastereo: runanastereo.cpp obj/anastereo.o 
+runanastereo: runanastereo.cpp src/anaConf.hh obj/anastereo.o obj/evstHist.o obj/sipmCameraHist.o obj/anaTrgB.o
 	$(CXX) -o runanastereo runanastereo.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 run_dbscan: run_dbscan.cpp obj/dbscan.o

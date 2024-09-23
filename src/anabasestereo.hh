@@ -28,11 +28,13 @@ public :
   static Double_t getExpectedTimeDelayBetweenTwoLST(const TVector3 &v1, const TVector3 &v2,
 						    Double_t tel_arr_pointing_azimuth, Double_t tel_arr_pointing_altitude,
 						    Double_t hmax_approximate_m = 10000.0);
+  Int_t _n_file_counter;
   //
   Bool_t if_single_LST(Int_t &coincidenceID);
   Bool_t if_double_LST(Int_t &coincidenceID);
   Bool_t if_triple_LST(Int_t &coincidenceID);
   Bool_t if_four_LST(Int_t &coincidenceID);
+  Bool_t if_stereo_trigger_pne(Int_t npecut);
   
 public :
   void Loop(TString histOut);

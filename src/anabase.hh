@@ -134,8 +134,9 @@ public :
 		 TString prname, TString prTitle, Int_t Nbin, Float_t Vmin, Float_t Vmax);
   double getUnixTimeFromTime(double d_year, double d_month, double d_day, double d_hour, double d_min, double d_sec);  
   //
-  void TH2D_divide( TH2D *h2_w, TH2D *h2,TH2D *h2_norm);
-  void TH1D_divide( TH1D *h1_w, TH1D *h1,TH1D *h1_norm);
+  static void TH2D_divide( TH2D *h2_w, TH2D *h2,TH2D *h2_norm);
+  static void TH1D_divide( TH1D *h1_w, TH1D *h1,TH1D *h1_norm);
+  static void TH1D_divide( TH1D *h1, TH1D *h1_norm, Double_t norm);
   //
 };
 

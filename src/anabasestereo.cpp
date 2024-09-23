@@ -33,7 +33,8 @@ anabasestereo::anabasestereo(TString fileList) : _particle_type_name("NONE"),
 						 LST1_r0(-70.93, -52.07, 43.0),
 						 LST2_r0(-35.27,  66.14, 32.0),
 						 LST3_r0( 75.28,  50.49, 28.7),
-						 LST4_r0( 30.91, -64.54, 32.0)
+						 LST4_r0( 30.91, -64.54, 32.0),
+						 _n_file_counter(-1)
 {
   ifstream indata;
   TString rootFileName;
@@ -57,7 +58,8 @@ anabasestereo::anabasestereo(TString inFileName, Int_t keyID) : _particle_type_n
 								LST1_r0(-70.93, -52.07, 43.0),
 								LST2_r0(-35.27,  66.14, 32.0),
 								LST3_r0( 75.28,  50.49, 28.7),
-								LST4_r0( 30.91, -64.54, 32.0)
+								LST4_r0( 30.91, -64.54, 32.0),
+								_n_file_counter(-1)
 {
   if(keyID == 1){
     ifstream indata;
@@ -162,6 +164,7 @@ Bool_t anabasestereo::Notify(){
   // is started when using PROOF. It is normally not necessary to make changes
   // to the generated code, but the routine can be extended by the
   // user if needed. The return value is currently not used.
+  _n_file_counter++;
   return kTRUE;
 }
 
@@ -376,6 +379,21 @@ Bool_t anabasestereo::if_four_LST(Int_t &coincidenceID){
     coincidenceID = 0;
     return true;
   }
+  //
+  return false;
+}
+
+Bool_t anabasestereo::if_stereo_trigger_pne(Int_t npecut){
+  const Int_t nLST_tel = 4;
+  Int_t tel_npe[nLST_tel] = {n_pe_LST1,n_pe_LST2,n_pe_LST3,n_pe_LST4};
+  //
+  Int_t n_sig_tel = 0;
+  for(Int_t i = 0;i<nLST_tel;i++){
+    if(tel_npe[i]>=npecut)
+      n_sig_tel++;
+  }
+  if(n_sig_tel > 1)
+    return true;
   //
   return false;
 }
