@@ -522,6 +522,7 @@ public:
   void test_pixel_neighbors_bubbleSort(Int_t pix_id);
   void test_trigger_channel_mask_isolated_flower(TString pdf_out_name = "test_trigger_channel_mask_isolated_flower.pdf");
   void test_trigger_channel_mask_isolated_flower_plus_super_flower(TString pdf_out_name = "test_trigger_channel_mask_isolated_flower_plus_super_flower.pdf", unsigned int seedID = 0);
+  void test_of_inefficient_regions_isolated_flower_plus_super_flower(TString file_out_name = "test_of_inefficient_regions_isolated_flower_plus_super_flower.pdf");
   void Clean();
   void count_signal(Double_t th_val, Int_t &nch, Int_t &npe);
   //

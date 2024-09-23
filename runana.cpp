@@ -332,7 +332,7 @@ int main(int argc, char *argv[]){
     TString gif_out_name_preff = "test_trigger_channel_mask_isolated_flower_plus_super_flower";
     TString gif_out_name;
     unsigned int seedID;
-    for(unsigned int i = 0;i<100;i++){
+    for(unsigned int i = 0;i<2;i++){
       seedID = isolated_flower_seeds.at(i);
       gif_out_name = gif_out_name_preff;
       gif_out_name += seedID;
@@ -340,6 +340,8 @@ int main(int argc, char *argv[]){
       sipm_cam->Clean();
       sipm_cam->test_trigger_channel_mask_isolated_flower_plus_super_flower(gif_out_name,seedID);
     }
+    sipm_cam->Clean();
+    sipm_cam->test_of_inefficient_regions_isolated_flower_plus_super_flower();    
   }
   else if(argc == 2 && atoi(argv[1])==5550){
     cout<<"--> Parameters <--"<<endl

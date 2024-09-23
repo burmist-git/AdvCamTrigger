@@ -537,6 +537,7 @@ void sipmCameraHist::save_isolated_flower_seed_super_flower(TString file_out_nam
   //
   //
   Int_t npointsCounter = 0;
+  Int_t goodPathcounter = 0;
   Int_t npointsCounterMax = 49; // 49 pixels for super flower
   for(unsigned int ii = 0;ii<isolated_flower_seeds.size();ii++){
     pix_seed = isolated_flower_seeds.at(ii);
@@ -549,6 +550,7 @@ void sipmCameraHist::save_isolated_flower_seed_super_flower(TString file_out_nam
     }
     if(npointsCounter == npointsCounterMax){
       outfile<<std::endl;
+      goodPathcounter++;
     }
     else if(npointsCounter<npointsCounterMax){
       for(int ii = npointsCounter; ii<npointsCounterMax;ii++)
@@ -562,6 +564,7 @@ void sipmCameraHist::save_isolated_flower_seed_super_flower(TString file_out_nam
       assert(0);
     }
   }
+  cout<<"goodPathcounter (isolated_flower_seed_super_flower) = "<<goodPathcounter<<endl;  
   //
   outfile.close();
 }
@@ -616,6 +619,35 @@ void sipmCameraHist::test_trigger_channel_mask_isolated_flower_plus_super_flower
   SetMaximum(0.0);
   SetMaximum(10.0);
   Draw_cam("ZCOLOR",pdf_out_name.Data());
+}
+
+void sipmCameraHist::test_of_inefficient_regions_isolated_flower_plus_super_flower(TString file_out_name){
+  std::vector<Int_t> isolated_flower_seeds = get_trigger_channel_mask_isolated_flower(); 
+  std::cout<<"test_of_inefficient_regions_isolated_flower_plus_super_flower"<<std::endl;  
+  unsigned int pix_seed;
+  std::vector<unsigned int> pix_seed_v;
+  //
+  for(unsigned int i = 0;i<isolated_flower_seeds.size();i++)
+    SetBinContent(isolated_flower_seeds.at(i)+1,10);
+  //
+  for(unsigned int j = 0;j<isolated_flower_seeds.size();j++)
+    if(_pixel_vec.at(isolated_flower_seeds.at(j)).v_pixel_super_flower.size()<48)
+      pix_seed_v.push_back(isolated_flower_seeds.at(j));
+  //
+  for(unsigned int ii = 0;ii<pix_seed_v.size();ii++){
+    //for(unsigned int ii = 0;ii<10;ii++){
+    pix_seed = pix_seed_v.at(ii);
+    for(unsigned int j = 0;j<_pixel_vec.at(pix_seed).v_pixel_neighbors.size();j++){
+      if(GetBinContent(_pixel_vec.at(pix_seed).v_pixel_neighbors.at(j).pixel_id+1)<10)
+	SetBinContent(_pixel_vec.at(pix_seed).v_pixel_neighbors.at(j).pixel_id+1,5);
+    }
+  }
+  //}
+  //
+  //    
+  SetMaximum(0.0);
+  SetMaximum(10.0);
+  Draw_cam("ZCOLOR",file_out_name.Data());
 }
 
 void sipmCameraHist::test(TString pdf_out_name){
