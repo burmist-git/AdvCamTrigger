@@ -509,7 +509,7 @@ void sipmCameraHist::save_isolated_flower_seed_flower(TString file_out_name){
   //
   for(unsigned int ii = 0;ii<isolated_flower_seeds.size();ii++){
     pix_seed = isolated_flower_seeds.at(ii);
-    outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_neighbors.size()+1;
+    //outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_neighbors.size()+1;
     outfile<<std::setw(10)<<pix_seed;
     for(unsigned int j = 0;j<_pixel_vec.at(pix_seed).v_pixel_neighbors.size();j++)
       outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_neighbors.at(j).pixel_id;
@@ -536,35 +536,37 @@ void sipmCameraHist::save_isolated_flower_seed_super_flower(TString file_out_nam
   //std::vector<pixel_neighbors_info> v_pixel_super_flower;
   //
   //
-  Int_t npointsCounter = 0;
-  Int_t goodPathcounter = 0;
-  Int_t npointsCounterMax = 49; // 49 pixels for super flower
+  //Int_t npointsCounter = 0;
+  //Int_t goodPathcounter = 0;
+  //Int_t npointsCounterMax = 49; // 49 pixels for super flower
   for(unsigned int ii = 0;ii<isolated_flower_seeds.size();ii++){
     pix_seed = isolated_flower_seeds.at(ii);
-    outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_super_flower.size()+1;
-    outfile<<std::setw(10)<<pix_seed;
-    npointsCounter = 1;
-    for(unsigned int j = 0;j<_pixel_vec.at(pix_seed).v_pixel_super_flower.size();j++){
-      outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_super_flower.at(j).pixel_id;
-      npointsCounter++;
-    }
-    if(npointsCounter == npointsCounterMax){
+    //outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_super_flower.size()+1;
+    //npointsCounter = 1;
+    if(_pixel_vec.at(pix_seed).v_pixel_super_flower.size()==48){
+      outfile<<std::setw(10)<<pix_seed;
+      for(unsigned int j = 0;j<_pixel_vec.at(pix_seed).v_pixel_super_flower.size();j++){
+	outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_super_flower.at(j).pixel_id;
+	//npointsCounter++;
+      }
+      //if(npointsCounter == npointsCounterMax){
       outfile<<std::endl;
-      goodPathcounter++;
-    }
-    else if(npointsCounter<npointsCounterMax){
-      for(int ii = npointsCounter; ii<npointsCounterMax;ii++)
-	outfile<<std::setw(10)<<-999;
-      outfile<<std::endl;
-    }
-    else if(npointsCounter>npointsCounterMax){
-      cout<<"ERROR --> npointsCounter > npointsCounterMax"<<endl
-	  <<"          npointsCounter = "<<npointsCounter<<endl
-	  <<"       npointsCounterMax = "<<npointsCounterMax<<endl;
-      assert(0);
+      //goodPathcounter++;
+      //}
+      //else if(npointsCounter<npointsCounterMax){
+      //for(int ii = npointsCounter; ii<npointsCounterMax;ii++)
+      //outfile<<std::setw(10)<<-999;
+      //outfile<<std::endl;
+      //}
+      //else if(npointsCounter>npointsCounterMax){
+      //cout<<"ERROR --> npointsCounter > npointsCounterMax"<<endl
+      //    <<"          npointsCounter = "<<npointsCounter<<endl
+      //    <<"       npointsCounterMax = "<<npointsCounterMax<<endl;
+      //assert(0);
+      //}
     }
   }
-  cout<<"goodPathcounter (isolated_flower_seed_super_flower) = "<<goodPathcounter<<endl;  
+  //cout<<"goodPathcounter (isolated_flower_seed_super_flower) = "<<goodPathcounter<<endl;  
   //
   outfile.close();
 }

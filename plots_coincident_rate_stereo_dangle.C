@@ -27,6 +27,8 @@ Int_t plots_coincident_rate_stereo_dangle(){
   //
   //
   //
+  TGraph *gr_80ns_2deg = new TGraph();
+  gr_80ns_2deg->SetNameTitle("gr_80ns_2deg","gr_80ns_2deg");
   TGraph *gr_80ns_1deg = new TGraph();
   gr_80ns_1deg->SetNameTitle("gr_80ns_1deg","gr_80ns_1deg");
   TGraph *gr_70ns_07deg = new TGraph();
@@ -36,6 +38,7 @@ Int_t plots_coincident_rate_stereo_dangle(){
   TGraph *gr_70ns_07deg_three = new TGraph();
   gr_70ns_07deg_three->SetNameTitle("gr_70ns_07deg_three","gr_70ns_07deg_three");
   //
+  coincident_rate( gr_80ns_2deg,  80*1.0e-9, 2.0, 100000, 3.0*1.0e+6, 1000);
   coincident_rate( gr_80ns_1deg,  80*1.0e-9, 1.0, 100000, 3.0*1.0e+6, 1000);
   coincident_rate( gr_70ns_07deg,  70*1.0e-9, 0.7, 100000, 3.0*1.0e+6, 1000);
   coincident_three_rate(gr_80ns_1deg_three, 80*1.0e-9, 1.0, 100000, 10.0*1.0e+6, 1000);
@@ -56,10 +59,11 @@ Int_t plots_coincident_rate_stereo_dangle(){
   //gr->Draw("APL");
   //
   TMultiGraph *mg = new TMultiGraph();
+  mg->Add(gr_80ns_2deg);
   mg->Add(gr_80ns_1deg);
-  mg->Add(gr_70ns_07deg);
-  mg->Add(gr_80ns_1deg_three);
-  mg->Add(gr_70ns_07deg_three);
+  //mg->Add(gr_70ns_07deg);
+  //mg->Add(gr_80ns_1deg_three);
+  //mg->Add(gr_70ns_07deg_three);
   //
   //mg->SetMinimum(1.1e+9);
   mg->SetMaximum(1.0e+8);
@@ -76,10 +80,11 @@ Int_t plots_coincident_rate_stereo_dangle(){
   //
   //
   TLegend *leg = new TLegend(0.6,0.6,0.9,0.9,"","brNDC");
+  leg->AddEntry(gr_80ns_2deg,  "#tau = 80 ns no topological trigger", "al");
   leg->AddEntry(gr_80ns_1deg,  "#tau = 80 ns and 1.0 deg topological trigger", "al");
-  leg->AddEntry(gr_70ns_07deg, "#tau = 70 ns and 0.7 deg topological trigger", "al");
-  leg->AddEntry(gr_80ns_1deg_three,  "#tau = 80 ns and 1.0 deg topological trigger (triple coinc.)", "al");
-  leg->AddEntry(gr_70ns_07deg_three, "#tau = 70 ns and 0.7 deg topological trigger (triple coinc.)", "al");
+  //leg->AddEntry(gr_70ns_07deg, "#tau = 70 ns and 0.7 deg topological trigger", "al");
+  //leg->AddEntry(gr_80ns_1deg_three,  "#tau = 80 ns and 1.0 deg topological trigger (triple coinc.)", "al");
+  //leg->AddEntry(gr_70ns_07deg_three, "#tau = 70 ns and 0.7 deg topological trigger (triple coinc.)", "al");
   leg->Draw();
   //
   //
