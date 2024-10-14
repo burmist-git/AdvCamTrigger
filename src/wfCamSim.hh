@@ -37,6 +37,10 @@ public :
   void getWF_ampl(TString name, Double_t &Ampl_Prompt_max, Double_t &Prompt_max);
   void getWF_tmpl(TString name);
   Double_t generate_wf_ampl_from_file();
+  //
+  inline void set_electronic_noise_with_pedestal_removal_key(bool b_val){_electronic_noise_with_pedestal_removal = b_val;};
+  inline bool get_electronic_noise_with_pedestal_removal_key(){return _electronic_noise_with_pedestal_removal;};
+  //
   const inline TGraph *getTemplate() {return _gr_wf_tmpl;}
   const inline TGraph *get_gr_wf_ampl() {return _gr_wf_ampl;}
   const inline TH1D *get_h1_wf_ampl_ADC() {return _h1_wf_ampl_ADC;}
@@ -148,6 +152,7 @@ private:
   //
   Float_t _fadc_electronic_noise_RMS;
   Int_t _fadc_pedestal;
+  bool _electronic_noise_with_pedestal_removal;
   //
   unsigned int _nn_fadc_point;
   unsigned int _nn_PMT_channels;

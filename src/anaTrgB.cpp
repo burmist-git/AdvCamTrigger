@@ -103,8 +103,8 @@ void anaTrgB::Loop(TString histOut,
   clock_t start_sim, finish_sim;
   start = clock();
   //
-  TH1D *h1_digital_sum = new TH1D("h1_digital_sum", "h1_digital_sum", 10001,-0.5,10000.5);
-  TH1D *h1_digital_sum_rate = new TH1D("h1_digital_sum_rate", "h1_digital_sum_rate", 10001,-0.5,10000.5);
+  TH1D *h1_digital_sum = new TH1D("h1_digital_sum", "h1_digital_sum", 20001,-0.5,20000.5);
+  TH1D *h1_digital_sum_rate = new TH1D("h1_digital_sum_rate", "h1_digital_sum_rate", 20001,-0.5,20000.5);
   TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val", (Int_t)(400.5-249.5), 249.5, 400.5);
   //
   TH1D *h1_energy = new TH1D("h1_energy","h1_energy", 100000, 0.0, 100000.0); 
@@ -146,6 +146,8 @@ void anaTrgB::Loop(TString histOut,
   cout<<"trg_sim->_trg_setup.load_trg_setup"<<endl
       <<"_trg_conf_file = "<<_trg_conf_file<<endl;
   trg_sim->_trg_setup.load_trg_setup(_trg_conf_file.Data());
+  trg_sim->fill_trg_channel_mask_from_file(trg_sim->_trg_setup.trigger_channel_mask_file_list);
+  //trg_sim->set_k_dist_graph_flag(true);
   //
   //cout<<"trg_sim->set_k_dist_graph_flag(false)"<<endl;
   //trg_sim->set_k_dist_graph_flag(false);

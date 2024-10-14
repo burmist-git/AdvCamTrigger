@@ -40,7 +40,7 @@ wfCamSim::wfCamSim( TRandom3 *rnd, TString wf_tamplete, TString spe_dat,
 		    const Float_t fadc_offset,
 		    const Float_t fadc_sample_in_ns,
 		    const Float_t NGB_rate_in_MHz,
-		    Float_t fadc_electronic_noise_RMS) : _fadc_electronic_noise_RMS(fadc_electronic_noise_RMS)
+		    Float_t fadc_electronic_noise_RMS) : _fadc_electronic_noise_RMS(fadc_electronic_noise_RMS), _electronic_noise_with_pedestal_removal(true)
 {
   //
   _h1_wf_ampl_ADC = NULL;
@@ -367,8 +367,10 @@ void wfCamSim::simulate_cam_event(const Int_t nn_fadc_point,
     generate_zero_wf(wf.at(i),(_fadc_offset-_NGB_pedestal_mean));
     //generate_zero_wf(wf.at(i),_fadc_offset);
     generateNGB(wf.at(i));
-    //generate_electronic_noise(wf.at(i));
-    generate_electronic_noise_pedestal_removal(wf.at(i));
+    if(_electronic_noise_with_pedestal_removal)
+      generate_electronic_noise_pedestal_removal(wf.at(i));
+    else
+      generate_electronic_noise(wf.at(i));
   }
 }
 
@@ -594,6 +596,7 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
     }
   }
   //
+  //Bool_t pdf_out = true;
   Bool_t pdf_out = false;
   //
   TString ev_dir_name = pathPref;
@@ -612,10 +615,12 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
   Int_t nChannels =wf.size();
   sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
   sipm_cam->SetMinimum(299.0);
-  sipm_cam->SetMaximum(500.0);
+  //sipm_cam->SetMaximum(500.0);
+  sipm_cam->SetMaximum(308.0);
   sipmCameraHist *sipm_cam_ref = new sipmCameraHist("sipm_cam_ref","sipm_cam_ref","pixel_mapping.csv",0);
   sipm_cam_ref->SetMinimum(299.0);
-  sipm_cam_ref->SetMaximum(500.0);
+  //sipm_cam_ref->SetMaximum(500.0);
+  sipm_cam_ref->SetMaximum(308.0);
   for(Int_t i = 0;i<nn_fadc_point;i++){
     TString sipm_cam_name = "sipm_cam_";
     TString gif_name = ev_dir_name;

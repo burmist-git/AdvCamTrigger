@@ -10,13 +10,13 @@
 ##inRootFile="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/0000/corsika_0000ID.root"
 ##outHistF="./hist_gamma_on_corsika_0000ID.root"
 ##
-#inRootFile="gamma_on_nsb_1x.list"
-#outHistF="./hist_gamma_on_tw.root"
+inRootFile="gamma_on_nsb_1x.list"
+outHistF="./hist_gamma_on_tw.root"
 #inRootFile="gamma_diffuse_nsb_1x.list"
 #inRootFile="gamma_diffuse_nsb_1x.listshort"
 #outHistF="./hist_gamma_diffuse_nsb_1x_tw.root"
-inRootFile="proton_nsb_1x.list"
-outHistF="./hist_proton_nsb_1x_tw.root"
+#inRootFile="proton_nsb_1x.list"
+#outHistF="./hist_proton_nsb_1x_tw.root"
 
 #short
 #'nightsky_background=all:0.001'
@@ -324,7 +324,7 @@ else
 	#./runana 4 $inRootFile $outHistF 3058 gamma  # 43 pe
 	#./runana 4 $inRootFile $outHistF 2153 gamma  # 43 pe
 	#./runana 4 $inRootFile $outHistF 3929 gamma  # 42 pe
-	#./runana 4 $inRootFile $outHistF 3932 gamma  # 44 pe
+        #./runana 4 $inRootFile $outHistF 3932 gamma  # 44 pe
 	#./runana 4 $inRootFile $outHistF 4067 gamma   # 42 pe
 	#./runana 4 $inRootFile $outHistF 4064 gamma   # 40 pe
 	#./runana 4 $inRootFile $outHistF 1222 gamma   # 27 pe
@@ -373,7 +373,7 @@ else
 	#./runana 4 $inRootFile $outHistF  4821 gamma  #   151
 	#./runana 4 $inRootFile $outHistF  5061 gamma  #   184
 	#
-	#./runana 4 $inRootFile $outHistF 716 gamma    # n_pe 40  energy 11.4927 GeV
+	./runana 4 $inRootFile $outHistF 716 gamma    # n_pe 40  energy 11.4927 GeV
 	#./runana 4 $inRootFile $outHistF 934 gamma    # n_pe 45  energy 13.5425 GeV
 	#./runana 4 $inRootFile $outHistF 626 gamma    # n_pe 41  energy 15.969 GeV
 	#
@@ -446,26 +446,32 @@ else
 	#./runana 4 $inRootFile $outHistF 7478 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 8142 gamma   # n_pe 50 energy  GeV
 	#./runana 4 $inRootFile $outHistF 9855 gamma   # n_pe 50 energy  GeV
-	#./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
+
+	##
+	##./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
+
 	#./runana 4 $inRootFile $outHistF 12409 gamma   # n_pe 50 energy  GeV
 
+	##./runana 4 $inRootFile $outHistF 380672 gamma  # n_pe
+	##
+	
 	#./runana 4 $inRootFile $outHistF 380672 proton # n_pe 652779  energy 77215.1 GeV
 
 
-	./runana 4 $inRootFile $outHistF 432957 proton # n_pe 12012  energy 12941.7 GeV azi. 179.938 alt. 69.0438
-	./runana 4 $inRootFile $outHistF 663468 proton # n_pe 19384  energy 4243.47 GeV azi. 179.988 alt. 69.0788
-	./runana 4 $inRootFile $outHistF 721973 proton # n_pe 28603  energy 19568.3 GeV azi. 180.181 alt. 68.8473
-	./runana 4 $inRootFile $outHistF 721975 proton # n_pe 28546  energy 19568.3 GeV azi. 180.181 alt. 68.8473
-	./runana 4 $inRootFile $outHistF 1842076 proton # n_pe 18990  energy 4119.99 GeV azi. 180.097 alt. 69.0628
-	./runana 4 $inRootFile $outHistF 2165305 proton # n_pe 51582  energy 2740.96 GeV azi. 180.045 alt. 69.0556
-	./runana 4 $inRootFile $outHistF 2592242 proton # n_pe 60448  energy 74998 GeV azi. 180.067 alt. 69.1491
-	./runana 4 $inRootFile $outHistF 2592340 proton # n_pe 40701  energy 5037.92 GeV azi. 179.902 alt. 69.0582
-	./runana 4 $inRootFile $outHistF 4851729 proton # n_pe 18199  energy 4219.2 GeV azi. 179.86 alt. 68.9217
-	./runana 4 $inRootFile $outHistF 6070811 proton # n_pe 26305  energy 11048.5 GeV azi. 180.182 alt. 68.9255
-	./runana 4 $inRootFile $outHistF 6591666 proton # n_pe 628094  energy 45336.2 GeV azi. 180.042 alt. 69.1757
-	./runana 4 $inRootFile $outHistF 7905149 proton # n_pe 54283  energy 4563.45 GeV azi. 179.881 alt. 68.8071
-	./runana 4 $inRootFile $outHistF 8799036 proton # n_pe 50236  energy 7297.92 GeV azi. 179.904 alt. 69.1129
-	./runana 4 $inRootFile $outHistF 9701121 proton # n_pe 13113  energy 3821.47 GeV azi. 179.902 alt. 69.1146
+	#./runana 4 $inRootFile $outHistF 432957 proton # n_pe 12012  energy 12941.7 GeV azi. 179.938 alt. 69.0438
+	#./runana 4 $inRootFile $outHistF 663468 proton # n_pe 19384  energy 4243.47 GeV azi. 179.988 alt. 69.0788
+	#./runana 4 $inRootFile $outHistF 721973 proton # n_pe 28603  energy 19568.3 GeV azi. 180.181 alt. 68.8473
+	#./runana 4 $inRootFile $outHistF 721975 proton # n_pe 28546  energy 19568.3 GeV azi. 180.181 alt. 68.8473
+	#./runana 4 $inRootFile $outHistF 1842076 proton # n_pe 18990  energy 4119.99 GeV azi. 180.097 alt. 69.0628
+	#./runana 4 $inRootFile $outHistF 2165305 proton # n_pe 51582  energy 2740.96 GeV azi. 180.045 alt. 69.0556
+	#./runana 4 $inRootFile $outHistF 2592242 proton # n_pe 60448  energy 74998 GeV azi. 180.067 alt. 69.1491
+	#./runana 4 $inRootFile $outHistF 2592340 proton # n_pe 40701  energy 5037.92 GeV azi. 179.902 alt. 69.0582
+	#./runana 4 $inRootFile $outHistF 4851729 proton # n_pe 18199  energy 4219.2 GeV azi. 179.86 alt. 68.9217
+	#./runana 4 $inRootFile $outHistF 6070811 proton # n_pe 26305  energy 11048.5 GeV azi. 180.182 alt. 68.9255
+	#./runana 4 $inRootFile $outHistF 6591666 proton # n_pe 628094  energy 45336.2 GeV azi. 180.042 alt. 69.1757
+	#./runana 4 $inRootFile $outHistF 7905149 proton # n_pe 54283  energy 4563.45 GeV azi. 179.881 alt. 68.8071
+	#./runana 4 $inRootFile $outHistF 8799036 proton # n_pe 50236  energy 7297.92 GeV azi. 179.904 alt. 69.1129
+	#./runana 4 $inRootFile $outHistF 9701121 proton # n_pe 13113  energy 3821.47 GeV azi. 179.902 alt. 69.1146
 
 	#./runana 4 $inRootFile $outHistF 7014318 proton # n_pe 12438  energy 98388.8 GeV azi. 194.212 alt. 75.7073
 	#./runana 4 $inRootFile $outHistF 7105497 proton # n_pe 12693  energy 95500.4 GeV azi. 164.026 alt. 75.1417

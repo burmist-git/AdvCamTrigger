@@ -505,6 +505,7 @@ public:
   void save_trigger_channel_mask_isolated_flower(TString file_out_name = "trigger_channel_mask_isolated_flower.list");
   void save_trigger_channel_mask_all_pixels(TString file_out_name="trigger_channel_mask_all_pixels.list");
   void save_isolated_flower_seed_flower(TString file_out_name = "isolated_flower_seed_flower.list");
+  void save_all_seed_flower(TString file_out_name = "all_seed_flower.list");
   void save_isolated_flower_seed_super_flower(TString file_out_name = "isolated_flower_seed_super_flower.list");
   void test_drawer_id();
   void test_pixel_neighbors_id();

@@ -50,7 +50,7 @@ else
 		NGBsim=0
 		anaConf="./anaTrgB_p.conf"
 	    elif [ "$2" = "nsb" ]; then
-		inRootFilePref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/proton_nsb_1x/root/"
+		inRootFilePref="../scratch/simtel_data/proton/root/"
 		outHistFPref="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgB/"
 		NGBsim=1
 		anaConf="./anaTrgB_nsb.conf"
@@ -69,8 +69,10 @@ else
 	    npe_max=1000000
 	    nEvSim_max=-1
 	    #nEv_max=15000
-	    nEv_max=-1
-            NGB_rate_in_MHz="1.0"
+	    #nEv_max=-1
+	    nEv_max=100
+            NGB_rate_in_MHz="265.0"
+	    #NGB_rate_in_MHz="0.1"
 	    fadc_electronic_noise_RMS="3.8082498"
 	    #
 	    #

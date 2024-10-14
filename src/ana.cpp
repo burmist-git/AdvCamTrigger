@@ -553,6 +553,9 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   TRandom3 *rnd = new TRandom3(1231232);
   wfCamSim *wfc = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
 			       nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz, fadc_electronic_noise_RMS);
+  cout<<"wfc->get_electronic_noise_with_pedestal_removal_key() = "<<wfc->get_electronic_noise_with_pedestal_removal_key()<<endl;
+  wfc->set_electronic_noise_with_pedestal_removal_key(false);
+  cout<<"wfc->get_electronic_noise_with_pedestal_removal_key() = "<<wfc->get_electronic_noise_with_pedestal_removal_key()<<endl;
   wfc->print_wfCamSim_configure();
   //
   TGraph *gr_WF_tmpl_array = new TGraph();
@@ -560,16 +563,22 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   wfc->get_gr_WF_tmpl_array(gr_WF_tmpl_array);
   //
   //NGB_rate_in_MHz = 386.0;
-  NGB_rate_in_MHz = 268.0;
-  //NGB_rate_in_MHz = 0.0;
+  NGB_rate_in_MHz = 265.0;
+  //NGB_rate_in_MHz = 0.1;
   //fadc_electronic_noise_RMS = 1.5;
-  fadc_electronic_noise_RMS = 3.94;
+  //fadc_electronic_noise_RMS = 3.94;
+  fadc_electronic_noise_RMS = 3.8082498;
   //fadc_electronic_noise_RMS = 0.1;
   wfCamSim *wfc_real = new wfCamSim(rnd, "Template_CTA_SiPM.txt", "spe.dat",
 				    nn_fadc_point, nn_PMT_channels, fadc_offset, fadc_sample_in_ns, NGB_rate_in_MHz, fadc_electronic_noise_RMS);
+  wfc_real->print_wfCamSim_configure();
   //
   sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
   triggerSim *trg_sim = new triggerSim(sipm_cam);  
+  cout<<"trg_sim->_trg_setup.load_trg_setup"<<endl
+      <<"trg_conf_file = "<<"trg_setup.conf"<<endl;
+  trg_sim->_trg_setup.load_trg_setup("trg_setup.conf");
+  trg_sim->fill_trg_channel_mask_from_file(trg_sim->_trg_setup.trigger_channel_mask_file_list);
   //assert(0);
   //
   vector <TGraph*> gr_v;
@@ -612,9 +621,7 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   //std::vector<std::vector<int>> trg_vec = trg_sim->get_trigger_test(wfcam_real);
   //std::vector<std::vector<int>> trg_vec = trg_sim->get_trigger_test();
   //trg_sim->print_trigger_vec(trg_vec);
-  TH1D *h1_digital_sum = new TH1D("h1_digital_sum","h1_digital_sum",1000,0.0,1000);
-  TH1D *h1_digital_sum_3ns = new TH1D("h1_digital_sum_3ns","h1_digital_sum_3ns",1000,0.0,1000);
-  TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns","h1_digital_sum_5ns",1000,0.0,1000);
+  TH1D *h1_digital_sum = new TH1D("h1_digital_sum","h1_digital_sum",20000,0.0,20000);
   TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val",1000,0.0,1000);
   //std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger( wfcam_real, h1_digital_sum, h1_digital_sum_3ns, h1_digital_sum_5ns, h1_fadc_val);
   std::vector<std::vector<unsigned int>> trg_vec = trg_sim->get_trigger( wfcam_real, h1_digital_sum, h1_fadc_val);
@@ -723,8 +730,6 @@ void ana::save_wf_for_event(TString histOut, Long64_t evID){
   h1_wf_charge_sim->Write();
   //
   h1_digital_sum->Write();
-  h1_digital_sum_3ns->Write();
-  h1_digital_sum_5ns->Write();
   h1_fadc_val->Write();
   //
   //cout<<"_particle_type_name = "<<_particle_type_name<<endl;

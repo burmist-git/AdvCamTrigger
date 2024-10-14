@@ -42,6 +42,8 @@ void triggerSim::fill_trg_channel_mask_from_file(TString mask_file){
   //
   ifstream fFile(mask_file.Data());
   //
+  cout<<"mask_file = "<<mask_file<<endl;
+  //
   if(fFile.is_open()){
     while(fFile>>val_chID){
       _trg_channel_mask.at((unsigned int)val_chID) = 1;
@@ -210,7 +212,7 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_time_cluster_db
     outrootFile += "ev";
     outrootFile += ".root";
     vector<Double_t> k_dist_graph;
-    k_dist_graph = _dbs->build_k_dist_graph(10);
+    k_dist_graph = _dbs->build_k_dist_graph(3);
     plot_and_save_to_hist_root(outrootFile,k_dist_graph);
     _trg_counter++;
   }
@@ -301,6 +303,7 @@ std::vector<std::vector<unsigned int>> triggerSim::build_spatial_cluster(const s
 // sum_type = 1 pixel flower + neighbors             (second neighbors)
 // sum_type = 2 pixel flower + neighbors + neighbors (third  neighbors) 
 // sum_type = 3 flower of flowers                    (flower of flowers)
+// sum_type = 4 one pixel                            (one pixel)
 // norm_yes = true | false                           (normalise by number of operations)
 //
 int triggerSim::get_digital_sum( const unsigned int ch_i, const unsigned int wf_j,
@@ -386,6 +389,9 @@ int triggerSim::get_digital_sum( const unsigned int ch_i, const unsigned int wf_
 	norm++;
       }
     }
+  }
+  else if(sum_type == 4){
+    norm++;
   }
   else{
     assert(0);

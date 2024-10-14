@@ -352,6 +352,7 @@ int main(int argc, char *argv[]){
     sipm_cam->save_trigger_channel_mask_all_pixels();
     sipm_cam->save_isolated_flower_seed_flower();
     sipm_cam->save_isolated_flower_seed_super_flower();
+    sipm_cam->save_all_seed_flower();
     //
   }
   else if(argc == 4 && atoi(argv[1])==6){

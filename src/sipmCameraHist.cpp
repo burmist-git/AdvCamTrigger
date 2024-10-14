@@ -490,6 +490,29 @@ void sipmCameraHist::save_trigger_channel_mask_isolated_flower(TString file_out_
   outfile.close();
 }
 
+void sipmCameraHist::save_all_seed_flower(TString file_out_name){
+  //
+  std::cout<<"save_all_seed_flower"<<std::endl;
+  //
+  unsigned int pix_seed;
+  //
+  ofstream outfile;
+  outfile.open(file_out_name.Data());
+  //
+  for(unsigned int ii = 0;ii<_pixel_vec.size();ii++){
+    pix_seed = _pixel_vec.at(ii).pixel_id;
+    //outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_neighbors.size()+1;
+    if(_pixel_vec.at(pix_seed).v_pixel_neighbors.size()==6){
+      outfile<<std::setw(10)<<pix_seed;
+      for(unsigned int j = 0;j<_pixel_vec.at(pix_seed).v_pixel_neighbors.size();j++)
+	outfile<<std::setw(10)<<_pixel_vec.at(pix_seed).v_pixel_neighbors.at(j).pixel_id;
+      outfile<<std::endl;
+    }
+  }
+  //
+  outfile.close();
+}
+
 void sipmCameraHist::save_isolated_flower_seed_flower(TString file_out_name){
   std::vector<Int_t> isolated_flower_seeds = get_trigger_channel_mask_isolated_flower(); 
   std::cout<<"save_isolated_flower_seed_flower"<<std::endl;  
