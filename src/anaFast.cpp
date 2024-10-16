@@ -1014,20 +1014,23 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //
   if(_anaConf.cuts_set_to_false)
     return false;
-  Double_t azimuth_min = (180.0 - 0.2)/180.0*TMath::Pi();
-  Double_t azimuth_max = (180.0 + 0.2)/180.0*TMath::Pi();
-  Double_t altitude_min = (90.0 - 20.0 - 1.0 - 0.2)/180.0*TMath::Pi();
-  Double_t altitude_max = (90.0 - 20.0 - 1.0 + 0.2)/180.0*TMath::Pi();
+  //
+  if(n_pe>=10)
+    return true;
+  //Double_t azimuth_min = (180.0 - 0.2)/180.0*TMath::Pi();
+  //Double_t azimuth_max = (180.0 + 0.2)/180.0*TMath::Pi();
+  //Double_t altitude_min = (90.0 - 20.0 - 1.0 - 0.2)/180.0*TMath::Pi();
+  //Double_t altitude_max = (90.0 - 20.0 - 1.0 + 0.2)/180.0*TMath::Pi();
   //
   //Double_t x0_LST01 = -70.93;
   //Double_t y0_LST01 = -52.07;
   //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //
-  if(energy>=1.0)
-    if(n_pe>=12000)
-      if(azimuth>=azimuth_min && azimuth<=azimuth_max)
-	if(altitude>=altitude_min && altitude<=altitude_max)
-	  return true;
+  //if(energy>=1.0)
+  //if(n_pe>=12000)
+  //if(azimuth>=azimuth_min && azimuth<=azimuth_max)
+  //if(altitude>=altitude_min && altitude<=altitude_max)
+  //return true;
   //if(energy>=75.0)
   //if(n_pe>=12000)
   //if(n_pe<13000)
@@ -1043,9 +1046,9 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   //}
   //}
   //
-  Double_t x0_LST01 = -70.93;
-  Double_t y0_LST01 = -52.07;
-  Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
+  //Double_t x0_LST01 = -70.93;
+  //Double_t y0_LST01 = -52.07;
+  //Double_t r = TMath::Sqrt((x0_LST01 - xcore)*(x0_LST01 - xcore) + (y0_LST01 - ycore)*(y0_LST01 - ycore));
   //if(energy>=0.010 && energy<0.02)
   //if(n_pe>=40)
   //if(r<=300)
