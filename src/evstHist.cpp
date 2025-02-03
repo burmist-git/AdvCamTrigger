@@ -651,6 +651,12 @@ Double_t evstHist::get_Weight_ETeV(Double_t ETev){
   return 0.0;
 }
 
+Double_t evstHist::get_Weight_ETeV_soft(Double_t ETev){
+  if(ETev>0.0)
+    return 1.0/TMath::Power(ETev,0.22);
+  return 0.0;
+}
+
 Double_t evstHist::Weight_integral_GeV( Double_t e_r_GeV, Double_t e_l_GeV){
   if(e_r_GeV<0.0 || e_l_GeV<0.0){
     cout<<" ERROR --> e_r_GeV<0.0 || e_l_GeV<0.0"<<endl

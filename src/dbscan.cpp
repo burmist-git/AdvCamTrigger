@@ -4,6 +4,7 @@
 //root
 #include "TROOT.h"
 #include "TMath.h"
+#include "TGraph.h"
 
 //C, C++
 #include <iostream>
@@ -103,6 +104,23 @@ void dbscan::print_cluster_stats() const {
     for(unsigned int i = 0; i<_clusters_v.size(); i++)
       _clusters_v.at(i).print_cluster_info();
   }  
+}
+
+Int_t dbscan::run(unsigned int minPts, Double_t eps, TGraph *gr){
+  vector<point> point_v;
+  point_v.clear();
+  //
+  for( Int_t i = 0; i<gr->GetN(); i++){
+    point singlepoint;
+    gr->GetPoint(i,singlepoint.x,singlepoint.y);
+    singlepoint.z = 0.0;
+    singlepoint.time_ii = 0;
+    singlepoint.pixel_id = i;
+    singlepoint.point_id = i;
+    point_v.push_back(singlepoint);
+  }
+  //
+  return run( minPts, eps, point_v);
 }
 
 Int_t dbscan::run(unsigned int minPts, Double_t eps, vector<point> point_v){

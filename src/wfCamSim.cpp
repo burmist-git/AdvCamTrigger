@@ -532,16 +532,27 @@ void wfCamSim::getWF_ampl(TString name, Double_t &Ampl_Prompt_max, Double_t &Pro
 }
 
 void wfCamSim::getWF_tmpl(TString name){
+  //
+  Double_t stretchingFactor = 1.0;
+  //
   std::ifstream fileIn(name.Data());
   std::cout<<"template file : "<<name<<std::endl;
   double x;
+  double x_min;
+  double x_max;
   double y;
   double ymax = -999.0;
+  TGraph *grtmp = new TGraph();
+  TGraph *grtmpstrached = new TGraph();
   _gr_wf_tmpl->SetName("_gr_wf_tmpl");
   _gr_wf_tmpl->SetTitle("_gr_wf_tmpl");
   if (fileIn.is_open()){
     while(fileIn>>x>>y){
-      _gr_wf_tmpl->SetPoint(_gr_wf_tmpl->GetN(),x,y);
+      if(grtmp->GetN() == 0)
+	x_min = x;
+      x_max = x;
+      grtmp->SetPoint(grtmp->GetN(),x,y);
+      grtmpstrached->SetPoint(grtmpstrached->GetN(),x*stretchingFactor,y);
       if(ymax<y){
 	ymax = y;
 	_t_max_ampl_wf_tmpl = x;
@@ -552,6 +563,11 @@ void wfCamSim::getWF_tmpl(TString name){
   else {
     std::cout<<"Unable to open file"<<std::endl;
     assert(0);
+  }
+  //
+  for(Int_t i = 0;i<grtmp->GetN();i++){
+    grtmp->GetPoint(i,x,y);
+    _gr_wf_tmpl->SetPoint(i,x,grtmpstrached->Eval(x));
   }
 }
 
@@ -585,6 +601,7 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
 				      const anabase *ab){
   //
   bool if_all_trig_superimposed = false;
+  bool if_clean_with_trg_vector = true;
   //
   //gStyle->SetPalette(kCherry);
   //TColor::InvertPalette();
@@ -596,8 +613,8 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
     }
   }
   //
-  //Bool_t pdf_out = true;
-  Bool_t pdf_out = false;
+  Bool_t pdf_out = true;
+  //Bool_t pdf_out = false;
   //
   TString ev_dir_name = pathPref;
   ev_dir_name += event_id; 
@@ -641,8 +658,18 @@ void wfCamSim::generate_gif_for_event(TString pathPref, Int_t event_id,
     //sipm_cam->SetMinimum(0.0);
     //sipm_cam->SetMaximum(TMath::Power(2,14));
     for(Int_t j = 0;j<nChannels;j++){
-      sipm_cam->SetBinContent(j+1,wf.at(j).at(i));
-      sipm_cam_ref->SetBinContent(j+1,wf_ref.at(j).at(i));
+      if(if_clean_with_trg_vector){
+	sipm_cam->SetBinContent(j+1,300);
+	for(Int_t kk = 0;kk<trg_vector.at(i).size();kk++){
+	  if(trg_vector.at(i).at(kk)==j)
+	    sipm_cam->SetBinContent(j+1,wf.at(j).at(i));
+	}
+	sipm_cam_ref->SetBinContent(j+1,wf_ref.at(j).at(i));
+      }
+      else{
+	sipm_cam->SetBinContent(j+1,wf.at(j).at(i));
+	sipm_cam_ref->SetBinContent(j+1,wf_ref.at(j).at(i));
+      }
     }
     merge_gif<<gif_name_short<<" ";
     //

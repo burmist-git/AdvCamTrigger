@@ -1,6 +1,8 @@
 ROOTCFLAGS    = $(shell $(ROOTSYS)/bin/root-config --cflags)
 ROOTLIBS      = $(shell $(ROOTSYS)/bin/root-config --libs)
 ROOTGLIBS     = $(shell $(ROOTSYS)/bin/root-config --glibs)
+#
+ROOTLIBS += -lMinuit2 -lMinuit
 
 CXX  = g++
 CXX += -I./	
@@ -15,16 +17,22 @@ OUTLIB = ./obj/
 
 #----------------------------------------------------#
 
-all: runana runanastereo run_dbscan
+all: runana runanamuon runanastereo run_dbscan
 
 runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaTrgB.o obj/anaFast.o obj/anaSuperFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o obj/anaEvPerEv.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+runanamuon: runanamuon.cpp obj/anamuon.o obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaTrgB.o obj/anaFast.o obj/anaSuperFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o obj/anaEvPerEv.o obj/muonRingFitter.o
+	$(CXX) -o runanamuon runanamuon.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 runanastereo: runanastereo.cpp src/anaConf.hh obj/anastereo.o obj/evstHist.o obj/sipmCameraHist.o obj/anaTrgB.o
 	$(CXX) -o runanastereo runanastereo.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
 
 run_dbscan: run_dbscan.cpp obj/dbscan.o
 	$(CXX) -o run_dbscan run_dbscan.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+obj/muonRingFitter.o: src/muonRingFitter.cpp src/muonRingFitter.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)/muonRingFitter.o $<
 
 obj/rateCalculator.o: src/rateCalculator.cpp src/rateCalculator.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)/rateCalculator.o $<
@@ -34,6 +42,9 @@ obj/dbscan.o: src/dbscan.cpp src/dbscan.hh
 
 obj/ana.o: src/ana.cpp src/ana.hh obj/anabase.o obj/sipmCameraHist.o obj/wfCamSim.o obj/triggerSim.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)ana.o $<
+
+obj/anamuon.o: src/anamuon.cpp src/anamuon.hh obj/ana.o obj/anabase.o obj/sipmCameraHist.o obj/wfCamSim.o obj/triggerSim.o
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anamuon.o $<
 
 obj/anastereo.o: src/anastereo.cpp src/anastereo.hh obj/anabasestereo.o obj/sipmCameraHist.o
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)anastereo.o $<
@@ -88,6 +99,7 @@ obj/evstHist.o: src/evstHist.cpp src/evstHist.hh
 
 clean:
 	rm -f runana
+	rm -f runanamuon
 	rm -f run_dbscan
 	rm -f runanastereo
 	rm -f *~

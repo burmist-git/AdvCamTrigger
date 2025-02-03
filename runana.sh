@@ -373,7 +373,7 @@ else
 	#./runana 4 $inRootFile $outHistF  4821 gamma  #   151
 	#./runana 4 $inRootFile $outHistF  5061 gamma  #   184
 	#
-	./runana 4 $inRootFile $outHistF 716 gamma    # n_pe 40  energy 11.4927 GeV
+	#./runana 4 $inRootFile $outHistF 716 gamma    # n_pe 40  energy 11.4927 GeV
 	#./runana 4 $inRootFile $outHistF 934 gamma    # n_pe 45  energy 13.5425 GeV
 	#./runana 4 $inRootFile $outHistF 626 gamma    # n_pe 41  energy 15.969 GeV
 	#
@@ -448,7 +448,7 @@ else
 	#./runana 4 $inRootFile $outHistF 9855 gamma   # n_pe 50 energy  GeV
 
 	##
-	##./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
+	#./runana 4 $inRootFile $outHistF 10392 gamma   # n_pe 50 energy  GeV
 
 	#./runana 4 $inRootFile $outHistF 12409 gamma   # n_pe 50 energy  GeV
 
@@ -491,6 +491,46 @@ else
 	#./runana 4 $inRootFile $outHistF 17251109 proton # n_pe 12111  energy 77332.2 GeV azi. 179.034 alt. 68.5323
 	#./runana 4 $inRootFile $outHistF 19918811 proton # n_pe 12499  energy 76577.8 GeV azi. 198.538 alt. 66.4997
 	
+	#./runana 4 $inRootFile $outHistF 1955588 proton # n_pe 663  energy 237.659 GeV azi. 175.277 alt. 70.643
+	#./runana 4 $inRootFile $outHistF 1956184 proton # n_pe 929  energy 499.373 GeV azi. 182.713 alt. 71.2581
+	#./runana 4 $inRootFile $outHistF 1958417 proton # n_pe 632  energy 629.811 GeV azi. 174.318 alt. 70.4644
+	#./runana 4 $inRootFile $outHistF 1961391 proton # n_pe 513  energy 370.986 GeV azi. 181.264 alt. 68.4045
+	#./runana 4 $inRootFile $outHistF 1962023 proton # n_pe 527  energy 522.798 GeV azi. 183.21 alt. 70.7176
+	#./runana 4 $inRootFile $outHistF 1963887 proton # n_pe 567  energy 53.1942 GeV azi. 180.077 alt. 68.9247
+
+
+	#./runana 4 $inRootFile $outHistF 294147 gamma_diff # n_pe 744  energy 95.6272 GeV azi. 176.903 alt. 69.4121
+	#./runana 4 $inRootFile $outHistF 295097 gamma_diff # n_pe 638  energy 104.954 GeV azi. 184.103 alt. 68.6591
+	#./runana 4 $inRootFile $outHistF 297136 gamma_diff # n_pe 745  energy 631.211 GeV azi. 183.728 alt. 69.5613
+	#./runana 4 $inRootFile $outHistF 297393 gamma_diff # n_pe 506  energy 104.338 GeV azi. 176.395 alt. 70.158
+	#./runana 4 $inRootFile $outHistF 298833 gamma_diff # n_pe 884  energy 311.858 GeV azi. 175.135 alt. 70.8417
+	#./runana 4 $inRootFile $outHistF 300017 gamma_diff # n_pe 788  energy 71.6998 GeV azi. 182.422 alt. 69.3299
+	#./runana 4 $inRootFile $outHistF 300247 gamma_diff # n_pe 708  energy 120.475 GeV azi. 184.444 alt. 68.9793
+	#./runana 4 $inRootFile $outHistF 301566 gamma_diff # n_pe 714  energy 237.02 GeV azi. 174.342 alt. 70.2848
+	#./runana 4 $inRootFile $outHistF 302997 gamma_diff # n_pe 797  energy 184.711 GeV azi. 184.042 alt. 70.2937
+
+	#./runana 4 $inRootFile $outHistF 309219 gamma # n_pe 188  energy 14.1998 GeV azi. 180 alt. 70
+	#./runana 4 $inRootFile $outHistF 309248 gamma # n_pe 195  energy 38.9857 GeV azi. 180 alt. 70
+	#./runana 4 $inRootFile $outHistF 309270 gamma # n_pe 142  energy 72.6081 GeV azi. 180 alt. 70
+	#./runana 4 $inRootFile $outHistF 309372 gamma # n_pe 140  energy 121.083 GeV azi. 180 alt. 70
+	#./runana 4 $inRootFile $outHistF 309375 gamma # n_pe 168  energy 121.083 GeV azi. 180 alt. 70
+	#./runana 4 $inRootFile $outHistF 309407 gamma # n_pe 168  energy 23.2705 GeV azi. 180 alt. 70
+	#./runana 4 $inRootFile $outHistF 309425 gamma # n_pe 197  energy 85.1306 GeV azi. 180 alt. 70
+	#./runana 4 $inRootFile $outHistF 309443 gamma # n_pe 120  energy 29.1908 GeV azi. 180 alt. 70
+	#./runana 4 $inRootFile $outHistF 309545 gamma # n_pe 138  energy 284.292 GeV azi. 180 alt. 70
+
+
+	./runana 4 $inRootFile $outHistF 1253355 proton # n_pe 193  energy 607.424 GeV azi. 180.691 alt. 70.0067
+	./runana 4 $inRootFile $outHistF 1253358 proton # n_pe 121  energy 607.424 GeV azi. 180.691 alt. 70.0067
+	./runana 4 $inRootFile $outHistF 1259656 proton # n_pe 176  energy 323.335 GeV azi. 180.008 alt. 70.2926
+	./runana 4 $inRootFile $outHistF 1276471 proton # n_pe 160  energy 367.73 GeV azi. 180.838 alt. 69.9816
+	./runana 4 $inRootFile $outHistF 1276476 proton # n_pe 135  energy 367.73 GeV azi. 180.838 alt. 69.9816
+	./runana 4 $inRootFile $outHistF 1276477 proton # n_pe 143  energy 367.73 GeV azi. 180.838 alt. 69.9816
+	./runana 4 $inRootFile $outHistF 1289253 proton # n_pe 160  energy 1228.8 GeV azi. 180.513 alt. 70.079
+	./runana 4 $inRootFile $outHistF 1304203 proton # n_pe 185  energy 123.244 GeV azi. 180.468 alt. 69.8788
+	./runana 4 $inRootFile $outHistF 1311879 proton # n_pe 168  energy 175.343 GeV azi. 179.775 alt. 70.3453
+	./runana 4 $inRootFile $outHistF 1313207 proton # n_pe 136  energy 36.6412 GeV azi. 180.166 alt. 69.8697
+
     elif [ "$1" = "-th" ]; then
 	./runana 5
     elif [ "$1" = "-th_flowerpixID" ]; then
@@ -559,9 +599,9 @@ else
 	./runana 7 proton_nsb_1x.list hist_fast_proton_nsb_1x.root anaFast_p.conf | tee hist_fast_proton_nsb_1x.log
     elif [ "$1" = "-sfall" ]; then
 	time ./runana 77 gamma_on_nsb_1x.list hist_superfast_gamma_on_nsb_1x.root anaFast_g.conf | tee hist_superfast_gamma_on_nsb_1x.log
-	time ./runana 77 gamma_diffuse_nsb_1x.list hist_superfast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_superfast_gamma_diffuse_nsb_1x.log
+	#time ./runana 77 gamma_diffuse_nsb_1x.list hist_superfast_gamma_diffuse_nsb_1x.root anaFast_gd.conf | tee hist_superfast_gamma_diffuse_nsb_1x.log
 	#time ./runana 77 electron_nsb_1x.list hist_superfast_electron_nsb_1x.root anaFast_e.conf | tee hist_superfast_electron_nsb_1x.log
-	time ./runana 77 proton_nsb_1x.list hist_superfast_proton_nsb_1x.root anaFast_p.conf | tee hist_superfast_proton_nsb_1x.log
+	#time ./runana 77 proton_nsb_1x.list hist_superfast_proton_nsb_1x.root anaFast_p.conf | tee hist_superfast_proton_nsb_1x.log
     elif [ "$1" = "-fscang" ]; then
 	time ./runana 8 gamma_on_nsb_1x.list hist_fast_scan_gamma_on_nsb_1x.root anaFast_g.conf ../cosmique_gamma_hadron_generator/gamma_on_axis_simtel.dat ../cosmique_gamma_hadron_generator/flux_gamma_crab.dat | tee hist_fast_scan_gamma_on_nsb_1x.log
     elif [ "$1" = "-fscangd" ]; then
@@ -595,7 +635,7 @@ else
 	txtFileOut="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/gamma_on_nsb_1x/root/gamma_on_nsb_1x_0000_event_map.txt"
 	./runana 3333 $inRootFiles $txtFileOut
     elif [ "$1" = "-c" ]; then
-	make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j		
+	make clean; make -f Makefileana clean ; make -j; make -f Makefileana -j	
     elif [ "$1" = "-h" ]; then
         printHelp
     else

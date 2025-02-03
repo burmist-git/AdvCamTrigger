@@ -11,6 +11,8 @@
 #include <iostream>
 #include <iomanip>
 
+class TGraph;
+
 #define CORE_POINT 1
 #define BORDER_POINT 2
 #define UNCLASSIFIED -1
@@ -151,6 +153,7 @@ public:
   ~dbscan();
   
   Int_t run(unsigned int minPts, Double_t eps, vector<point> point_v);
+  Int_t run(unsigned int minPts, Double_t eps, TGraph *gr);
   void set_points(vector<point> point_v);
 
   vector<unsigned int> regionQuery(const point &p);

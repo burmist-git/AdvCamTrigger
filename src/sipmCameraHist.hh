@@ -592,6 +592,7 @@ public:
   void Fill_pe_center(const Int_t npixels_n, const Int_t *pix_id);
   void Fill_pix_x_y_hist( const Int_t npixels_n, const Int_t *pix_id, TH1D *h1_x, TH1D *h1_y);
   void Fill_pix_hist2D_y_vs_x( const Int_t npixels_n, const Int_t *pix_id, TH2D *h2_y_vs_x);
+  void Fill_pix_TGraph_y_vs_x( const Int_t npixels_n, const Int_t *pix_id, TGraph *gr);
   void get_pix_mean( const Int_t npixels_n, const Int_t *pix_id, Double_t &x_mean, Double_t &y_mean);
   //
   void get_pix_density_info(const Int_t npixels_n, const Int_t *pix_id,

@@ -1063,6 +1063,12 @@ void sipmCameraHist::Fill_pix_hist2D_y_vs_x( const Int_t npixels_n, const Int_t 
       h2_y_vs_x->Fill((Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x, (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y);
 }
 
+void sipmCameraHist::Fill_pix_TGraph_y_vs_x( const Int_t npixels_n, const Int_t *pix_id, TGraph *gr){
+  for(Int_t i = 0;i<npixels_n;i++)
+    if(pix_id[i]>=0 && pix_id[i]<(Int_t)_n_pixels)
+      gr->SetPoint(gr->GetN(),(Double_t)_pixel_vec.at((unsigned int)pix_id[i]).x, (Double_t)_pixel_vec.at((unsigned int)pix_id[i]).y);
+}
+
 void sipmCameraHist::Fill_pix_x_y_hist( const Int_t npixels_n, const Int_t *pix_id, TH1D *h1_x, TH1D *h1_y){
   for(Int_t i = 0;i<npixels_n;i++){
     if(pix_id[i]>=0 && pix_id[i]<(Int_t)_n_pixels){

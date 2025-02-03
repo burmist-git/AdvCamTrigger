@@ -38,6 +38,8 @@ public:
   inline void set_disable_energy_theta_rcore_binwise_cuts(bool val){_disable_energy_theta_rcore_binwise_cuts = val;};
   inline void set_k_dist_graph_flag(bool val){_k_dist_graph_flag = val;};
   inline void set_trg_conf_file(TString trgf){_trg_conf_file = trgf;};
+
+  static void get_NSB_Rate(TH1D *h1, TH1D *h1_rate, Int_t nevsim, Double_t delta_time_of_one_wf);
   
 private:
   //

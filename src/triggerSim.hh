@@ -205,7 +205,12 @@ class triggerSim {
   std::vector<std::vector<int>> get_trigger_test();
   std::vector<std::vector<unsigned int>> get_trigger(const std::vector<std::vector<int>> &wf,
 						     TH1D *h1_digital_sum = NULL,
-						     TH1D *h1_fadc_val = NULL);
+						     TH1D *h1_fadc_val = NULL,
+						     TH1D *h1_digital_sum_pe = NULL,
+						     TH1D *h1_fadc_val_pe = NULL,
+						     Double_t adc_per_pe = 1.0,
+						     Double_t pedestal_digital_sum_pe = 0.0,
+						     Double_t pedestal_fadc_pe = 0.0);
   static void print_trigger_vec(const std::vector<std::array<int, 2>> &trg_vector);
   static void print_trigger_vec(const std::vector<std::vector<unsigned int>> &trg_vector);
   static void print_trigger_vec_to_csv(const std::vector<std::vector<unsigned int>> &trg_vector, const sipmCameraHist *sipm_cam, TString out_file_name, bool if_short_format = true);

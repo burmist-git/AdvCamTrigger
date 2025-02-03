@@ -15,6 +15,7 @@ else
     if [ "$1" = "-m" ]; then
 	inRootFile="../scratch/simtel_data/muon/root/run1_muon.root"
 	outHistF="../scratch/simtel_data/muon/hist/hist_run1_muon.root"
+	#outHistF="../scratch/simtel_data/muon/hist/hist_run1_muon_evID_cut.root"
 	./runanamuon 1 $inRootFile $outHistF
     elif [ "$1" = "--vis" ]; then
 	inRootFile="../scratch/simtel_data/muon/root/run1_muon.root"

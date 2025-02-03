@@ -33,6 +33,9 @@ public:
   TVector3 _v_det;
 
   Double_t get_theta_p_t();
+  void get_cumulative( TH1D *h1, TH1D *h1_int);
+  void get_cumulative( TH1D *h1, TH1D *h1_int, Double_t norm);
+  void save_hist_to_csv(TString outfilename, TH1D *h1);
   
 };
 

@@ -134,7 +134,12 @@ void const triggerSim::fill_fadc_val_vs_time( const std::vector<std::vector<int>
 
 std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector<std::vector<int>> &wf,
 							       TH1D *h1_digital_sum,
-							       TH1D *h1_fadc_val){
+							       TH1D *h1_fadc_val,
+							       TH1D *h1_digital_sum_pe,
+							       TH1D *h1_fadc_val_pe,
+							       Double_t adc_per_pe,
+							       Double_t pedestal_digital_sum_pe,
+							       Double_t pedestal_fadc_pe){
   //
   std::vector<std::vector<unsigned int>> trg_vector;
   std::vector<std::vector<unsigned int>> trg_vector_empty;
@@ -156,6 +161,16 @@ std::vector<std::vector<unsigned int>> triggerSim::get_trigger(const std::vector
 	  h1_digital_sum->Fill(digital_sum);
 	if(h1_fadc_val != NULL)
 	  h1_fadc_val->Fill(fadc_val);
+	//
+	//if(h1_digital_sum_pe != NULL)
+	//h1_digital_sum_pe->Fill(digital_sum/adc_per_pe);
+	//if(h1_fadc_val_pe != NULL)
+	//h1_fadc_val_pe->Fill(fadc_val/adc_per_pe);
+	//
+	if(h1_digital_sum_pe != NULL)
+	  h1_digital_sum_pe->Fill((digital_sum/adc_per_pe - pedestal_digital_sum_pe));
+	if(h1_fadc_val_pe != NULL)
+	  h1_fadc_val_pe->Fill((fadc_val/adc_per_pe - pedestal_fadc_pe));
 	//
 	if(digital_sum>_trg_setup.digital_sum_cut)
 	  trg_chID.push_back(ch_i);

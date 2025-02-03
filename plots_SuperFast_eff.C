@@ -44,22 +44,24 @@ Int_t plots_SuperFast_eff(){
   h1_more->SetMarkerColor(kRed+2);
   //  
   h1_all->SetTitle("");
-  h1_all->Draw();
-  h1_more->Draw("sames");
-  h1_all->SetMinimum(1.0e-5);
-  h1_all->SetMaximum(1.0);
+  h1_more->SetTitle("");
+  //h1_all->Draw();
+  //h1_more->Draw("sames");
+  h1_more->Draw();
+  //h1_all->SetMinimum(1.0e+2);
+  //h1_all->SetMaximum(1.0e+7);
   
   //
-  //h1_all->GetYaxis()->SetTitle("Number of on-axis gammas");
-  h1_all->GetYaxis()->SetTitle("Ratio");
+  h1_all->GetYaxis()->SetTitle("Number of on-axis gammas");
+  //h1_all->GetYaxis()->SetTitle("Ratio");
   h1_all->GetXaxis()->SetTitle("Energy, GeV");
   //
   TLegend *leg = new TLegend(0.6,0.6,0.9,0.9,"","brNDC");
-  //leg->AddEntry(h1_all,  "All events  (>100 p.e. in total) (1/E^2.7)", "apl");
-  //leg->AddEntry(h1_more, "Events with (>100 p.e./ channel) (1/E^2.7)", "apl");
-  leg->AddEntry(h1_all,  "Ratio (1/E^2.7)", "apl");
-  leg->AddEntry(h1_more, "Ratio (1/E^2.2)", "apl");
-  leg->Draw();  
+  leg->AddEntry(h1_all,  "All events  (>100 p.e. in total) (1/E^2.2)", "apl");
+  leg->AddEntry(h1_more, "Events with (>100 p.e./ channel in 10 channels) (1/E^2.2)", "apl");
+  //leg->AddEntry(h1_all,  "Ratio (1/E^2.7)", "apl");
+  //leg->AddEntry(h1_more, "Ratio (1/E^2.2)", "apl");
+  //leg->Draw();  
 
   //
   return 0;

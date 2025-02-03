@@ -183,7 +183,7 @@ else
 	    typeJob=$3
 	    inRootFile=$inRootFilePref$jobID"/corsika_"$jobID"ID.root"
 	    outHistF=$outHistFPref"/hist_trgA_corsika_"$jobID"ID.root"
-	    nEv_max=10
+	    nEv_max=100
 	    rndseed=`date +%N`
 	    trgSetup="trg_setup.conf"
 	    echo "inRootFile $inRootFile"	

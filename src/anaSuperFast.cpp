@@ -1,5 +1,6 @@
 //my
 #include "anaSuperFast.hh"
+#include "anabase.hh"
 #include "sipmCameraHist.hh"
 #include "sipmCameraHistCropped.hh"
 #include "wfCamSim.hh"
@@ -48,6 +49,36 @@ void anaSuperFast::Loop(TString histOut){
   _anaConf.printInfo();
   //assert(0);
   //
+  Double_t val_Emin = 1.0;    // GeV
+  Double_t val_Emax = 100000; // GeV
+  Int_t val_N_bins_E = 25;
+  //
+  Double_t val_Thetamin = 0.0;  //deg
+  Double_t val_Thetamax = 10.0; //deg
+  Int_t val_N_bins_t = 10;
+  //
+  evstHist *evH_sim_more_then_100pe_all = new evstHist("evH_sim_more_then_100pe_all","evH_sim_more_then_100pe_all",
+						       val_Emin, val_Emax, val_N_bins_E,
+						       val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_sim_more_then_100pe_100peminperch = new evstHist("evH_sim_more_then_100pe_100peminperch","evH_sim_more_then_100pe_100peminperch",
+						   val_Emin, val_Emax, val_N_bins_E,
+						   val_Thetamin, val_Thetamax, val_N_bins_t);
+  //
+  evstHist *evH_sim_more_then_100pe_all_soft = new evstHist("evH_sim_more_then_100pe_all_soft","evH_sim_more_then_100pe_all_soft",
+							    val_Emin, val_Emax, val_N_bins_E,
+							    val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_sim_more_then_100pe_100peminperch_soft = new evstHist("evH_sim_more_then_100pe_100peminperch_soft","evH_sim_more_then_100pe_100peminperch_soft",
+								      val_Emin, val_Emax, val_N_bins_E,
+								      val_Thetamin, val_Thetamax, val_N_bins_t); 
+  //
+  evstHist *evH_sim_more_then_100pe_100peminperch_eff = new evstHist("evH_sim_more_then_100pe_100peminperch_eff","evH_sim_more_then_100pe_100peminperch_eff",
+								     val_Emin, val_Emax, val_N_bins_E,
+								     val_Thetamin, val_Thetamax, val_N_bins_t);
+  evstHist *evH_sim_more_then_100pe_100peminperch_soft_eff = new evstHist("evH_sim_more_then_100pe_100peminperch_soft_eff","evH_sim_more_then_100pe_100peminperch_soft_eff",
+									  val_Emin, val_Emax, val_N_bins_E,
+									  val_Thetamin, val_Thetamax, val_N_bins_t);
+  
+  //
   TH1D *h1_energy = new TH1D("h1_energy","h1_energy",110000,0.0,110.0);
   //
   TH1D *h1_nphotons = new TH1D("h1_nphotons","h1_nphotons",10000,0.0,1000000);
@@ -77,6 +108,21 @@ void anaSuperFast::Loop(TString histOut){
   TH1D *h1_pe_time = new TH1D("h1_pe_time","h1_pe_time",4000,-4000,4000);
   TH1D *h1_pe_time_shift = new TH1D("h1_pe_time_shift","h1_pe_time_shift",4000,-4000,4000);
   //
+  //TH1D *h1_if_more_than_100pe = new TH1D("h1_if_more_than_100pe","h1_if_more_than_100pe",2,-0.5,1.5);
+  TH1D *h1_npe_per_ch_max = new TH1D("h1_npe_per_ch_max","h1_npe_per_ch_max",100000,0.0,100000);
+  TH1D *h1_npe_per_ch_max_integrated = new TH1D("h1_npe_per_ch_max_integrated","h1_npe_per_ch_max_integrated",100000,0.0,100000);
+  TH1D *h1_npe_per_ch_max_nsim_integrated = new TH1D("h1_npe_per_ch_max_nsim_integrated","h1_npe_per_ch_max_nsim_integrated",100000,0.0,100000);
+  //
+  TH1D *h1_npe_per_ch_max_norm = new TH1D("h1_npe_per_ch_max_norm","h1_npe_per_ch_max_norm",100000,0.0,100000);
+  TH1D *h1_npe_per_ch_max_norm_integrated = new TH1D("h1_npe_per_ch_max_norm_integrated","h1_npe_per_ch_max_norm_integrated",100000,0.0,100000);
+  TH1D *h1_npe_per_ch_max_normsim_integrated = new TH1D("h1_npe_per_ch_max_normsim_integrated","h1_npe_per_ch_max_normsim_integrated",100000,0.0,100000);
+  //
+  TH1D *h1_npe_per_ch_max_norm_soft = new TH1D("h1_npe_per_ch_max_norm_soft","h1_npe_per_ch_max_norm_soft",100000,0.0,100000);
+  TH1D *h1_npe_per_ch_max_norm_soft_integrated = new TH1D("h1_npe_per_ch_max_norm_soft_integrated","h1_npe_per_ch_max_norm_soft_integrated",100000,0.0,100000);
+  TH1D *h1_npe_per_ch_max_normsim_soft_integrated = new TH1D("h1_npe_per_ch_max_normsim_soft_integrated","h1_npe_per_ch_max_normsim_soft_integrated",100000,0.0,100000);
+  //
+  Double_t npe_per_ch_max = 0.0;
+  //
   Double_t x0_LST01 = -70.93;
   Double_t y0_LST01 = -52.07;
   //
@@ -95,6 +141,14 @@ void anaSuperFast::Loop(TString histOut){
   //
   Long64_t nentries = fChain->GetEntriesFast();
   Long64_t nbytes = 0, nb = 0;
+  //
+  Int_t npe_inchannel[nChannels];
+  //
+  Int_t npe_per_ch_saturation = 100;
+  Int_t n_ch_saturation = 0;
+  //
+  Double_t normsim_ev = 0.0;
+  //
   if(_anaConf.nentries_max>0)
     nentries = _anaConf.nentries_max;
   cout<<"nentries = "<<nentries<<endl;
@@ -108,10 +162,55 @@ void anaSuperFast::Loop(TString histOut){
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     //
     //
-    theta_p_t_deg = get_theta_p_t()*180/TMath::Pi();
+    //theta_p_t_deg = get_theta_p_t()*180/TMath::Pi();
     //
-    if(n_pe>50){
+    h1_energy->Fill(energy);
+    h1_nphotons->Fill(nphotons);
+    h1_n_pe->Fill(n_pe);
+    h1_n_pixels->Fill(n_pixels);
+    //
+    normsim_ev++;
+    //
+    if(n_pe>100){
+      for(Int_t jj = 0;jj<nChannels;jj++)
+	npe_inchannel[jj] = 0;
       //
+      for( Int_t jj = 0; jj<n_pe; jj++)
+	if(pe_chID[jj]>=0 && pe_chID[jj]<nChannels)
+	  npe_inchannel[pe_chID[jj]] = npe_inchannel[pe_chID[jj]] + 1;
+      //
+      npe_per_ch_max = 0.0;
+      n_ch_saturation = 0;
+      for(Int_t jj = 0;jj<nChannels;jj++){
+	if(npe_inchannel[jj]>npe_per_ch_max)
+	  npe_per_ch_max = npe_inchannel[jj];
+	if(npe_inchannel[jj]>=npe_per_ch_saturation)
+	  n_ch_saturation++;	
+      }
+      //
+      h1_npe_per_ch_max->Fill(npe_per_ch_max);
+      h1_npe_per_ch_max_norm->Fill( npe_per_ch_max, evstHist::get_Weight_ETeV(energy));
+      h1_npe_per_ch_max_norm_soft->Fill( npe_per_ch_max, evstHist::get_Weight_ETeV_soft(energy));
+      //
+      //
+      evH_sim_more_then_100pe_all->get_E_hist()->Fill(energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      if(n_ch_saturation>=10)
+	if(npe_per_ch_max>=npe_per_ch_saturation)
+	  evH_sim_more_then_100pe_100peminperch->get_E_hist()->Fill(energy*1000.0, evstHist::get_Weight_ETeV(energy));
+      //
+      //
+      evH_sim_more_then_100pe_all_soft->get_E_hist()->Fill(energy*1000.0, evstHist::get_Weight_ETeV_soft(energy));
+      if(n_ch_saturation>=10)
+	if(npe_per_ch_max>=npe_per_ch_saturation)
+	  evH_sim_more_then_100pe_100peminperch_soft->get_E_hist()->Fill(energy*1000.0, evstHist::get_Weight_ETeV_soft(energy));      
+    }
+    //}
+      //h1_if_more_than_100pe->Fill(0.0, evstHist::get_Weight_ETeV(energy));
+    //}
+    //
+    //if(n_pe>50){
+      //
+      /*
       getCore_rel_R_theta( x0_LST01, y0_LST01, xcore, ycore, r_core, theta_core);
       //
       azimuth_deg = azimuth*180.0/TMath::Pi();
@@ -156,14 +255,32 @@ void anaSuperFast::Loop(TString histOut){
 	h1_pe_time->Fill(pe_time[jj]);
 	h1_pe_time_shift->Fill(pe_time[jj]-ev_time+time_offset);
       }
-    }
+      */
+    //}
     //
   }
   //  
   //
-  TH2D_divide( h2_ycore_vs_xcore_km_ev_time_w, h2_ycore_vs_xcore_km_norm, h2_ycore_vs_xcore_km_ev_time);  
-  TH1D_divide( h1_xcore_km_ev_time_cut_ycore_w, h1_xcore_km_ev_time_cut_ycore_norm, h1_xcore_km_ev_time_cut_ycore);
+  //TH2D_divide( h2_ycore_vs_xcore_km_ev_time_w, h2_ycore_vs_xcore_km_norm, h2_ycore_vs_xcore_km_ev_time);  
+  //TH1D_divide( h1_xcore_km_ev_time_cut_ycore_w, h1_xcore_km_ev_time_cut_ycore_norm, h1_xcore_km_ev_time_cut_ycore);
   //
+  anabase::TH1D_divide( evH_sim_more_then_100pe_100peminperch->get_E_hist(),
+			evH_sim_more_then_100pe_all->get_E_hist(),
+			evH_sim_more_then_100pe_100peminperch_eff->get_E_hist());
+  anabase::TH1D_divide( evH_sim_more_then_100pe_100peminperch_soft->get_E_hist(),
+			evH_sim_more_then_100pe_all_soft->get_E_hist(),
+			evH_sim_more_then_100pe_100peminperch_soft_eff->get_E_hist());
+  //
+  get_cumulative(h1_npe_per_ch_max,h1_npe_per_ch_max_integrated);
+  get_cumulative(h1_npe_per_ch_max_norm,h1_npe_per_ch_max_norm_integrated);
+  get_cumulative(h1_npe_per_ch_max_norm_soft,h1_npe_per_ch_max_norm_soft_integrated);
+  //
+  get_cumulative(h1_npe_per_ch_max,          h1_npe_per_ch_max_nsim_integrated, normsim_ev);
+  get_cumulative(h1_npe_per_ch_max_norm,     h1_npe_per_ch_max_normsim_integrated, normsim_ev);
+  get_cumulative(h1_npe_per_ch_max_norm_soft,h1_npe_per_ch_max_normsim_soft_integrated, normsim_ev);
+  //
+  save_hist_to_csv("h1_npe_per_ch_max_norm_integrated_E2p7spectrum.csv", h1_npe_per_ch_max_norm_integrated);
+  save_hist_to_csv("h1_npe_per_ch_max_norm_integrated_E2p2spectrum.csv", h1_npe_per_ch_max_norm_soft_integrated);
   //
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
@@ -179,26 +296,55 @@ void anaSuperFast::Loop(TString histOut){
   h1_n_pe->Write();
   h1_n_pixels->Write();
   //
-  h1_azimuth_deg->Write();
-  h1_altitude_deg->Write();
+  h1_npe_per_ch_max->Write();
+  h1_npe_per_ch_max_norm->Write();
+  h1_npe_per_ch_max_norm_soft->Write();  
   //
-  h1_xcore_km->Write();
-  h1_ycore_km->Write();
+  h1_npe_per_ch_max_integrated->Write();
+  h1_npe_per_ch_max_norm_integrated->Write();
+  h1_npe_per_ch_max_norm_soft_integrated->Write();
   //
-  h1_theta_p_t_deg->Write();
   //
-  h1_ev_time->Write();
-  h1_ev_time_cut_ycore_xcore->Write();
-  h1_pe_time->Write();
-  h1_pe_time_shift->Write();
+  h1_npe_per_ch_max_nsim_integrated->Write();
+  h1_npe_per_ch_max_normsim_integrated->Write();
+  h1_npe_per_ch_max_normsim_soft_integrated->Write();
   //
-  h2_ycore_vs_xcore_km_norm->Write();
-  h2_ycore_vs_xcore_km_ev_time_w->Write();
-  h2_ycore_vs_xcore_km_ev_time->Write();
   //
-  h1_xcore_km_ev_time_cut_ycore_w->Write();
-  h1_xcore_km_ev_time_cut_ycore_norm->Write();
-  h1_xcore_km_ev_time_cut_ycore->Write();  
+  evH_sim_more_then_100pe_all->get_E_hist()->Write();
+  evH_sim_more_then_100pe_100peminperch->get_E_hist()->Write();
+  evH_sim_more_then_100pe_all_soft->get_E_hist()->Write();
+  evH_sim_more_then_100pe_100peminperch_soft->get_E_hist()->Write();
+  //
+  evH_sim_more_then_100pe_100peminperch_eff->get_E_hist()->Write();
+  evH_sim_more_then_100pe_100peminperch_soft_eff->get_E_hist()->Write();  
+  //
+  //
+  //
+  //
+  //
+  //
+  //h1_azimuth_deg->Write();
+  //h1_altitude_deg->Write();
+  //
+  //h1_xcore_km->Write();
+  //h1_ycore_km->Write();
+  //
+  //h1_theta_p_t_deg->Write();
+  //
+  //h1_ev_time->Write();
+  //h1_ev_time_cut_ycore_xcore->Write();
+  //h1_pe_time->Write();
+  //h1_pe_time_shift->Write();
+  //
+  //h2_ycore_vs_xcore_km_norm->Write();
+  //h2_ycore_vs_xcore_km_ev_time_w->Write();
+  //h2_ycore_vs_xcore_km_ev_time->Write();
+  //
+  //h1_xcore_km_ev_time_cut_ycore_w->Write();
+  //h1_xcore_km_ev_time_cut_ycore_norm->Write();
+  //h1_xcore_km_ev_time_cut_ycore->Write();  
+  //
+  //h1_if_more_than_100pe->Write();
   //
   rootFile->Close();
 }
@@ -208,4 +354,29 @@ Double_t anaSuperFast::get_theta_p_t(){
   v_prot.SetMagThetaPhi(1.0,TMath::Pi()/2.0-altitude,TMath::Pi() - azimuth);
   TVector3 v_prot_inv(v_prot.x(),v_prot.y(),v_prot.z());
   return TMath::ACos(v_prot_inv.Dot(_v_det)/v_prot_inv.Mag()/_v_det.Mag());
+}
+
+void anaSuperFast::get_cumulative( TH1D *h1, TH1D *h1_int){
+  Double_t norm = h1->Integral(1,h1->GetNbinsX());
+  get_cumulative( h1, h1_int, norm);
+}
+
+void anaSuperFast::get_cumulative( TH1D *h1, TH1D *h1_int, Double_t norm){
+  for(Int_t i = 1;i<=h1->GetNbinsX();i++){
+    Double_t val = h1->Integral(i,h1->GetNbinsX());
+    h1_int->SetBinContent(i,val/norm);
+  }
+}
+
+void anaSuperFast::save_hist_to_csv(TString outfilename, TH1D *h1){
+  ofstream outfile;
+  outfile.open(outfilename.Data());
+  //
+  outfile<<"x,y"<<endl;
+  for(Int_t i = 1;i<=h1->GetNbinsX();i++){
+    Double_t val = h1->GetBinContent(i);
+    Double_t valx = h1->GetBinCenter(i);
+    outfile<<valx<<","<<val<<endl;
+  }
+  outfile.close();
 }

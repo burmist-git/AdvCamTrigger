@@ -39,6 +39,9 @@ using namespace std;
 anaFast::anaFast(TString fileList, TString anaConfFile) : anashort(fileList)
 {
   _anaConf.readFromFile(anaConfFile);
+  cout<<"anaFast::anaFast "<<endl
+      <<"anaConfFile      "<<anaConfFile<<endl;
+  _anaConf.printInfo();
   _v_det.SetXYZ(1.0*TMath::Sin(20.0/180.0*TMath::Pi()),0,1.0*TMath::Cos(20.0/180.0*TMath::Pi()));
 }
 
@@ -840,10 +843,13 @@ void anaFast::Loop(TString histOut){
 	  break;
 	//
 	//
+	//_anaConf.
+	// assert(0);
 	if(_anaConf.if_cout_jentry){
 	  //cout<<"jentry = "<<jentry<<"   "<<n_pe<<energy<<endl;
 	  //./runana 4 $inRootFile $outHistF  588 gamma  #   68
 	  //cout<<"./runana 4 $inRootFile $outHistF "<<jentry<<" gamma # n_pe "<<n_pe<<"  energy "<<energy*1000.0<<" GeV"<<" azi. "<<azimuth_deg<<" alt. "<<altitude_deg<<endl;
+	  //cout<<"./runana 4 $inRootFile $outHistF "<<jentry<<" gamma_diff # n_pe "<<n_pe<<"  energy "<<energy*1000.0<<" GeV"<<" azi. "<<azimuth_deg<<" alt. "<<altitude_deg<<endl;
 	  cout<<"./runana 4 $inRootFile $outHistF "<<jentry<<" proton # n_pe "<<n_pe<<"  energy "<<energy*1000.0<<" GeV"<<" azi. "<<azimuth_deg<<" alt. "<<altitude_deg<<endl;
 	}
 	//
@@ -1015,8 +1021,13 @@ bool anaFast::cuts(Double_t theta_p_t_deg){
   if(_anaConf.cuts_set_to_false)
     return false;
   //
-  if(n_pe>=10)
-    return true;
+  //if(n_pe>=10)
+  //return true;
+  if(n_pe>=120 && n_pe<200){
+    if(theta_p_t_deg>=0.0 && theta_p_t_deg<0.4){
+      return true;
+    }
+  }    
   //Double_t azimuth_min = (180.0 - 0.2)/180.0*TMath::Pi();
   //Double_t azimuth_max = (180.0 + 0.2)/180.0*TMath::Pi();
   //Double_t altitude_min = (90.0 - 20.0 - 1.0 - 0.2)/180.0*TMath::Pi();

@@ -197,12 +197,18 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   clock_t start_sim, finish_sim;
   start = clock();
   //
-  TH1D *h1_digital_sum     = new TH1D("h1_digital_sum",     "h1_digital_sum",    10001,-0.5,10000.5);
+  //TH1D *h1_digital_sum     = new TH1D("h1_digital_sum",     "h1_digital_sum",    10001,-0.5,10000.5);
+  TH1D *h1_digital_sum     = new TH1D("h1_digital_sum",     "h1_digital_sum",    100001,-0.5,100000.5);
+  TH1D *h1_digital_sum_pe  = new TH1D("h1_digital_sum_pe",     "h1_digital_sum_pe",    200000, -10000.0, 10000.0);
+  TH1D *h1_rate_digital_sum_pe = new TH1D("h1_rate_digital_sum_pe",     "h1_rate_digital_sum_pe",    200000, -10000.0,10000.0);
   //TH1D *h1_digital_sum_3ns = new TH1D("h1_digital_sum_3ns", "h1_digital_sum_3ns",1001,-0.5,1000.5);
   //TH1D *h1_digital_sum_5ns = new TH1D("h1_digital_sum_5ns", "h1_digital_sum_5ns",1001,-0.5,1000.5);
   //TH1D *h1_fadc_val        = new TH1D("h1_fadc_val",        "h1_fadc_val",       1001,-0.5,1000.5);
   //
-  TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val", (Int_t)(400.5-249.5), 249.5, 400.5);
+  //TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val", (Int_t)(400.5-249.5), 249.5, 400.5);
+  TH1D *h1_fadc_val = new TH1D("h1_fadc_val","h1_fadc_val", 1001,-0.5,1000.5);
+  TH1D *h1_fadc_val_pe = new TH1D("h1_fadc_val_pe","h1_fadc_val_pe", 2000,-100.0,100.0);
+  TH1D *h1_rate_fadc_val_pe = new TH1D("h1_rate_fadc_val_pe","h1_rate_fadc_val_pe", 2000,-100.0,100.0);
   //
   evstHist *evH_h1_energy_all = new evstHist("evH_h1_energy_all","evH_h1_energy_all");
   evstHist *evH_h1_energy_trg = new evstHist("evH_h1_energy_trg","evH_h1_energy_trg");
@@ -270,7 +276,7 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //Float_t fadc_electronic_noise_RMS = 3.94;
   //Float_t fadc_electronic_noise_RMS = 0.01;
   //Float_t fadc_electronic_noise_RMS = 3.8436441; //takes into account 3.0/sqrt(12)
-  Float_t fadc_electronic_noise_RMS = 3.8082498; //takes into account 3.5/sqrt(12)
+  Float_t fadc_electronic_noise_RMS = 3.8082498;   //takes into account 3.5/sqrt(12)
   //
   bool if_dbc_trg = true;
   bool if_digital_sum_trg = false;
@@ -359,7 +365,9 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
 	  cout<<"---------------------"<<endl<<"n_pe = "<<n_pe<<endl;
 	//cout<<"get_trigger"<<endl;
 	//trg_sim->get_trigger(wfcam,h1_digital_sum,h1_digital_sum_3ns,h1_digital_sum_5ns,h1_fadc_val);
-	trg_sim->get_trigger(wfcam,h1_digital_sum,h1_fadc_val);
+	trg_sim->get_trigger(wfcam,h1_digital_sum,h1_fadc_val,h1_digital_sum_pe,h1_fadc_val_pe,8.25,
+			     (300.0*49.0/8.25+0.0),
+			     (300.0/8.25 + 0.0));
 	finish_trg = clock();
 	cout<<nevsim
 	    <<" "<<((finish_sim - start_sim)/(CLOCKS_PER_SEC/1000))<<" (msec)"
@@ -425,6 +433,15 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   evH_h1_energy_eff_r->Divideh1(evH_h1_energy_trg, evH_h1_energy_all, TMath::Pi()*_rsimulation*_rsimulation);
   //----------------------
   //
+  //Rate calc
+  cout<<"nevsim            "<<nevsim<<endl
+      <<"fadc_sample_in_ns "<<fadc_sample_in_ns<<endl
+      <<"nn_fadc_point     "<<nn_fadc_point<<endl;
+  get_NSB_Rate(h1_digital_sum_pe, h1_rate_digital_sum_pe, nevsim, fadc_sample_in_ns*nn_fadc_point);
+  get_NSB_Rate(h1_fadc_val_pe, h1_rate_fadc_val_pe, nevsim, fadc_sample_in_ns*nn_fadc_point);
+  //
+  //
+  //
   TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
   if (rootFile->IsZombie()){
@@ -445,6 +462,10 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   //h1_digital_sum_3ns->Write();
   //h1_digital_sum_5ns->Write();
   h1_fadc_val->Write();
+  h1_digital_sum_pe->Write();
+  h1_fadc_val_pe->Write();
+  h1_rate_digital_sum_pe->Write();
+  h1_rate_fadc_val_pe->Write();
   //
   h1_energy->Write();
   h1_rcore->Write();
@@ -514,4 +535,16 @@ const void anaTrgA::print_cuts(){
       <<"_npe_min       "<<_npe_min<<endl
       <<"_npe_max       "<<_npe_max<<endl
       <<"_nEv_max       "<<_nEv_max<<endl;
+}
+
+void anaTrgA::get_NSB_Rate(TH1D *h1, TH1D *h1_rate, Int_t nevsim, Double_t delta_time_of_one_wf){
+  Double_t rate;
+  Double_t tot_time = nevsim*delta_time_of_one_wf*1.0e-9;
+  if(tot_time>0.0){
+    for(Int_t i = 1;i<=h1->GetNbinsX();i++){
+      rate  = h1->Integral(i,h1->GetNbinsX());
+      rate /= tot_time;
+      h1_rate->SetBinContent(i,rate);
+    }
+  }
 }

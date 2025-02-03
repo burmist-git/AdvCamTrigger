@@ -77,7 +77,8 @@ class evstHist: public TH2Poly {
   Double_t Weight_integral_GeV( Double_t e_r_GeV, Double_t e_l_GeV);
 
   static Double_t get_Weight_ETeV(Double_t ETev);
-
+  static Double_t get_Weight_ETeV_soft(Double_t ETev);
+  
   bool get_arbitrary_hist_ID( Double_t E, Double_t th, Double_t r_core, unsigned int &arbitrary_hist_ID);
 
   void test_get_arbitrary_hist_ID();
