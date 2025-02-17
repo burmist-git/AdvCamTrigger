@@ -533,6 +533,7 @@ void wfCamSim::getWF_ampl(TString name, Double_t &Ampl_Prompt_max, Double_t &Pro
 
 void wfCamSim::getWF_tmpl(TString name){
   //
+  //Double_t stretchingFactor = 1.0*3.0/3.0;
   Double_t stretchingFactor = 1.0;
   //
   std::ifstream fileIn(name.Data());

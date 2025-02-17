@@ -17,7 +17,7 @@ OUTLIB = ./obj/
 
 #----------------------------------------------------#
 
-all: runana runanamuon runanastereo run_dbscan
+all: runana runanamuon runanastereo run_dbscan run_lst_mirror
 
 runana: runana.cpp obj/ana.o obj/anashort.o obj/anaPCA.o obj/anaPCAp.o obj/anaTrg.o obj/anaTrgA.o obj/anaTrgB.o obj/anaFast.o obj/anaSuperFast.o obj/anabase.o obj/dbscan.o obj/triggerSim.o obj/rateCalculator.o obj/anaEvPerEv.o
 	$(CXX) -o runana runana.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
@@ -30,6 +30,12 @@ runanastereo: runanastereo.cpp src/anaConf.hh obj/anastereo.o obj/evstHist.o obj
 
 run_dbscan: run_dbscan.cpp obj/dbscan.o
 	$(CXX) -o run_dbscan run_dbscan.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+run_lst_mirror: run_lst_mirror.cpp obj/lstMirrorHist.o
+	$(CXX) -o run_lst_mirror run_lst_mirror.cpp $(OUTLIB)*.o $(ROOTCFLAGS) $(ROOTLIBS) $(ROOTGLIBS)
+
+obj/lstMirrorHist.o: src/lstMirrorHist.cpp src/lstMirrorHist.hh
+	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)/lstMirrorHist.o $<
 
 obj/muonRingFitter.o: src/muonRingFitter.cpp src/muonRingFitter.hh
 	$(CXX) $(CXXFLAGS) -c -I. -o $(OUTLIB)/muonRingFitter.o $<
@@ -102,6 +108,7 @@ clean:
 	rm -f runanamuon
 	rm -f run_dbscan
 	rm -f runanastereo
+	rm -f run_lst_mirror
 	rm -f *~
 	rm -f src/*~
 	rm -f $(OUTLIB)*.o

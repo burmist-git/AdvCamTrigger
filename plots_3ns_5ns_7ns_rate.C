@@ -13,15 +13,27 @@ using namespace std;
 
 void save_hist_to_csv(TString outfilename, TH1D *h1);
 
-Int_t plots_3ns_6ns_9ns_rate(){
-
+Int_t plots_3ns_5ns_7ns_rate(){
+  //
+  //
   TString fileN01;
   TString fileN02;
   TString fileN03;
-  fileN01="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_3ns.root";
-  fileN02="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_6ns.root";
-  fileN03="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_9ns.root";
+  //
+  //
+  fileN01="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_150MHz_3ns.root";
+  fileN02="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_150MHz_5ns.root";
+  fileN03="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_150MHz_7ns.root";
+  //
+  //fileN01="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_300MHz_3ns.root";
+  //fileN02="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_300MHz_5ns.root";
+  //fileN03="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_300MHz_7ns.root";
+  //
+  //fileN01="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_900MHz_3ns.root";
+  //fileN02="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_900MHz_5ns.root";
+  //fileN03="../scratch/mono-lst-sipm-pmma-3ns-v1_triggerless/nsb_1x_268MHz/trgA_test/hist_trgA_corsika_0000ID_900MHz_7ns.root";
   //  
+  //
   TFile *f1 = new TFile(fileN01.Data());
   TFile *f2 = new TFile(fileN02.Data());
   TFile *f3 = new TFile(fileN03.Data());
@@ -47,10 +59,11 @@ Int_t plots_3ns_6ns_9ns_rate(){
   //TH1D *gr03 = (TH1D*)f3->Get("h1_fadc_val");
   //
   //
-  //save_hist_to_csv("rate_digital_sum_pe_3ns.csv",gr01);
-  //save_hist_to_csv("rate_digital_sum_pe_6ns.csv",gr02);
-  //save_hist_to_csv("rate_digital_sum_pe_9ns.csv",gr03);
-  //  
+  //save_hist_to_csv("rate_digital_sum_pe_150MHz_3ns.csv",gr01);
+  //save_hist_to_csv("rate_digital_sum_pe_150MHz_5ns.csv",gr02);
+  //save_hist_to_csv("rate_digital_sum_pe_150MHz_7ns.csv",gr03);
+  //
+  //
   TCanvas *c1 = new TCanvas("c1","c1",10,10,600,600);
   gStyle->SetPalette(1);
   gStyle->SetFrameBorderMode(0);
@@ -74,13 +87,11 @@ Int_t plots_3ns_6ns_9ns_rate(){
   gr03->SetMarkerStyle(20);
   //
   //
-  //
   //TMultiGraph *mg = new TMultiGraph();
   //mg->Add(gr01);
   //mg->Add(gr02);
   //mg->Add(gr03);
   //mg->Draw("apl");
-  //
   //
   //
   //gr03->SetMaximum(6.0e+5);
@@ -92,11 +103,24 @@ Int_t plots_3ns_6ns_9ns_rate(){
   //mg->GetYaxis()->SetTitle("FADC counts");
   //mg->GetXaxis()->SetTitle("Time, ns");
   //mg->GetYaxis()->SetTitle("Amplitude, a.u.");
-  //  
+  //mg->GetXaxis()->SetTitle("threshold, p.e.");
+  //mg->GetYaxis()->SetTitle("Rate, Hz");
+  gr03->GetXaxis()->SetTitle("threshold, p.e.");
+  gr03->GetYaxis()->SetTitle("Rate, Hz");
+  //    
   TLegend *leg = new TLegend(0.6,0.6,0.9,0.9,"","brNDC");
-  leg->AddEntry(gr01, "FWHM 3 ns", "apl");
-  leg->AddEntry(gr02, "FWHM 6 ns", "apl");
-  leg->AddEntry(gr03, "FWHM 9 ns", "apl");
+  leg->AddEntry(gr01, "FWHM 3 ns (NSB @ 150 MHz)", "apl");
+  leg->AddEntry(gr02, "FWHM 5 ns (NSB @ 150 MHz)", "apl");
+  leg->AddEntry(gr03, "FWHM 7 ns (NSB @ 150 MHz)", "apl");
+  //leg->AddEntry(gr01, "FWHM 3 ns (NSB @ 300 MHz)", "apl");
+  //leg->AddEntry(gr02, "FWHM 5 ns (NSB @ 300 MHz)", "apl");
+  //leg->AddEntry(gr03, "FWHM 7 ns (NSB @ 300 MHz)", "apl");
+  //leg->AddEntry(gr01, "FWHM 3 ns (NSB @ 900 MHz)", "apl");
+  //leg->AddEntry(gr02, "FWHM 5 ns (NSB @ 900 MHz)", "apl");
+  //leg->AddEntry(gr03, "FWHM 7 ns (NSB @ 900 MHz)", "apl");
+  //leg->AddEntry(gr01, "FWHM 3 ns", "apl");
+  //leg->AddEntry(gr02, "FWHM 5 ns", "apl");
+  //leg->AddEntry(gr03, "FWHM 7 ns", "apl");
   leg->Draw();  
 
   return 0;

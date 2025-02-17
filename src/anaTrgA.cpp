@@ -270,6 +270,8 @@ void anaTrgA::Loop(TString histOut, Int_t binE, Int_t binTheta, Int_t binDist, I
   Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
   //Float_t NGB_rate_in_MHz = 386.0;
   Float_t NGB_rate_in_MHz = 268.0;
+  //Float_t NGB_rate_in_MHz = 150.0;
+  //Float_t NGB_rate_in_MHz = 900.0;
   //Float_t NGB_rate_in_MHz = 10.0;
   //Float_t NGB_rate_in_MHz = 0.0;
   //Float_t fadc_electronic_noise_RMS = 4.5;

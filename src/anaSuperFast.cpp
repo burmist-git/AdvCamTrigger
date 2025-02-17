@@ -49,8 +49,8 @@ void anaSuperFast::Loop(TString histOut){
   _anaConf.printInfo();
   //assert(0);
   //
-  Double_t val_Emin = 1.0;    // GeV
-  Double_t val_Emax = 100000; // GeV
+  Double_t val_Emin = 1.0;      // GeV
+  Double_t val_Emax = 100000;   // GeV
   Int_t val_N_bins_E = 25;
   //
   Double_t val_Thetamin = 0.0;  //deg
