@@ -57,23 +57,23 @@ public :
   const TString treeName = "T";
   //
   ////////////////////////////////////
-  Int_t           event_id;
-  Float_t         energy;
+  Int_t   event_id;
+  Float_t energy;
   //
-  Float_t         azimuth;
-  Float_t         altitude;
-  Float_t         h_first_int;
-  Float_t         xmax;
-  Float_t         hmax;
-  Float_t         emax;
-  Float_t         cmax;
+  Float_t azimuth;
+  Float_t altitude;
+  Float_t h_first_int;
+  Float_t xmax;
+  Float_t hmax;
+  Float_t emax;
+  Float_t cmax;
   //
-  Float_t         xcore;
-  Float_t         ycore;
-  Float_t         ev_time;
-  Int_t           nphotons;
-  Int_t           n_pe;
-  Int_t           n_pixels;
+  Float_t xcore;
+  Float_t ycore;
+  Float_t ev_time;
+  Int_t   nphotons;
+  Int_t   n_pe;
+  Int_t   n_pixels;
   Int_t   pe_chID[946466];
   Float_t pe_time[946466];
   Int_t   wf[7987][75];

@@ -6,6 +6,7 @@
 #include "triggerSim.hh"
 #include "dbscan.hh"
 #include "muonRingFitter.hh"
+#include "evstHist.hh"
 
 //root
 #include <TH2.h>
@@ -80,6 +81,8 @@ void anamuon::Loop(TString histOut){
   TH1D *h1_muony0 = new TH1D("h1_muony0","h1_muony0",400, -2.0,2.0);
   TH1D *h1_muon_r0 = new TH1D("h1_muon_r0","h1_muon_r0",400, 0.0,2.0);
   TH1D *h1_muonR = new TH1D("h1_muonR","h1_muonR",400, 0.0,2.0);
+  TH1D *h1_muonR_deg = new TH1D("h1_muonR_deg","h1_muonR_deg",800, 0.0,4.0);
+  TH1D *h1_muonR_deg_norm = new TH1D("h1_muonR_deg_norm","h1_muonR_deg_norm",800, 0.0,4.0);
   //
   TH2D *h2_muon_r0_vs_thetaDeg = new TH2D("h2_muon_r0_vs_thetaDeg","h2_muon_r0_vs_thetaDeg", 400, 0.0, 1.0, 400, 0.0, 1.0);
   TH2D *h2_muonR_vs_muon_E = new TH2D("h2_muonR_vs_muon_E","h2_muonR_vs_muon_E",400, 0.0, 0.2, 400, 0.0, 2.0);
@@ -134,7 +137,7 @@ void anamuon::Loop(TString histOut){
     //if(coreR<5){
     //if(cmax<791){
     //if(n_pe<2200 && energy<0.016){
-    if(energy>0.0130 && energy<0.014){
+    //if(energy>0.0130 && energy<0.014){
       //if(n_pe>1500 && n_pe<3000){
     //if(n_pe>3000){
     //if(thetaDeg>0.35 && thetaDeg<0.45){
@@ -235,6 +238,15 @@ void anamuon::Loop(TString histOut){
       h1_muon_r0->Fill(muon_r0);
       h1_muonR->Fill(muonR);
       //
+      Double_t LST1_effective_focal_length = 29.30565; //m % Only to be used for image analysis. No effect in simulation itself.
+      //
+      ///evstHist.hh:  static Double_t get_Weight_ETeV
+      //      
+      h1_muonR_deg->Fill(TMath::ATan(muonR/29.30565)*180.0/TMath::Pi());
+      h1_muonR_deg_norm->Fill(TMath::ATan(muonR/29.30565)*180.0/TMath::Pi(), evstHist::get_Weight_ETeV(energy));
+      //
+      //      
+      //
       h2_muon_r0_vs_thetaDeg->Fill(thetaDeg,muon_r0);
       h2_muonR_vs_muon_E->Fill(energy,muonR);
       //
@@ -264,7 +276,7 @@ void anamuon::Loop(TString histOut){
       c1_v.push_back(c1);
     }//if(gr_tmp->GetN()>20){
 
-    }
+    //}
     //----------------------
   }
   //
@@ -318,11 +330,120 @@ void anamuon::Loop(TString histOut){
   h1_muony0->Write();
   h1_muon_r0->Write();
   h1_muonR->Write();
+  h1_muonR_deg->Write();
+  h1_muonR_deg_norm->Write();
   //
   h2_muon_r0_vs_thetaDeg->Write();
   h2_muonR_vs_muon_E->Write();
   //
   h1_pixID_tot->Write();
+  //
+  rootFile->Close();
+}
+
+void anamuon::LoopFast(TString histOut){
+  //
+  TH1D *h1_n_pe = new TH1D("h1_n_pe","h1_n_pe",10000,0.0,100000);
+  TH1D *h1_nphotons = new TH1D("h1_nphotons","h1_nphotons",10000,0.0,100000);
+  TH1D *h1_energy = new TH1D("h1_energy","h1_energy",10000,0.0,10);
+  TH1D *h1_xcore = new TH1D("h1_xcore","h1_xcore",400,-15.0,15);
+  TH1D *h1_ycore = new TH1D("h1_ycore","h1_ycore",400,-15.0,15);
+  TH1D *h1_rcore = new TH1D("h1_rcore","h1_rcore",400, 0.0,15);
+  TH1D *h1_theta = new TH1D("h1_theta","h1_theta",1000,-1.0,10.0);
+  TH1D *h1_petime = new TH1D("h1_petime","h1_petime",1000,0.0,75.0);
+  TH1D *h1_petime_cut01 = new TH1D("h1_petime_cut01","h1_petime_cut01",1000,0.0,75.0);
+  TH1D *h1_petime_cut02 = new TH1D("h1_petime_cut02","h1_petime_cut02",1000,0.0,75.0);
+  TH1D *h1_petime_cut03 = new TH1D("h1_petime_cut03","h1_petime_cut03",1000,0.0,75.0);  
+  TH1D *h1_azimuth_deg = new TH1D("h1_azimuth_deg","h1_azimuth_deg",400,180.0-10.0,180+10.0);
+  TH1D *h1_altitude_deg = new TH1D("h1_altitude_deg","h1_altitude_deg",400,80.0-2.0,80.0+2.0);
+  TH1D *h1_h_first_int = new TH1D("h1_h_first_int","h1_h_first_int",400,0.0,10000);
+  //
+  //
+  Double_t thetaDeg, coreR, azimuth_deg, altitude_deg;
+  //
+  Int_t fadc_sum_offset = 15;
+  Int_t fadc_MHz = 1024;
+  Float_t fadc_sample_in_ns = 1000.0/fadc_MHz;
+  Float_t time_offset = fadc_sum_offset*fadc_sample_in_ns;
+  //
+  //
+  Long64_t nentries = fChain->GetEntriesFast();
+  cout<<"nentries = "<<nentries<<endl;
+  Long64_t nbytes = 0, nb = 0;
+  //
+  for (Long64_t jentry=0; jentry<nentries;jentry++) {
+    if(jentry%100 == 0)
+      cout<<jentry<<endl;
+    Long64_t ientry = LoadTree(jentry);
+    if (ientry < 0) break;
+    //if (ientry > 10) break;
+    nb = fChain->GetEntry(jentry); nbytes += nb;
+    //
+    thetaDeg = get_theta_p_t()*180.0/TMath::Pi();
+    coreR = TMath::Sqrt(xcore*xcore + ycore*ycore);
+    azimuth_deg = azimuth*180.0/TMath::Pi();
+    altitude_deg =  altitude*180.0/TMath::Pi();
+    //
+    //
+    h1_n_pe->Fill(n_pe);
+    h1_nphotons->Fill(nphotons);
+    h1_energy->Fill(energy);
+    h1_xcore->Fill(xcore);
+    h1_ycore->Fill(ycore);
+    h1_rcore->Fill(coreR);
+    h1_theta->Fill(thetaDeg);
+    h1_azimuth_deg->Fill(azimuth_deg);
+    h1_altitude_deg->Fill(altitude_deg);
+    h1_h_first_int->Fill(h_first_int);
+    //
+    //
+    for(Int_t ii = 0; ii<n_pe; ii++)
+      h1_petime->Fill(pe_time[ii] - ev_time + time_offset);
+    //if(n_pe>3500.0 && energy>0.06)
+    //if( h_first_int < 20)
+    if(energy>0.01)
+      for(Int_t ii = 0; ii<n_pe; ii++)
+	h1_petime_cut01->Fill(pe_time[ii] - ev_time + time_offset);
+    if(energy>0.015)
+      for(Int_t ii = 0; ii<n_pe; ii++)
+	h1_petime_cut02->Fill(pe_time[ii] - ev_time + time_offset);
+    if(energy>0.020)
+      for(Int_t ii = 0; ii<n_pe; ii++)
+	h1_petime_cut03->Fill(pe_time[ii] - ev_time + time_offset);
+    //if(n_pe>3500.0 && energy>0.06)
+    //if( h_first_int < 20)
+    //for(Int_t ii = 0; ii<n_pe; ii++)
+    //h1_petime_cut->Fill(pe_time[ii] - ev_time + time_offset);
+    //
+    //
+  }
+  //
+  //
+  TFile* rootFile = new TFile(histOut.Data(), "RECREATE", " Histograms", 1);
+  rootFile->cd();
+  if (rootFile->IsZombie()){
+    cout<<"  ERROR ---> file "<<histOut.Data()<<" is zombi"<<endl;
+    assert(0);
+  }
+  else
+    cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
+  //
+  //
+  h1_n_pe->Write();
+  h1_nphotons->Write();
+  h1_energy->Write();
+  h1_xcore->Write();
+  h1_ycore->Write();
+  h1_rcore->Write();
+  h1_theta->Write();
+  h1_azimuth_deg->Write();
+  h1_altitude_deg->Write();
+  h1_h_first_int->Write();
+  //
+  h1_petime->Write();
+  h1_petime_cut01->Write();
+  h1_petime_cut02->Write();
+  h1_petime_cut03->Write();
   //
   rootFile->Close();
 }

@@ -2,10 +2,11 @@
 
 function printHelp {
     echo " --> ERROR in input arguments "
-    echo " [0] -m    : muons"
-    echo " [0] -c    : recompile"
-    echo " [0] --vis : vis"
-    echo " [0] -h    : print help"
+    echo " [0] -m      : muons"
+    echo " [0] --mfast : muons fast"
+    echo " [0] -c      : recompile"
+    echo " [0] --vis   : vis"
+    echo " [0] -h      : print help"
 }
 
 if [ $# -eq 0 ] 
@@ -17,6 +18,10 @@ else
 	outHistF="../scratch/simtel_data/muon/hist/hist_run1_muon.root"
 	#outHistF="../scratch/simtel_data/muon/hist/hist_run1_muon_evID_cut.root"
 	./runanamuon 1 $inRootFile $outHistF
+    elif [ "$1" = "--mfast" ]; then
+	inRootFile="../scratch/simtel_data/muon/root/run1_muon.root"
+	outHistF="../scratch/simtel_data/muon/hist/hist_fast_run1_muon.root"
+	./runanamuon 11 $inRootFile $outHistF
     elif [ "$1" = "--vis" ]; then
 	inRootFile="../scratch/simtel_data/muon/root/run1_muon.root"
 	outHistF="../scratch/simtel_data/muon/hist/hist_vis_run1_muon.root"

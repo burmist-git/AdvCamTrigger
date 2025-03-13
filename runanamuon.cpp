@@ -40,6 +40,15 @@ int main(int argc, char *argv[]){
     anamuon a( inRootFile, atoi(argv[1]));
     a.Loop(outRootFileHist);
   }
+  else if(argc == 4 && atoi(argv[1])==11){
+    TString inRootFile = argv[2];
+    TString outRootFileHist = argv[3];
+    cout<<"--> Parameters <--"<<endl
+	<<"inRootFile      : "<<inRootFile<<endl
+	<<"outRootFileHist : "<<outRootFileHist<<endl;
+    anamuon a( inRootFile, 1);
+    a.LoopFast(outRootFileHist);
+  }
   else if(argc == 6 && atoi(argv[1])==2){
     TString inRootFile = argv[2];
     TString outRootFileHist = argv[3];
@@ -60,6 +69,9 @@ int main(int argc, char *argv[]){
       	<<"       [2] - file with list of the root files"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 1 (execution ID number)"<<endl
+      	<<"       [2] - in root file"<<endl
+	<<"       [3] - name of root file with histograms"<<endl;
+    cout<<" runID [1] = 11 (execution ID number, fast loop)"<<endl
       	<<"       [2] - in root file"<<endl
 	<<"       [3] - name of root file with histograms"<<endl;
     cout<<" runID [1] = 2 (execution ID number) short file format"<<endl

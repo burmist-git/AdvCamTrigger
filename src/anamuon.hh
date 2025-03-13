@@ -32,6 +32,7 @@ public:
   }
 
   void Loop(TString histOut);
+  void LoopFast(TString histOut);
   Double_t get_theta_p_t();
 
   void gen_ring(TGraph *gr, Int_t np, Double_t x0, Double_t y0, Double_t R);

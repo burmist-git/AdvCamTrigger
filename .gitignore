@@ -942,3 +942,5 @@ rate_digital_sum_pe_300MHz_7ns.csv
 rate_digital_sum_pe_900MHz_3ns.csv
 rate_digital_sum_pe_900MHz_5ns.csv
 rate_digital_sum_pe_900MHz_7ns.csv
+run_lst_mirror
+2D_gauss_AMC_mirror_alignment.pdf
