@@ -910,9 +910,33 @@ void sipmCameraHist::test_pixel_super_flower(Int_t pix_id){
   Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_super_flower_id.pdf", pixel_line_flower_vec);
 }
 
-void sipmCameraHist::test_pixel_super_flower(Int_t npixels_n,Int_t *pix_id){
-  for(Int_t i = 0;i<npixels_n;i++)
-    test_pixel_super_flower(pix_id[i]);
+void sipmCameraHist::test_pixel_super_flower(Int_t npixels_n,Int_t *pix_id_arr){
+  //for(Int_t i = 0;i<npixels_n;i++)
+  //test_pixel_super_flower(pix_id[i]);
+  std::vector<unsigned int> pixel_line_flower_vec;
+  for(Int_t i = 0;i<npixels_n;i++){
+    Int_t pix_id=pix_id_arr[i];
+    if( (pix_id < 0) || ((unsigned int)pix_id > _n_pixels)){
+      std::cout<<" ERROR --> (pix_id < 0) || (pix_id > _n_pixels)"<<std::endl
+	       <<"                            pix_id = "<<pix_id<<std::endl;
+      assert(0);
+    }
+    //
+    SetBinContent(pix_id+1,20);
+    for(unsigned int i = 0;i<_pixel_vec.size();i++){
+      if(_pixel_vec.at(i).pixel_id == pix_id){
+	for(unsigned int j = 0;j<_pixel_vec.at(i).v_pixel_super_flower.size();j++){
+	  SetBinContent(_pixel_vec.at(i).v_pixel_super_flower.at(j).pixel_id+1,
+			(GetBinContent(_pixel_vec.at(i).v_pixel_super_flower.at(j).pixel_id+1)+10));
+	}
+      }
+    }
+    //    
+    SetMaximum(0.0);
+    SetMaximum(20.0);
+    pixel_line_flower_vec.push_back(pix_id);
+  }
+  Draw_cam("ZCOLOR","sipmCameraHist_test_pixel_super_flower_id.pdf", pixel_line_flower_vec);
 }
 
 void sipmCameraHist::test_pixel_neighbors_bubbleSort(Int_t pix_id){

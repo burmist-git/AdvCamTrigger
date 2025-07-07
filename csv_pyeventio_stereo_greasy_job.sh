@@ -29,8 +29,10 @@ else
 	    #particletype="NSB268MHz"
 	    #
 	    particletype="proton"
-	    inFilePref="/scratch/snx3000/lburmist/simtel_data/proton_st/data/"
-	    outFilePref="/scratch/snx3000/lburmist/simtel_data/proton_st/csv/"
+	    #inFilePref="/scratch/snx3000/lburmist/simtel_data/proton_st/data/"
+	    inFilePref="../scratch/simtel_data/gamma/data/"
+	    #outFilePref="/scratch/snx3000/lburmist/simtel_data/proton_st/csv/"
+	    outFilePref="../scratch/simtel_data/gamma/csv/"
 	    #
 	    Nnodes=$2
 	    echo "Nnodes        $Nnodes"
@@ -87,7 +89,7 @@ else
 		    #/scratch/snx3000/lburmist/simtel_data/$particletype/data/corsika_run1.simtel.gz
 		    in_simtel_file="$inFilePref/corsika_run$fileID.simtel.gz"
 		    #
-		    if [ -f "$in_simtel_file" ]; then
+		    #if [ -f "$in_simtel_file" ]; then
 			#
 			out_header_file="$outFilePref/corsika_run$fileID.header.csv"
 			out_pe_inf_file_LST1="$outFilePref/corsika_run$fileID.pe_info_LST1.csv"
@@ -103,7 +105,7 @@ else
 			#			
 			cmd="python csv_pyeventio_stereo.py $in_simtel_file $out_header_file $out_pe_inf_file_LST1 $out_pe_inf_file_LST2 $out_pe_inf_file_LST3 $out_pe_inf_file_LST4"
 			echo "$cmd" >> $outJOBfileList
-		    fi
+		    #fi
 		    #
 		    ((fileID=fileID+1))
 		done

@@ -36,6 +36,25 @@ Int_t tvec3_test(){
   //
   TVector3 v_in_tel( vx_tel.Dot(part), vy_tel.Dot(part), vz_tel.Dot(part));
   //
+  //
+  //
+  TVector3 vr(1.0,1.0,1.0);
+  cout<<"vr.x() "<<vr.x()<<endl
+      <<"vr.y() "<<vr.y()<<endl
+      <<"vr.z() "<<vr.z()<<endl;      
+  //
+  vr.RotateY(TMath::Pi());
+  cout<<"vr.x() "<<vr.x()<<endl
+      <<"vr.y() "<<vr.y()<<endl
+      <<"vr.z() "<<vr.z()<<endl;
+  //
+  vr.RotateZ(TMath::Pi());
+  cout<<"vr.x() "<<vr.x()<<endl
+      <<"vr.y() "<<vr.y()<<endl
+      <<"vr.z() "<<vr.z()<<endl;
+  //
+  //
+  //
   /*
   Double_t part_theta = 20.0/180.0*TMath::Pi();
   Double_t part_phi   = 175.0/180.0*TMath::Pi();

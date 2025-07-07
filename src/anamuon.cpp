@@ -10,6 +10,7 @@
 
 //root
 #include <TH2.h>
+#include <TH1.h>
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <TString.h>
@@ -45,6 +46,13 @@ using namespace std;
 void anamuon::Loop(TString histOut){
   //
   TRandom3 *rnd = new TRandom3(11231);
+  Double_t LST1_effective_focal_length = 29.30565; //m % Only to be used for image analysis. No effect in simulation itself.
+  bool if_write_canvas = false;
+  //
+  //
+  cout<<"LST1_effective_focal_length "<<LST1_effective_focal_length<<endl
+      <<"if_write_canvas             "<<if_write_canvas<<endl;
+  //
   //
   sipmCameraHist *sipm_cam = new sipmCameraHist("sipm_cam","sipm_cam","pixel_mapping.csv",0);
   TH1D* h1_chx = new TH1D("h1_chx","h1_chx",1000,-1.2,1.2);
@@ -86,11 +94,13 @@ void anamuon::Loop(TString histOut){
   //
   TH2D *h2_muon_r0_vs_thetaDeg = new TH2D("h2_muon_r0_vs_thetaDeg","h2_muon_r0_vs_thetaDeg", 400, 0.0, 1.0, 400, 0.0, 1.0);
   TH2D *h2_muonR_vs_muon_E = new TH2D("h2_muonR_vs_muon_E","h2_muonR_vs_muon_E",400, 0.0, 0.2, 400, 0.0, 2.0);
+  TH2D *h2_muonRdeg_vs_muon_E = new TH2D("h2_muonRdeg_vs_muon_E","h2_muonRdeg_vs_muon_E",400, 0.0, 0.2, 400, 0.0, 2.0);
   //
   Double_t thetaDeg;
   Double_t coreR;
   Double_t azimuth_deg;
   Double_t altitude_deg;
+  Double_t muonR_deg;
   //
   TGraph *gr_frame = new TGraph();
   gr_frame->SetNameTitle("gr_frame","gr_frame");
@@ -116,7 +126,9 @@ void anamuon::Loop(TString histOut){
   Double_t x0out_fit, y0out_fit, Rout_fit;
   Double_t x0out_fit_err, y0out_fit_err, Rout_fit_err;
   //
+  //
   Long64_t nentries = fChain->GetEntriesFast();
+  //nentries = 3000;
   cout<<"nentries = "<<nentries<<endl;
   Long64_t nbytes = 0, nb = 0;
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -225,7 +237,7 @@ void anamuon::Loop(TString histOut){
       muonRingFitter *mrf = new muonRingFitter();
       //mrf->set_gr(gr_tmp_dbscan_clean);
       mrf->set_gr(gr_tmp);
-
+      //
       mrf->fit_ring(muonx0, muony0, muonR,
 		    x0out_fit, y0out_fit, Rout_fit,
 		    x0out_fit_err, y0out_fit_err, Rout_fit_err);
@@ -238,17 +250,17 @@ void anamuon::Loop(TString histOut){
       h1_muon_r0->Fill(muon_r0);
       h1_muonR->Fill(muonR);
       //
-      Double_t LST1_effective_focal_length = 29.30565; //m % Only to be used for image analysis. No effect in simulation itself.
       //
-      ///evstHist.hh:  static Double_t get_Weight_ETeV
       //      
-      h1_muonR_deg->Fill(TMath::ATan(muonR/29.30565)*180.0/TMath::Pi());
-      h1_muonR_deg_norm->Fill(TMath::ATan(muonR/29.30565)*180.0/TMath::Pi(), evstHist::get_Weight_ETeV(energy));
+      muonR_deg = TMath::ATan(muonR/LST1_effective_focal_length)*180.0/TMath::Pi();
+      h1_muonR_deg->Fill(muonR_deg);
+      h1_muonR_deg_norm->Fill(muonR_deg, evstHist::get_Weight_ETeV(energy));
       //
       //      
       //
       h2_muon_r0_vs_thetaDeg->Fill(thetaDeg,muon_r0);
       h2_muonR_vs_muon_E->Fill(energy,muonR);
+      h2_muonRdeg_vs_muon_E->Fill(energy,muonR_deg);
       //
       TString c1canvaname="c1_";
       c1canvaname += (Int_t)jentry;
@@ -291,20 +303,30 @@ void anamuon::Loop(TString histOut){
     cout<<"  Output Histos file ---> "<<histOut.Data()<<endl;
   //
   //
-  TDirectory *trueRing = rootFile->mkdir("trueRing");
-  trueRing->cd();
-  for(unsigned int i = 0;i<gr_v.size();i++){
-    gr_v.at(i)->Write();
-    c1_v.at(i)->Write();
+  if(if_write_canvas){
+    cout<<"writing the canvases"<<endl;
+    TDirectory *trueRing = rootFile->mkdir("trueRing");
+    trueRing->cd();
+    for(unsigned int i = 0;i<gr_v.size();i++){
+      gr_v.at(i)->Write();
+      c1_v.at(i)->Write();
+    }
+    rootFile->cd();
   }
-  rootFile->cd();
+  else{
+    TH1::AddDirectory(kFALSE);
+    TH2::AddDirectory(kFALSE);
+  }
   //
   gr_frame->Write();
+  //
+  cout<<"A"<<endl;
   //
   h1_n_pe->Write();
   h1_nphotons->Write();
   h2_n_pe_vs_nphotons->Write();
   h1_energy->Write();
+  cout<<"AA"<<endl;
   gr_n_pe_vs_jentry->Write();
   h2_n_pe_vs_energy->Write();
   h1_xcore->Write();
@@ -313,6 +335,8 @@ void anamuon::Loop(TString histOut){
   h1_azimuth_deg->Write();
   h1_altitude_deg->Write();
   h2_ycore_vs_xcore->Write();
+  //
+  cout<<"B"<<endl;
   //
   h1_chx->Write();
   h1_chy->Write();
@@ -326,6 +350,8 @@ void anamuon::Loop(TString histOut){
   h1_emax->Write();
   h1_cmax->Write();
   //
+  cout<<"C"<<endl;
+  //
   h1_muonx0->Write();
   h1_muony0->Write();
   h1_muon_r0->Write();
@@ -333,11 +359,17 @@ void anamuon::Loop(TString histOut){
   h1_muonR_deg->Write();
   h1_muonR_deg_norm->Write();
   //
+  cout<<"D"<<endl;
+  //
   h2_muon_r0_vs_thetaDeg->Write();
   h2_muonR_vs_muon_E->Write();
+  h2_muonRdeg_vs_muon_E->Write();
   //
   h1_pixID_tot->Write();
   //
+  cout<<"E"<<endl;
+  //
+  cout<<"rootFile->Close()"<<endl;
   rootFile->Close();
 }
 
