@@ -35,10 +35,15 @@ int main(int argc, char *argv[]){
     lstmirr->dump_mapping_info();
     lstmirr->test_ideal();
   }
+  else if (argc == 2 && atoi(argv[1])==2){
+    lstMirrorHist *lstmirr = new lstMirrorHist( "lstMirrorHist_ideal", "lstMirrorHist_ideal", "mirror_CTA-LST-v20141201-198.dat", true, 0.0);
+    lstmirr->print_lst_tot_mirror_surface();
+  }
   else{
     cout<<" --> ERROR in input arguments "<<endl
 	<<" runID [1] = 0 (lstMirrorHist)"<<endl
-    	<<" runID [1] = 1 (lstMirrorHist ideal)"<<endl;
+    	<<" runID [1] = 1 (lstMirrorHist ideal)"<<endl
+	<<" runID [1] = 2 (print_lst_tot_mirror_surface)"<<endl;
   }
   return 0;
 }

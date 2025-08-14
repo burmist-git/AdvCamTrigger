@@ -5,6 +5,7 @@
 #include <TH2Poly.h>
 #include <TGraph.h>
 #include <TVector2.h>
+#include <TVector3.h>
 #include <TCanvas.h>
 #include <TMath.h>
 #include <TLine.h>
@@ -138,6 +139,13 @@ struct mirror_info {
     x = y_right_cam;
     y = x_down - rr/2.0;
   }
+  Double_t get_single_mirror_surface(){
+    return flat_to_flat*flat_to_flat*3/4.0;
+  }
+  Double_t get_normal_mirror_angle(){
+    TVector3 v(n_x,n_y,n_z);
+    return v.Theta();  
+  }
 };
 
 class lstMirrorHist: public TH2Poly {
@@ -173,6 +181,8 @@ public:
   Double_t get_ideal_curvature( Double_t focus_val_cm, Double_t x, Double_t y);
   Double_t get_spherical_mirror_focus_form_curvature( Double_t curvature);
   Double_t get_ideal_angle_deg_mirror_oa( Double_t focus_val_cm, Double_t x, Double_t y);
+
+  void print_lst_tot_mirror_surface();
   
 private:
   

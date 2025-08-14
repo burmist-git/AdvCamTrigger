@@ -276,6 +276,18 @@ void lstMirrorHist::Clean(){
     SetBinContent(i,0);
 }
 
+void lstMirrorHist::print_lst_tot_mirror_surface(){
+  cout<<"  lstMirrorHist::print_lst_tot_mirror_surface "<<endl;
+  Double_t tot_mirror_surface = 0.0;
+  Double_t tot_mirror_surface_projected = 0.0;
+  for(unsigned int i = 0;i<_mirror_vec.size();i++){
+    tot_mirror_surface += _mirror_vec.at(i).get_single_mirror_surface();
+    tot_mirror_surface_projected += _mirror_vec.at(i).get_single_mirror_surface()*TMath::Cos(_mirror_vec.at(i).get_normal_mirror_angle());
+  }
+  cout<<"           tot_mirror_surface "<<tot_mirror_surface<<endl
+      <<" tot_mirror_surface_projected "<<tot_mirror_surface_projected<<endl;  
+}
+
 void lstMirrorHist::test(TString pdf_out_name, TString hist_out_name){
   TFile* rootFile = new TFile(hist_out_name.Data(), "RECREATE", " Histograms", 1);
   rootFile->cd();
